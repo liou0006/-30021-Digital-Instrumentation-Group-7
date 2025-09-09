@@ -60,10 +60,14 @@ int8_t readJoystick(){
 	return bit;
 }
 
-void handleJoystick(int8_t currentState){
+void handleJoystick(){
+
+	static int8_t currentState = 0;  // remember last state
 
 	int8_t newState = readJoystick();
-	if ((newState != 0) && (currentState != newState)){
+//	if ((newState != 0) && (currentState != newState)){
+
+    if ((currentState == 0) && (newState != 0)) {
 		if (newState == 0x1){
 			printf("Up");
 		} else if (newState == 0x2){
@@ -75,11 +79,9 @@ void handleJoystick(int8_t currentState){
 		} else if (newState == 0x10){
 			printf("Center");
 		}
-
-		currentState = newState;
-
-	} else if (newState == 0){
-		currentState = 0;
 	}
+
+	currentState = newState;
+
 }
 
