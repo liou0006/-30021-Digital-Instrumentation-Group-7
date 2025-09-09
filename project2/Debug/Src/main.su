@@ -1,1 +1,6 @@
-../Src/main.c:5:5:main	8	static
+../Src/main.c:6:6:ini_EXTI_NVIC	24	static
+../Src/main.c:28:6:EXTI9_5_IRQHandler	32	static
+../Src/main.c:37:6:configEXTIA4	24	static
+../Src/main.c:59:6:EXTI4_IRQHandler	8	static
+../Src/main.c:74:6:EXTI0_IRQHandler	8	static
+../Src/main.c:81:5:main	16	static
