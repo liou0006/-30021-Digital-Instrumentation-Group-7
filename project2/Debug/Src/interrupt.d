@@ -1,4 +1,4 @@
-Src/main.o: ../Src/main.c \
+Src/interrupt.o: ../Src/interrupt.c \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x_conf.h \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_adc.h \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x.h \
@@ -29,11 +29,7 @@ Src/main.o: ../Src/main.c \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_usart.h \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_wwdg.h \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_misc.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/30010_io.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/joystick.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/30010_io.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/led.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/interrupt.h
+ C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/30010_io.h
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x_conf.h:
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_adc.h:
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x.h:
@@ -65,7 +61,3 @@ C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_wwdg.h:
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_misc.h:
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/30010_io.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/joystick.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/30010_io.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/led.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/interrupt.h:
