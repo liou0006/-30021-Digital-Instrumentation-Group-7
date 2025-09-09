@@ -1,0 +1,3 @@
+window.c:3:6:clrscr	8	static
+window.c:12:6:initStopWatchWindow	8	static
+window.c:21:6:printTitleBar	32	static

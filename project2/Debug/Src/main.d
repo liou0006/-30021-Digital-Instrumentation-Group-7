@@ -1,67 +1,115 @@
 Src/main.o: ../Src/main.c \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/Inc/stm32f30x_conf.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_adc.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/Inc/stm32f30x.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/cmsis/core_cm4.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/cmsis/core_cmInstr.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/cmsis/core_cmFunc.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/cmsis/core_cm4_simd.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/Inc/system_stm32f30x.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/Inc/stm32f30x_conf.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_can.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_crc.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_comp.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_dac.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_dbgmcu.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_dma.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_exti.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_flash.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_gpio.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_syscfg.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_i2c.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_iwdg.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_opamp.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_pwr.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_rcc.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_rtc.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_spi.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_tim.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_usart.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_wwdg.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_misc.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/Inc/30010_io.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/Inc/joystick.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/Inc/30010_io.h
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/Inc/stm32f30x_conf.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_adc.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/Inc/stm32f30x.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/cmsis/core_cm4.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/cmsis/core_cmInstr.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/cmsis/core_cmFunc.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/cmsis/core_cm4_simd.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/Inc/system_stm32f30x.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/Inc/stm32f30x_conf.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_can.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_crc.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_comp.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_dac.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_dbgmcu.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_dma.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_exti.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_flash.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_gpio.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_syscfg.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_i2c.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_iwdg.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_opamp.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_pwr.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_rcc.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_rtc.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_spi.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_tim.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_usart.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_wwdg.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/SPL/inc/stm32f30x_misc.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/Inc/30010_io.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/Inc/joystick.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/project2/Inc/30010_io.h:
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x_conf.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_adc.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cm4.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cmInstr.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cmFunc.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cm4_simd.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/system_stm32f30x.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x_conf.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_can.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_crc.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_comp.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_dac.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_dbgmcu.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_dma.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_exti.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_flash.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_gpio.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_syscfg.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_i2c.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_iwdg.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_opamp.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_pwr.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_rcc.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_rtc.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_spi.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_tim.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_usart.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_wwdg.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_misc.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/30010_io.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/joystick.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/30010_io.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/led.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/timer.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/joystick.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/window.h \
+ C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/window.h
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x_conf.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_adc.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cm4.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cmInstr.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cmFunc.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cm4_simd.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/system_stm32f30x.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x_conf.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_can.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_crc.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_comp.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_dac.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_dbgmcu.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_dma.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_exti.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_flash.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_gpio.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_syscfg.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_i2c.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_iwdg.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_opamp.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_pwr.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_rcc.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_rtc.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_spi.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_tim.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_usart.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_wwdg.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_misc.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/30010_io.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/joystick.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/30010_io.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/led.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/timer.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/joystick.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/window.h:
+
+C:/Users/s214680/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/A\ Kandidat\ -\ Elektroteknologi/1.\ Term/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/window.h:
