@@ -32,10 +32,30 @@ void initLed(){
 
 }
 
-void setLed(Red, Green, Blue){
-	if (color == "Red"){
+void setLed(int8_t state) {
+    // First turn everything off
+    GPIO_ResetBits(GPIOB, GPIO_Pin_4);
+    GPIO_ResetBits(GPIOC, GPIO_Pin_7);
+    GPIO_ResetBits(GPIOA, GPIO_Pin_9);
 
-	}
+    // Turn on based on joystick state
+    if (state & (1 << 0)) { // Up → Red
+        GPIO_SetBits(GPIOB, GPIO_Pin_4);
+    }
+    if (state & (1 << 1)) { // Down → Green
+        GPIO_SetBits(GPIOC, GPIO_Pin_7);
+    }
+    if (state & (1 << 2)) { // Left → Blue
+        GPIO_SetBits(GPIOA, GPIO_Pin_9);
+    }
+    if (state & (1 << 3)) { // Left → Blue
+        GPIO_SetBits(GPIOA, GPIO_Pin_9);
+        GPIO_SetBits(GPIOC, GPIO_Pin_7);
+    }
+    if (state & (1 << 4)) { // Left → Blue
+        GPIO_SetBits(GPIOB, GPIO_Pin_4);
+        GPIO_SetBits(GPIOC, GPIO_Pin_7);
+    }
 }
 
 int main(void)
@@ -47,8 +67,8 @@ int main(void)
 
 
 	while(1){
-//		handleJoystick();
-
+		handleJoystick();
+		
 
 
 	}
