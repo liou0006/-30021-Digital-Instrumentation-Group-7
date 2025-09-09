@@ -1,0 +1,3 @@
+../Src/joystick.c:12:6:initJoystick	1
+../Src/joystick.c:38:8:readJoystick	6
+../Src/joystick.c:63:6:handleJoystick	9
