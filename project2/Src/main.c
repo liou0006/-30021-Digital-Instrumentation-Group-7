@@ -9,12 +9,13 @@ int main(void) {
 
 	initJoystick();
 	initLED();
-	iniEXTIA4();
+//	iniEXTIA4();
 
 	int8_t prev_state = readJoystick();
 	int8_t current_state;
 
 	while(1) {
+		handleJoystick();
 //		current_state = readJoystick();
 //		if (prev_state != current_state) {
 //			if (current_state == 1) {

@@ -8,6 +8,10 @@
 #include "stm32f30x_conf.h" // STM32 config
 #include "30010_io.h"
 
+
+//Mostly template for now
+//Keep in mind to switch the GPIOx port and EXTI_PinSourcex and the EXTI_Linex
+
 void iniEXTIA4(){
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG,ENABLE);
 	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA,EXTI_PinSource4);
