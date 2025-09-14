@@ -64,24 +64,39 @@ void handleJoystick(){
 
 	static int8_t currentState = 0;  // remember last state
 
-	int8_t newState = readJoystick();
+	int8_t nextState = readJoystick();
 //	if ((newState != 0) && (currentState != newState)){
 
-    if ((currentState == 0) && (newState != 0)) {
-		if (newState == 0x1){
-			printf("Up");
-		} else if (newState == 0x2){
-			printf("Down");
-		} else if (newState == 0x4){
-			printf("Left");
-		} else if (newState == 0x8){
-			printf("Right");
-		} else if (newState == 0x10){
-			printf("Center");
+    if (nextState!= currentState) {
+
+		switch(nextState){
+
+		default:
+			break;
+
+		case 0x1:
+			printf("Up\n");
+			break;
+
+		case 0x2:
+			printf("Down\n");
+			break;
+
+		case 0x4:
+			printf("Left\n");
+			break;
+
+		case 0x8:
+			printf("Right\n");
+			break;
+
+		case 0x10:
+			printf("Center\n");
+			break;
+
 		}
 	}
 
-	currentState = newState;
-
+	currentState = nextState;
 }
 
