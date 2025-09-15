@@ -3,6 +3,7 @@
 #include "joystick.h"
 #include "led.h"
 #include "interrupt.h"
+//#include "window.h"
 
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
@@ -10,6 +11,8 @@ int main(void) {
 	initJoystick();
 	initLED();
 	iniEXTIA4();
+	initTimer();
+
 
 	int val = 10;
 	printf("Value = %02ld\n", val);
