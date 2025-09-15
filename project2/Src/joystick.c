@@ -65,15 +65,9 @@ void handleJoystick(){
 	static int8_t currentState = 0;  // remember last state
 
 	int8_t nextState = readJoystick();
-//	if ((newState != 0) && (currentState != newState)){
 
     if (nextState!= currentState) {
-
 		switch(nextState){
-
-		default:
-			break;
-
 		case 0x1:
 			printf("Up\n");
 			break;
@@ -93,10 +87,8 @@ void handleJoystick(){
 		case 0x10:
 			printf("Center\n");
 			break;
-
 		}
 	}
-
 	currentState = nextState;
 }
 
