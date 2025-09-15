@@ -1,0 +1,3 @@
+../Src/window.c:3:6:clrscr	1
+../Src/window.c:12:6:initStopWatchWindow	1
+../Src/window.c:21:6:printTitleBar	2

@@ -1,0 +1,7 @@
+C:/Users/liou-/OneDrive - Danmarks Tekniske Universitet/Elektrotekniologi - Master/1. semester/30021 Digital Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cm4.h:1071:22:NVIC_EnableIRQ	1
+C:/Users/liou-/OneDrive - Danmarks Tekniske Universitet/Elektrotekniologi - Master/1. semester/30021 Digital Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cm4.h:1085:22:NVIC_DisableIRQ	1
+C:/Users/liou-/OneDrive - Danmarks Tekniske Universitet/Elektrotekniologi - Master/1. semester/30021 Digital Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cm4.h:1156:22:NVIC_SetPriority	2
+../Src/timer.c:5:6:initTimer	1
+../Src/timer.c:47:6:TIM2_IRQHandler	5
+../Src/timer.c:73:6:stopWatch	6
+../Src/timer.c:101:6:printTime	1

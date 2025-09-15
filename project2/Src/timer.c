@@ -1,5 +1,7 @@
 #include "timer.h"
 
+timestruct_t timeData;
+
 void initTimer() {
 	// -------------------------------------------------
 	/*
@@ -38,9 +40,12 @@ void initTimer() {
 
 	NVIC_SetPriority(TIM2_IRQn, priority);		// set interrupt priority interrupts
 	NVIC_EnableIRQ(TIM2_IRQn);					// enable interrupt
+
+
 }
 
 void TIM2_IRQHandler(void) {
+
 	// ... Do whatever you want here, but make sure it doesn’t take too much time
 	timeData.hundredths++;
 
