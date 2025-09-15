@@ -3,6 +3,7 @@
 #include "joystick.h"
 #include "led.h"
 #include "interrupt.h"
+#include "timer.h"
 //#include "window.h"
 
 int main(void) {

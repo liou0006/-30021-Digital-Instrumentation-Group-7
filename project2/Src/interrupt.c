@@ -5,9 +5,7 @@
  *      Author: liou-
  */
 
-#include "stm32f30x_conf.h" // STM32 config
-#include "30010_io.h"
-
+#include "interrupt.h"
 
 //Mostly template for now
 //Keep in mind to switch the GPIOx port and EXTI_PinSourcex and the EXTI_Linex
