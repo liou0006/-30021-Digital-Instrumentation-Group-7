@@ -10,7 +10,7 @@
 
 
 
-iniEXTIA4();
-EXTI4_IRQHandler();
+void iniEXTIA4();
+void EXTI4_IRQHandler();
 
 #endif /* INTERRUPT_H_ */
