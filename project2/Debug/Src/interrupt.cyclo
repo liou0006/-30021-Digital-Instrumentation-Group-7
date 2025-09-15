@@ -1,2 +1,2 @@
-../Src/interrupt.c:11:6:iniEXTIA4	1
-../Src/interrupt.c:33:6:EXTI4_IRQHandler	2
+../Src/interrupt.c:15:6:iniEXTIA4	1
+../Src/interrupt.c:38:6:EXTI4_IRQHandler	2
