@@ -4,7 +4,7 @@
 #include "led.h"
 #include "interrupt.h"
 #include "timer.h"
-#include "lcd.h"
+#include "spi_lcd.h"
 //#include "window.h"
 
 int main(void) {
@@ -18,7 +18,7 @@ int main(void) {
 
 
 	int val = 10;
-	printf("Value = %02ld\n", val);
+	printf("Value = %02d\n", val);   // or printf("Value = %02ld\n", (long)val);
 
 	uint8_t a = 10;
 	char str[7];
@@ -31,6 +31,12 @@ int main(void) {
 
 	//	int8_t prev_state = readJoystick();
 	//	int8_t current_state;
+
+	    //lcd_fill(0x00);                          // black
+	    //lcd_draw_string(0, 0, "Hello");
+	    //push_lcd_buffer(NULL);
+	lcd_fill(0xFF);          // all pixels ON (or OFF if inverted)
+	push_lcd_buffer(NULL);
 
 	while(1) {
 		handleJoystick();
