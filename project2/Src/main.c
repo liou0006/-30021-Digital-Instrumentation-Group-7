@@ -4,11 +4,13 @@
 #include "led.h"
 #include "interrupt.h"
 #include "timer.h"
+#include "lcd.h"
 //#include "window.h"
 
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
+    initLCD();
 	initJoystick();
 	initLED();
 	iniEXTIA4();
