@@ -2,7 +2,7 @@
 
 // Code needed in main.c is included in the bottom of the file
 
-void initLED() {
+void initLed() {
 	// Enable clock for GPIO Ports
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);	// Port A
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);	// Port B
@@ -36,10 +36,10 @@ void initLED() {
 	GPIO_Init(GPIOC, &GPIO_InitStructAll);
 
 	// Initialize LED to off
-	setLED('d');
+	setLed('d');
 }
 
-void setLED(char sel) {
+void setLed(char sel) {
 	/* From [MBED-016.1_ApplicationShieldCookbook] pp. 3-4 section
 	 * 6. RGB LED "0" is on and "1" is off.
 	 */

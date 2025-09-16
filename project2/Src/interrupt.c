@@ -36,7 +36,8 @@ void iniEXTIA4(){
 void EXTI4_IRQHandler(void){
     if (EXTI_GetITStatus(EXTI_Line4) != RESET) {
         // --- Your handler code here ---
-        setLED('r');
+    	setLed('m');
+
         EXTI_ClearITPendingBit(EXTI_Line4);
     }
 

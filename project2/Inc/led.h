@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 /* Exported functions ------------------------------------------------------- */
-void initLED();
-void setLED(char sel);
+void initLed();
+void setLed(char sel);
 
 #endif /* JOYSTICK_H_ */
