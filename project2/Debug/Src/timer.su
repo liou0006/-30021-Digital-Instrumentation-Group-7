@@ -5,3 +5,4 @@ C:/Users/liou-/OneDrive - Danmarks Tekniske Universitet/Elektrotekniologi - Mast
 ../Src/timer.c:47:6:TIM2_IRQHandler	8	static
 ../Src/timer.c:73:6:stopWatch	24	static
 ../Src/timer.c:101:6:printTime	16	static
+../Src/timer.c:106:6:stopWatchFunction	8	static

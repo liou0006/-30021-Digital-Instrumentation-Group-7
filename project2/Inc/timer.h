@@ -13,10 +13,12 @@ typedef struct {
 } timestruct_t;
 
 
+
 /* Exported functions ------------------------------------------------------- */
 void initTimer();
 void TIM2_IRQHandler(void);
 void stopWatch(uint8_t *flag);
 void printTime();
+void stopWatchFunction();
 
 #endif /* TIMER_H_ */

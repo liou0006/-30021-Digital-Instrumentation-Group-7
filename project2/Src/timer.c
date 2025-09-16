@@ -41,7 +41,7 @@ void initTimer() {
 	NVIC_SetPriority(TIM2_IRQn, priority);		// set interrupt priority interrupts
 	NVIC_EnableIRQ(TIM2_IRQn);					// enable interrupt
 
-
+	TIM2_IRQHandler();
 }
 
 void TIM2_IRQHandler(void) {
@@ -101,4 +101,14 @@ void stopWatch(uint8_t *flag) {
 void printTime() {
 	printf("\033[0m");		// white text on black background
 	printf("%d:%02d:%02d:%02d", timeData.hours, timeData.minutes, timeData.seconds, timeData.hundredths);
+}
+
+void stopWatchFunction(){
+
+	initStopWatchWindow();
+	printf("\033[3;1H"); // moves cursor to row 3 column 1
+	printf("Time since start: \n");
+	printf("Split time 1: \n");
+	printf("Split time 2: \n");
+
 }
