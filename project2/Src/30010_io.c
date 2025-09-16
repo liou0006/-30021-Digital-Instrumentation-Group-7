@@ -129,7 +129,8 @@ void uart_init(uint32_t baud) {
 /*****************************/
 /*** LCD Control Functions ***/
 /*****************************/
-void lcd_transmit_byte(uint8_t data) {
+/*
+ * void lcd_transmit_byte(uint8_t data) {
     GPIOB->ODR &= ~(0x0001 << 6); // CS = 0 - Start Transmission
     while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
     SPI_SendData8(SPI2, data);
@@ -285,3 +286,6 @@ void lcd_init() {
 
     lcd_reset();
 }
+
+ */
+
