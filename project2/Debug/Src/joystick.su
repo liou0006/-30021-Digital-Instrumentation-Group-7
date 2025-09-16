@@ -1,3 +1,0 @@
-../Src/joystick.c:12:6:initJoystick	16	static
-../Src/joystick.c:38:8:readJoystick	16	static
-../Src/joystick.c:63:6:handleJoystick	16	static
