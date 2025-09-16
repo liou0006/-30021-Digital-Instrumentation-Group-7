@@ -1,1 +1,16 @@
 .DS_Store
+# IDE
+.idea/
+*.launch
+*.metadata/
+.settings/
+
+# Build output
+project2/Debug/
+*.o
+*.d
+*.su
+*.cyclo
+*.list
+*.map
+*.elf
