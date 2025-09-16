@@ -6,7 +6,7 @@
 #include "stm32f30x_conf.h"
 #include <stdio.h>
 #include "joystick.h"
-//#include "window.h"
+#include "window.h"
 
 typedef struct {
 	volatile uint8_t hours, minutes, seconds, hundredths;

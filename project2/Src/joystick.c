@@ -66,26 +66,36 @@ void handleJoystick(){
 
 	int8_t nextState = readJoystick();
 
-    if (nextState!= currentState) {
+	if (nextState!= currentState) {
 		switch(nextState){
+
+		default:
+			setLED('d');
+			break;
+
 		case 0x1:
-			printf("Up\n");
+			setLED('r');
+			printf("UP (red)\n");
 			break;
 
 		case 0x2:
-			printf("Down\n");
+			setLED('g');
+			printf("DOWN (green)\n");
 			break;
 
 		case 0x4:
-			printf("Left\n");
+			setLED('b');
+			printf("LEFT (blue)\n");
 			break;
 
 		case 0x8:
-			printf("Right\n");
+			setLED('c');
+			printf("RIGHT (cyan)\n");
 			break;
 
 		case 0x10:
-			printf("Center\n");
+			setLED('m');
+			printf("CENTER (magenta)\n");
 			break;
 		}
 	}

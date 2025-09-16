@@ -30,7 +30,8 @@ Src/timer.o: ../Src/timer.c \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_wwdg.h \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_misc.h \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/joystick.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/30010_io.h
+ C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/30010_io.h \
+ C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/window.h
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/timer.h:
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x_conf.h:
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_adc.h:
@@ -63,3 +64,4 @@ C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_misc.h:
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/joystick.h:
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/30010_io.h:
+C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/window.h:
