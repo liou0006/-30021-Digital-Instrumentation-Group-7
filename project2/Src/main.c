@@ -6,6 +6,7 @@
 #include "interrupt.h"
 #include "timer.h"
 #include "window.h"
+#include "flash.h"
 
 void lcd_init_and_print(void) {
     static uint8_t lcdBuffer[LCD_BUFF_SIZE];   // Frame buffer for LCD
@@ -23,34 +24,13 @@ void lcd_init_and_print(void) {
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
-//	initJoystick();
-//	initLED();
+	initJoystick();
 	iniEXTIA4();
-//	initTimer();
-
-	int val = 10;
-	printf("Value = %02d\n", val);
-
-	uint8_t a = 10;
-	char str[7];
-	sprintf(str, "a = %2d", a);
-
-	printf("%s\n",str);
-
-	float floatVal = 1.234;
-	printf("%6f\n", floatVal);
-
-	//	int8_t prev_state = readJoystick();
-	//	int8_t current_state;
-	//initLed();
+	initTimer();
+	initLED();
     lcd_init_and_print();
-	// --------------- TIMER ---------------
-//stopWatchFunction();
-//uint8_t stopWatchFlag = 0;
 
 	while(1) {
-//		stopWatch(&stopWatchFlag);
-//		printf("\033[3;20H"); // moves cursor to row 3 column 20
-//		printTime();
+
 	}
 }
