@@ -4,6 +4,10 @@
 *.launch
 *.metadata/
 .settings/
+# Ignore build system outputs
+project2/Debug/
+*.mk
+makefile
 
 # Build output
 project2/Debug/
