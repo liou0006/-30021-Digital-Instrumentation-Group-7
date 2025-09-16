@@ -1,0 +1,2 @@
+../Src/interrupt.c:13:6:iniEXTIA4	24	static
+../Src/interrupt.c:36:6:EXTI4_IRQHandler	8	static
