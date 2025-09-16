@@ -3,6 +3,9 @@
 #include "joystick.h"
 #include "led.h"
 #include "lcd.h"
+#include "interrupt.h"
+#include "timer.h"
+#include "window.h"
 
 void lcd_init_and_print(void) {
     static uint8_t lcdBuffer[LCD_BUFF_SIZE];   // Frame buffer for LCD
@@ -17,22 +20,16 @@ void lcd_init_and_print(void) {
     lcd_push_buffer(lcdBuffer);
 }
 
-
-#include "interrupt.h"
-#include "timer.h"
-#include "window.h"
-
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
-	initJoystick();
-	initLED();
+//	initJoystick();
+//	initLED();
 	iniEXTIA4();
-	initTimer();
-
+//	initTimer();
 
 	int val = 10;
-	printf("Value = %02ld\n", val);
+	printf("Value = %02d\n", val);
 
 	uint8_t a = 10;
 	char str[7];
@@ -48,12 +45,12 @@ int main(void) {
 	//initLed();
     lcd_init_and_print();
 	// --------------- TIMER ---------------
-stopWatchFunction();
-uint8_t stopWatchFlag = 0;
+//stopWatchFunction();
+//uint8_t stopWatchFlag = 0;
 
 	while(1) {
-		stopWatch(&stopWatchFlag);
-		printf("\033[3;20H"); // moves cursor to row 3 column 20
-		printTime();
+//		stopWatch(&stopWatchFlag);
+//		printf("\033[3;20H"); // moves cursor to row 3 column 20
+//		printTime();
 	}
 }
