@@ -5,6 +5,7 @@
 void initLCD(void){
 	uint8_t fbuffer[512];
 	memset(fbuffer, 0xAA, 512);
+	printf("Initializing LCD");
 
 }
 
