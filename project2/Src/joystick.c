@@ -70,31 +70,31 @@ void handleJoystick(){
 		switch(nextState){
 
 		default:
-			setLED('d');
+			setLed('d');
 			break;
 
 		case 0x1:
-			setLED('r');
+			setLed('r');
 			printf("UP (red)\n");
 			break;
 
 		case 0x2:
-			setLED('g');
+			setLed('g');
 			printf("DOWN (green)\n");
 			break;
 
 		case 0x4:
-			setLED('b');
+			setLed('b');
 			printf("LEFT (blue)\n");
 			break;
 
 		case 0x8:
-			setLED('c');
+			setLed('c');
 			printf("RIGHT (cyan)\n");
 			break;
 
 		case 0x10:
-			setLED('m');
+			setLed('m');
 			printf("CENTER (magenta)\n");
 			break;
 		}

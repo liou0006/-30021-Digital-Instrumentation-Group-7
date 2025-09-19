@@ -25,7 +25,7 @@ void initTimer() {
 	NVIC_Init(&NVIC_InitStructure);
 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
 	TIM_Cmd(TIM2, ENABLE);
-	*/
+	 */
 	// -------------------------------------------------
 
 	// Set reload and prescale value for 1/100 s (100 Hz) interrupt
@@ -110,5 +110,19 @@ void stopWatchFunction(){
 	printf("Time since start: \n");
 	printf("Split time 1: \n");
 	printf("Split time 2: \n");
+
+	/* include this in main for it to work
+	 * 	// --------------- TIMER ---------------
+	 * 	void main(){
+		stopWatchFunction();
+		uint8_t stopWatchFlag = 0;
+
+	while(1) {
+		stopWatch(&stopWatchFlag);
+		printf("\033[3;20H"); // moves cursor to row 3 column 20
+		printTime();
+	}
+	}
+	 */
 
 }
