@@ -217,6 +217,7 @@ void lcd_init_and_print(void) {
     init_spi_lcd();        // Initialize SPI + GPIOs and reset LCD
     memset(lcdBuffer, 0x00, LCD_BUFF_SIZE);		// Clear buffer
 
+    /*
     // Write to multiple lines with x offset
 //    lcd_write_string((uint8_t *)"1line", lcdBuffer, 10, 0);
 //    lcd_write_string((uint8_t *)"2line", lcdBuffer, 0, 1);
@@ -233,6 +234,10 @@ void lcd_init_and_print(void) {
     sprintf(buffer, "Val1=%d, Val2=%.2f", val1, val2);
 
     lcd_write_string((uint8_t *)buffer, lcdBuffer, 0, 0);
+    */
+
+    // Write "Hello" at x=0, y=0
+    lcd_write_string((uint8_t *)"Hello", lcdBuffer, 0, 0);
 
     // Push buffer content to LCD
     lcd_push_buffer(lcdBuffer);

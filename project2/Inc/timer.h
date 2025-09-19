@@ -12,6 +12,7 @@ typedef struct {
 	volatile uint8_t hours, minutes, seconds, hundredths;
 } timestruct_t;
 
+extern timestruct_t timeData;
 
 
 /* Exported functions ------------------------------------------------------- */

@@ -7,60 +7,36 @@
 #include "timer.h"
 #include "window.h"
 #include "flash.h"
+#include "adc.h"
 
-void lcd_init_and_print(void) {
-	static uint8_t lcdBuffer[LCD_BUFF_SIZE];   // Frame buffer for LCD
-
-	init_spi_lcd();        // Initialize SPI + GPIOs and reset LCD
-	memset(lcdBuffer, 0x00, LCD_BUFF_SIZE);  // Clear buffer
-
-	// Write "Hello" at x=0, y=0
-	lcd_write_string((uint8_t *)"Hello", lcdBuffer, 0, 0);
-
-	// Push buffer content to LCD
-	lcd_push_buffer(lcdBuffer);
-}
-
-
+static uint8_t lcdBuffer[LCD_BUFF_SIZE];
 
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
+
 	initJoystick();
 	initLed();
 	iniEXTIA4();
 	initTimer();
 
 	lcd_init_and_print();
-
-	uint32_t address = 0x0800F800;
-	uint16_t tempVal;
-	for ( int i = 0 ; i < 10 ; i++ ){
-		tempVal = *(uint16_t *)(address + i * 2); // Read Command
-		printf("%d ", tempVal);
-	}
-
-	float tempfloat = read_float_flash(PG31_BASE,0);
-
-
-	/*
-	init_page_flash(PG31_BASE);
-	FLASH_Unlock();
-	write_float_flash(PG31_BASE,0,(float)1.0);
-	FLASH_Lock();
-	tempfloat = read_float_flash(PG31_BASE,0);
-	...
-	tempval = read_word_flash(PG31_BASE,0);
-	if(tempval!=(uint32_t)0xDEADBEEF){
-	init_page_flash(PG31_BASE);
-	FLASH_Unlock();
-	write_word_flash(PG31_BASE,0,0xDEADBEEF);
-	FLASH_Lock();
-	}
-	tempval = read_hword_flash(PG31_BASE,0);
-	*/
-
+	ADC_setup_PA();
 
 	while(1) {
+	    static uint8_t lastDeci = 255;
+	    uint8_t curDeci = timeData.hundredths / 10;
+	    if (curDeci != lastDeci) {
+	        lastDeci = curDeci;
 
+	        uint16_t pa0 = ADC_measure_PA(1);
+	        uint16_t pa1 = ADC_measure_PA(2);
+
+	        char line0[24], line1[24];
+	        sprintf(line0, "PA0: %4u", pa0);
+	        sprintf(line1, "PA1: %4u", pa1);
+	        lcd_write_string((uint8_t *)line0, lcdBuffer, 0, 1);
+	        lcd_write_string((uint8_t *)line1, lcdBuffer, 0, 2);
+	        lcd_push_buffer(lcdBuffer);
+	    }
 	}
 }
