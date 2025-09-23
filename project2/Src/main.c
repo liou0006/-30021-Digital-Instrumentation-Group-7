@@ -36,28 +36,22 @@ int main(void) {
 	uint16_t tempVal;
 	for ( int i = 0 ; i < 10 ; i++ ){
 		tempVal = *(uint16_t *)(address + i * 2); // Read Command
-		printf("%d ", tempVal);
+		printf("%d\n", tempVal);
 	}
 
-	float tempfloat = read_float_flash(PG31_BASE,0);
+		init_page_flash(PG31_BASE);
+		FLASH_Unlock();
+		write_word_flash(PG31_BASE, 0, 0x01010101);
+		write_word_flash(PG31_BASE, 1, 0x02020202);
+		write_word_flash(PG31_BASE, 2, 0x03030303);
+		write_word_flash(PG31_BASE, 3, 0x04040404);
+		FLASH_Lock();
 
-
-	/*
-	init_page_flash(PG31_BASE);
-	FLASH_Unlock();
-	write_float_flash(PG31_BASE,0,(float)1.0);
-	FLASH_Lock();
-	tempfloat = read_float_flash(PG31_BASE,0);
-	...
-	tempval = read_word_flash(PG31_BASE,0);
-	if(tempval!=(uint32_t)0xDEADBEEF){
-	init_page_flash(PG31_BASE);
-	FLASH_Unlock();
-	write_word_flash(PG31_BASE,0,0xDEADBEEF);
-	FLASH_Lock();
+	int32_t value = 0;
+	for (int i = 0; i <= 3;i++){
+		value = read_word_flash(PG31_BASE,i);
+		printf("%x\n",value);
 	}
-	tempval = read_hword_flash(PG31_BASE,0);
-	*/
 
 
 	while(1) {
