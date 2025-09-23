@@ -13,7 +13,7 @@
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
-	pwm_init();
+	timer16_pwm_init();
 
 	while(1) {}
 }

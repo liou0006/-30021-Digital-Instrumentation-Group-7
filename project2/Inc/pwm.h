@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 /* Exported functions ------------------------------------------------------- */
-void pwm_init();
+void timer16_pwm_init();
+void GPIO_set_AF1_PA12();
 
 #endif /* PWM_H_ */
