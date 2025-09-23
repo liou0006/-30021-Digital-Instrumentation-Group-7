@@ -8,6 +8,10 @@
 #include "window.h"
 #include "flash.h"
 #include "adc.h"
+#include "math.h"
+
+#define VREFINT_CAL *((uint16_t*) ((uint32_t) 0x1FFFF7BA)) //calibrated at 3.3V@ 30
+
 
 static uint8_t lcdBuffer[LCD_BUFF_SIZE];
 
@@ -20,23 +24,38 @@ int main(void) {
 	initTimer();
 
 	lcd_init_and_print();
+
 	ADC_setup_PA();
+	ADC_Setup_VREFEN();
 
 	while(1) {
-	    static uint8_t lastDeci = 255;
-	    uint8_t curDeci = timeData.hundredths / 10;
-	    if (curDeci != lastDeci) {
-	        lastDeci = curDeci;
+		static uint8_t lastDeci = 255;
+		uint8_t curDeci = timeData.hundredths / 10;
+		if (curDeci != lastDeci) {
+			lastDeci = curDeci;
 
-	        uint16_t pa0 = ADC_measure_PA(1);
-	        uint16_t pa1 = ADC_measure_PA(2);
+			uint16_t pa0 = ADC_measure_PA(1);
+			uint16_t pa1 = ADC_measure_PA(2);
+			uint32_t VREF = ADC_measure_VREF();
 
-	        char line0[24], line1[24];
-	        sprintf(line0, "PA0: %4u", pa0);
-	        sprintf(line1, "PA1: %4u", pa1);
-	        lcd_write_string((uint8_t *)line0, lcdBuffer, 0, 1);
-	        lcd_write_string((uint8_t *)line1, lcdBuffer, 0, 2);
-	        lcd_push_buffer(lcdBuffer);
-	    }
+			printf("VREFint = %d\n",VREF);
+
+			float V_DDA = 3.3 * VREFINT_CAL / VREF;
+			printf("V_DDA = %f\n", V_DDA);
+
+			float Vch0 = (V_DDA *pa0)/ (pow(2,12)-1);
+			float Vch1 = (V_DDA *pa1)/ (pow(2,12)-1);
+
+			char line0[24], line1[24], line2[24], line3[24];
+//			sprintf(line0, "Vch1: %.2fV", Vch1);
+			sprintf(line0, "Vch0: %.2fV", Vch0);
+			sprintf(line1, "Vch1: %.2fV", Vch1);
+//			sprintf(line3, "Vch1: %.2fV", Vch1);
+
+			lcd_write_string((uint8_t *)line0, lcdBuffer, 0, 1);
+			lcd_write_string((uint8_t *)line1, lcdBuffer, 0, 2);
+			lcd_push_buffer(lcdBuffer);
+
+		}
 	}
 }
