@@ -9,4 +9,4 @@
 void initLed();
 void setLed(char sel);
 
-#endif /* JOYSTICK_H_ */
+#endif /* LED_H_ */
