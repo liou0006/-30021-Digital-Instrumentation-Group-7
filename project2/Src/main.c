@@ -36,7 +36,7 @@ int main(void) {
 
 			uint16_t pa0 = ADC_measure_PA(1);
 			uint16_t pa1 = ADC_measure_PA(2);
-			uint32_t VREF = ADC_measure_VREF();
+			uint16_t VREF = ADC_measure_VREF();
 
 			printf("VREFint = %d\n",VREF);
 
@@ -46,14 +46,19 @@ int main(void) {
 			float Vch0 = (V_DDA *pa0)/ (pow(2,12)-1);
 			float Vch1 = (V_DDA *pa1)/ (pow(2,12)-1);
 
-			char line0[24], line1[24], line2[24], line3[24];
-//			sprintf(line0, "Vch1: %.2fV", Vch1);
-			sprintf(line0, "Vch0: %.2fV", Vch0);
-			sprintf(line1, "Vch1: %.2fV", Vch1);
-//			sprintf(line3, "Vch1: %.2fV", Vch1);
+			float Abs = sqrt(pow(Vch0,2)+pow(Vch1,2));
 
-			lcd_write_string((uint8_t *)line0, lcdBuffer, 0, 1);
-			lcd_write_string((uint8_t *)line1, lcdBuffer, 0, 2);
+			char line0[24], line1[24], line2[24], line3[24];
+			sprintf(line0, "VRef: %4u", VREF);
+			sprintf(line1, "VDDA: %.2fV", V_DDA);
+			sprintf(line2, "PA0: %4uV, PA1: %4u", pa0,pa1);
+			sprintf(line3, "ABS value: %.2fV", Abs);
+
+
+			lcd_write_string((uint8_t *)line0, lcdBuffer, 0, 0);
+			lcd_write_string((uint8_t *)line1, lcdBuffer, 0, 1);
+			lcd_write_string((uint8_t *)line2, lcdBuffer, 0, 2);
+			lcd_write_string((uint8_t *)line3, lcdBuffer, 0, 3);
 			lcd_push_buffer(lcdBuffer);
 
 		}
