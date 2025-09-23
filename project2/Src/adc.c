@@ -10,11 +10,7 @@
 void ADC_setup_PA(void) {
 
     RCC_ADCCLKConfig(RCC_ADC12PLLCLK_Div8);
-
-
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_ADC12, ENABLE);
-
-
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
     GPIO_InitTypeDef gpio;
     GPIO_StructInit(&gpio);
@@ -25,7 +21,6 @@ void ADC_setup_PA(void) {
 
     ADC_InitTypeDef adc;
     ADC_StructInit(&adc);  // reset to defaults
-
     adc.ADC_ContinuousConvMode    = DISABLE;                     // single conversion
     adc.ADC_Resolution            = ADC_Resolution_12b;          // 12-bit
     adc.ADC_ExternalTrigConvEvent = ADC_ExternalTrigConvEvent_0; // SW trigger
@@ -34,7 +29,6 @@ void ADC_setup_PA(void) {
     adc.ADC_OverrunMode           = DISABLE;                     // simplest: overwrite off
     adc.ADC_AutoInjMode           = DISABLE;                     // no injected group
     adc.ADC_NbrOfRegChannel       = 1;                           // 1 channel only
-
     ADC_Init(ADC1, &adc);
 
     ADC_Cmd(ADC1, ENABLE);
