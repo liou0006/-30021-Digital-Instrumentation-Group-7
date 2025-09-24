@@ -84,7 +84,6 @@ void ADC_Setup_VREFEN(){
 	ADC_VoltageRegulatorCmd(ADC1,ENABLE);
 	for(uint32_t i = 0; i<10000;i++);
 
-
 	ADC_VrefintCmd(ADC1, ENABLE);
 	for(uint32_t i = 0; i<10000;i++);
 
