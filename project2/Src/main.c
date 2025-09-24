@@ -28,7 +28,7 @@ int main(void) {
 	ADC_Setup_VREFEN();
 
 	timer16_pwm_init();
-	TIM_SetCompare1(TIM16, 50);
+	TIM_SetCompare1(TIM16, 128);
 
 
 	while(1) {
@@ -38,11 +38,31 @@ int main(void) {
 		if (curDeci != lastDeci) {
 			lastDeci = curDeci;
 
-			uint16_t pa0 = ADC_measure_PA(1);
 			uint16_t VREF = ADC_measure_VREF();
 			float V_DDA = 3.3 * VREFINT_CAL / VREF;
+			uint16_t pa0 = ADC_measure_PA(1);
+
+			// when PWM has a duty cycle of 50 it switches between
+			// PA0: 0 and 4080
+			// V = 2.83
 
 			float Vch0 = (V_DDA *pa0)/ (pow(2,12)-1);
+			float V_desired = 1.0;
+			float error = V_desired - Vch0;
+
+			float ki = 0.3;
+			float kp = 10;
+			float integral = 0;
+
+			float cp = kp * error;
+			integral = integral + (ki *error);
+
+			int newDutyCycle = integral + cp;
+
+
+			printf("Error=%.2f\n",error);
+			printf("Duty Cycle (int)=%d\n",newDutyCycle);
+
 
 			char line0[24], line1[24], line2[24], line3[24];
 			sprintf(line0, "VRef: %4u", VREF);
