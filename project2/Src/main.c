@@ -51,7 +51,7 @@ int main(void) {
 			char line0[24], line1[24], line2[24], line3[24];
 			sprintf(line0, "VRef: %4u", VREF);
 			sprintf(line1, "VDDA: %.2fV", V_DDA);
-			sprintf(line2, "PA0: %4uV, PA1: %4u", pa0,pa1);
+			sprintf(line2, "PA0: %4u, PA1: %4u", pa0,pa1);
 			sprintf(line3, "ABS value: %.2fV", Abs);
 
 
@@ -60,6 +60,8 @@ int main(void) {
 			lcd_write_string((uint8_t *)line2, lcdBuffer, 0, 2);
 			lcd_write_string((uint8_t *)line3, lcdBuffer, 0, 3);
 			lcd_push_buffer(lcdBuffer);
+
+			for(uint32_t i = 0; i<1000;i++);
 
 		}
 	}
