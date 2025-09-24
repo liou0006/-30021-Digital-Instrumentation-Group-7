@@ -28,6 +28,7 @@
 "./Src/lcd.o"
 "./Src/led.o"
 "./Src/main.o"
+"./Src/pwm.o"
 "./Src/syscalls.o"
 "./Src/system_stm32f30x.o"
 "./Src/timer.o"
