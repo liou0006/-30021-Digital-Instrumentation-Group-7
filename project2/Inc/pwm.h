@@ -8,5 +8,6 @@
 /* Exported functions ------------------------------------------------------- */
 void timer16_pwm_init();
 void GPIO_set_AF1_PA12();
+void setDutyCycle(int dutycycle);
 
 #endif /* PWM_H_ */

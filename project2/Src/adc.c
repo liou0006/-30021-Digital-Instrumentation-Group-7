@@ -102,6 +102,7 @@ void ADC_Setup_VREFEN(){
 
 }
 
+//measures the V_REF
 uint16_t ADC_measure_VREF() {
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_18, 1, ADC_SampleTime_2Cycles5); // rank=1, Ts=1.5
 	ADC_StartConversion(ADC1);                                         // start

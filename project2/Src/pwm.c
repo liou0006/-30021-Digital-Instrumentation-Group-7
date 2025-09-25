@@ -56,6 +56,10 @@ void GPIO_set_AF1_PA12() {
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource12, GPIO_AF_1);
 }
 
+void setDutyCycle(int dutyCycle){
+	TIM_SetCompare1(TIM16, dutyCycle);
+}
+
 
 /*
  * In main.c include pwm.h and call timer16_pwm_init()

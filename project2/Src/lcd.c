@@ -211,6 +211,7 @@ void lcd_write_string(uint8_t * str, uint8_t * lcdBuff, uint8_t xoffset, uint8_t
  * Can be called from main.c with this line before the while(1) loop:
  * lcd_init_and_print();
  */
+
 void lcd_init_and_print(void) {
     static uint8_t lcdBuffer[LCD_BUFF_SIZE];	// Frame buffer for LCD
 
