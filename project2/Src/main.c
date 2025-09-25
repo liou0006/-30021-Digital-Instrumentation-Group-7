@@ -28,7 +28,9 @@ int main(void) {
 	ADC_Setup_VREFEN();
 
 	timer16_pwm_init();
-	TIM_SetCompare1(TIM16, 128);
+
+	int dutyCycle = 128;
+	TIM_SetCompare1(TIM16, dutyCycle);
 
 
 	while(1) {
@@ -50,19 +52,21 @@ int main(void) {
 			float V_desired = 1.0;
 			float error = V_desired - Vch0;
 
+			float kp = 20;
 			float ki = 0.3;
-			float kp = 10;
 			float integral = 0;
 
 			float cp = kp * error;
 			integral = integral + (ki *error);
+			int newDutyCycle = dutyCycle + cp;
 
-			int newDutyCycle = integral + cp;
-
-
+			printf("Vmeas=%.2f\n",Vch0);
 			printf("Error=%.2f\n",error);
-			printf("Duty Cycle (int)=%d\n",newDutyCycle);
+			printf("Duty Cycle (int)=%d\n",dutyCycle);
+			printf("New Duty Cycle (int)=%d\n",newDutyCycle);
 
+			TIM_SetCompare1(TIM16, newDutyCycle);
+			  dutyCycle = newDutyCycle;
 
 			char line0[24], line1[24], line2[24], line3[24];
 			sprintf(line0, "VRef: %4u", VREF);
@@ -76,7 +80,7 @@ int main(void) {
 			lcd_write_string((uint8_t *)line3, lcdBuffer, 0, 3);
 			lcd_push_buffer(lcdBuffer);
 
-			for(uint32_t i = 0; i<1000;i++);
+//			for(uint32_t i = 0; i<5000000;i++);
 
 		}
 	}
