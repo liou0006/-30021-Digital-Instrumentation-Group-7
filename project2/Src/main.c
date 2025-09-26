@@ -11,12 +11,17 @@
 #include "math.h"
 #include "pwm.h"
 
-#define VREFINT_CAL *((uint16_t*) ((uint32_t) 0x1FFFF7BA)) //calibrated at 3.3V@ 30
-static uint8_t lcdBuffer[LCD_BUFF_SIZE];
+//#define VREFINT_CAL *((uint16_t*) ((uint32_t) 0x1FFFF7BA)) //calibrated at 3.3V@ 30
+//static uint8_t lcdBuffer[LCD_BUFF_SIZE];
 
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
+	timer16_pwm_init();
+
+	while (1) {}
+
+	/*
 	initJoystick();
 	initLed();
 	iniEXTIA4();
@@ -87,4 +92,5 @@ int main(void) {
 
 		}
 	}
+	*/
 }
