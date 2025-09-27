@@ -1,179 +1,133 @@
+// pwm.c
 #include "pwm.h"
 
-void timer16_pwm_init() {
-	TIM_TimeBaseInitTypeDef TIM_BaseStruct;
-	TIM_OCInitTypeDef TIM_OCStruct;
+#define SERVO_MIN_US 1000   // ~0°
+#define SERVO_MAX_US 2000   // ~180°
+// If your servos support 500..2500 µs, widen the range above.
 
-	// From Table 23 in the datasheet APB2 clock frequency is 72MHz
-	uint32_t timer_clock = 72000000;
-	uint32_t PWM_freq = 10000; // 10 kHz
-	uint32_t PWM_steps = 256;
-	uint32_t fCK = PWM_freq * PWM_steps;
-	uint16_t prescaler = (timer_clock / fCK) - 1;
-	uint16_t period = PWM_steps - 1;
-
-	// 1.
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM16, ENABLE);
-
-	// 2.
-	GPIO_set_AF1_PA12();
-	GPIO_set_AF1_PA6();
-
-	// 3.
-	TIM_TimeBaseStructInit(&TIM_BaseStruct);
-	TIM_BaseStruct.TIM_Prescaler = prescaler;
-	TIM_BaseStruct.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_BaseStruct.TIM_Period = period;
-	TIM_BaseStruct.TIM_ClockDivision = TIM_CKD_DIV1;
-	TIM_TimeBaseInit(TIM16, &TIM_BaseStruct);
-
-	// 4.
-	TIM_OCStructInit(&TIM_OCStruct);
-	TIM_OCStruct.TIM_OCMode = TIM_OCMode_PWM1;
-	TIM_OCStruct.TIM_OutputState = TIM_OutputState_Enable;
-
-	// 5.
-	TIM_OC1Init(TIM16, &TIM_OCStruct);
-
-	// 6.
-	TIM_OC1PreloadConfig(TIM16, TIM_OCPreload_Enable);
-
-	// 7.
-	TIM_CtrlPWMOutputs(TIM16, ENABLE);
-	TIM_Cmd(TIM16, ENABLE);
+static inline uint16_t clamp_u16(int v, int lo, int hi) {
+    if (v < lo) v = lo;
+    if (v > hi) v = hi;
+    return (uint16_t)v;
 }
 
-void GPIO_set_AF1_PA12() {
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);	// enable clock
+/* -------------------- GPIO (AF) setup -------------------- */
 
-	GPIO_InitTypeDef GPIO_InitStruct;
-	GPIO_StructInit(&GPIO_InitStruct);					// initialize GPIO struct
-	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;			// set as AF
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_12;				// set so the configuration is on pin 12
-	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
-	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;		// set speed to 50 MHz
+static void GPIO_set_AF1_PA6(void) {
+    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
-	GPIO_Init(GPIOA, &GPIO_InitStruct); 				// setup of GPIO with the settings chosen
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource12, GPIO_AF_1);
+    GPIO_InitTypeDef g; GPIO_StructInit(&g);
+    g.GPIO_Mode  = GPIO_Mode_AF;
+    g.GPIO_Pin   = GPIO_Pin_6;              // PA6
+    g.GPIO_Speed = GPIO_Speed_50MHz;
+    g.GPIO_PuPd  = GPIO_PuPd_DOWN;
+    GPIO_Init(GPIOA, &g);
+
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource6, GPIO_AF_1); // TIM16_CH1
 }
 
-// Second channel GPIO setup (needed in Exercise 3.3)
-void GPIO_set_AF1_PA6() {
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);	// enable clock
+static void GPIO_set_AF10_PB9(void) {
+    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
 
-	GPIO_InitTypeDef GPIO_InitStruct;
-	GPIO_StructInit(&GPIO_InitStruct);					// initialize GPIO struct
-	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;			// set as AF
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6;				// set so the configuration is on pin 6
-	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
-	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;		// set speed to 50 MHz
+    GPIO_InitTypeDef g; GPIO_StructInit(&g);
+    g.GPIO_Mode  = GPIO_Mode_AF;
+    g.GPIO_Pin   = GPIO_Pin_9;              // PB9
+    g.GPIO_Speed = GPIO_Speed_50MHz;
+    g.GPIO_PuPd  = GPIO_PuPd_DOWN;
+    GPIO_Init(GPIOB, &g);
 
-	GPIO_Init(GPIOA, &GPIO_InitStruct); 				// setup of GPIO with the settings chosen
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource6, GPIO_AF_1);
+    GPIO_PinAFConfig(GPIOB, GPIO_PinSource9, GPIO_AF_10); // TIM17_CH1
 }
 
+/* -------------------- TIM16: PA6 (servo 1) -------------------- */
 
-void setDutyCycle(int dutyCycle){
-	TIM_SetCompare1(TIM16, dutyCycle);
+void timer16_pwm_init(void) {
+    // Timer base: 50 Hz frame with 1 µs tick
+    // 72 MHz / (PSC+1) = 1 MHz  => PSC = 71
+    // ARR = 20000-1 for 20 ms
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM16, ENABLE);
+    GPIO_set_AF1_PA6();
+
+    TIM_TimeBaseInitTypeDef tb;
+    TIM_OCInitTypeDef oc;
+
+    TIM_TimeBaseStructInit(&tb);
+    tb.TIM_Prescaler     = 71;
+    tb.TIM_CounterMode   = TIM_CounterMode_Up;
+    tb.TIM_Period        = 20000 - 1;
+    tb.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseInit(TIM16, &tb);
+
+    TIM_OCStructInit(&oc);
+    oc.TIM_OCMode      = TIM_OCMode_PWM1;
+    oc.TIM_OutputState = TIM_OutputState_Enable;
+    TIM_OC1Init(TIM16, &oc);
+    TIM_OC1PreloadConfig(TIM16, TIM_OCPreload_Enable);
+
+    TIM_CtrlPWMOutputs(TIM16, ENABLE);
+    TIM_Cmd(TIM16, ENABLE);
+
+    // Center by default
+    TIM_SetCompare1(TIM16, (SERVO_MIN_US + SERVO_MAX_US) / 2);
+	printf("timer16 initialized");
 }
 
-void regulate_voltage(float desired_voltage) {
-	float measured_voltage;
-	int duty = 128;			// 50%
-	float kp = 20.0;		// proportional gain, can be tuned
+/* -------------------- TIM17: PB9 (servo 2) -------------------- */
 
-	while (1) {
-		measured_voltage = ADC_measure_VREF();
-		float error = desired_voltage - measured_voltage;
-		duty += (int)(kp * error);
+void timer17_pwm_init(void) {
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM17, ENABLE);
+    GPIO_set_AF10_PB9();
 
-		// Clamp duty cycle
-		if (duty < 0) duty = 0;
-		if (duty > 255) duty = 255;
+    TIM_TimeBaseInitTypeDef tb;
+    TIM_OCInitTypeDef oc;
 
-		setDutyCycle(duty);
-	}
+    TIM_TimeBaseStructInit(&tb);
+    tb.TIM_Prescaler     = 71;
+    tb.TIM_CounterMode   = TIM_CounterMode_Up;
+    tb.TIM_Period        = 20000 - 1;
+    tb.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseInit(TIM17, &tb);
+
+    TIM_OCStructInit(&oc);
+    oc.TIM_OCMode      = TIM_OCMode_PWM1;
+    oc.TIM_OutputState = TIM_OutputState_Enable;
+    TIM_OC1Init(TIM17, &oc);
+    TIM_OC1PreloadConfig(TIM17, TIM_OCPreload_Enable);
+
+    TIM_CtrlPWMOutputs(TIM17, ENABLE);
+    TIM_Cmd(TIM17, ENABLE);
+
+    // Center by default
+    TIM_SetCompare1(TIM17, (SERVO_MIN_US + SERVO_MAX_US) / 2);
+	printf("timer17 initialized");
 }
 
+/* -------------------- Helpers -------------------- */
 
-/*
-#define VREFINT_CAL *((uint16_t*) ((uint32_t) 0x1FFFF7BA)) //calibrated at 3.3V@ 30
-
-void regulate_voltage(float V_desired) {
-	uint8_t duty = 128;		// start at 50 %
-	float kp = 20.0;		// proportional gain, can be tuned
-
-	uint16_t VREF = ADC_measure_VREF();
-	float V_DDA = 3.3 * VREFINT_CAL / VREF;
-	float V_measured = (V_DDA * ) / 4095;
-
-	while (1) {
-		V_measured = ADC_measure_VREF();
-		float error = V_desired - V_measured;
-		duty += (int)(kp * error);
-
-		// Clamp duty cycle 0-255
-		if (duty < 0) duty = 0;
-		if (duty > 255) duty = 255;
-
-		timer16_PA12_set_duty(duty);
-		delay_ms(10);		// allow settling, can be tuned
-	}
-
-	uint16_t pa0 = ADC_measure_PA(1);
-
-	// when PWM has a duty cycle of 50 it switches between
-	// PA0: 0 and 4080
-	// V = 0V and 2.83V
-
-	float Vch0 = (V_DDA *pa0)/ (4095);
-
-	float V_desired = 1.0;
-	float error = V_desired - Vch0;
-
-	float kp = 20; //increase or decrease for faster response
-	float cp = kp * error; // Proportional controller / might need to make a integral if we desire absolute 1V
-	int newDutyCycle = dutyCycle + cp;
-
-	// maybe set the boundary conditions to 5 for the lower and 250 for the upper
-	//so the duty cycle doesn't die out suddenly
-
-	if(newDutyCycle <= 0){
-		newDutyCycle = 0;
-	} else if (newDutyCycle >= 255){
-		newDutyCycle = 255;
-	}
-
-	printf("V_meas=%.2f, Error=%.2f, Duty=%d\n", Vch0, error, dutyCycle);
-
-
-
-	setDutyCycle(newDutyCycle);
-	dutyCycle = newDutyCycle;
-
-
+// Set absolute pulse width in microseconds on each timer
+void setServoPulse_TIM16(uint16_t us) {
+    us = clamp_u16(us, SERVO_MIN_US, SERVO_MAX_US);
+    TIM_SetCompare1(TIM16, us);
 }
-*/
 
-/*
-void update_servos() {
-	// Get the two potentiometer positions
-	uint16_t pot1 = ADC_measure_PA(1);				// potentiometer 1 position
-	uint16_t pot2 = ADC_measure_PA(2);				// potentiometer 2 position
-
-	// Map potentiometer ADC values (0-4095) to servo PWM duty cycle (0-255)
-	int duty1 = (pot1 * 255) / 4095;
-	int duty2 = (pot2 * 255) / 4095;
-
-	// Boundary conditions (ensures valid duty cycle value is given to servo)
-	if (duty1 < 0) duty1 = 0;
-	if (duty1 > 255) duty1 = 255;
-	if (duty2 < 0) duty2 = 0;
-	if (duty2 > 255) duty2 = 255;
-
-	// Set duty cycle for each servo
-	setDutyCycle(duty1);
-	setDutyCycle(duty2);
+void setServoPulse_TIM17(uint16_t us) {
+    us = clamp_u16(us, SERVO_MIN_US, SERVO_MAX_US);
+    TIM_SetCompare1(TIM17, us);
 }
-*/
 
+// Map 0..4095 potentiometer reading to SERVO_MIN_US..SERVO_MAX_US
+static inline uint16_t pot_to_pulse(uint16_t pot) {
+    return (uint16_t)(SERVO_MIN_US +
+                      ((uint32_t)(SERVO_MAX_US - SERVO_MIN_US) * pot) / 4095u);
+}
+
+/* -------------------- Exercise helper -------------------- */
+
+void update_servos(void) {
+    // Read two pots on PA1/PA2 (adjust to your wiring/ADC functions)
+    uint16_t pot1 = ADC_measure_PA(1);
+    uint16_t pot2 = ADC_measure_PA(2);
+
+    setServoPulse_TIM16(pot_to_pulse(pot1));  // PA6
+    setServoPulse_TIM17(pot_to_pulse(pot2));  // PB9
+}
