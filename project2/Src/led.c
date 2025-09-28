@@ -1,3 +1,10 @@
+/*
+ * led.c
+ *
+ *  Created on: Sep 9, 2025
+ *      Author: emma
+ */
+
 #include "led.h"
 
 // Code needed in main.c is included in the bottom of the file
@@ -8,7 +15,6 @@ void initLed() {
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);	// Port B
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);	// Port C
 	GPIO_InitTypeDef GPIO_InitStructAll; 				// Define typedef struct for setting pins
-
 
 	// Sets PA9 (BLUE) to output
 	GPIO_StructInit(&GPIO_InitStructAll);				// Initialize GPIO struct
@@ -88,7 +94,6 @@ void setLed(char sel) {
 		GPIO_WriteBit(GPIOA, GPIO_Pin_9, 1);	// blue
 	}
 }
-
 
 
 // main.c code
