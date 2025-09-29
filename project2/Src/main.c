@@ -21,7 +21,10 @@ int main(void) {
 	timer17_pwm_init();
 
 
-	while (1) {}
+	while (1)
+	{
+		update_servos(); // Update servos by reading the ADC for the pots
+	}
 
 	/*
 	initJoystick();

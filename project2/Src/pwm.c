@@ -3,7 +3,6 @@
 
 #define SERVO_MIN_US 1000   // ~0°
 #define SERVO_MAX_US 2000   // ~180°
-// If your servos support 500..2500 µs, widen the range above.
 
 static inline uint16_t clamp_u16(int v, int lo, int hi) {
     if (v < lo) v = lo;
@@ -42,7 +41,7 @@ static void GPIO_set_AF10_PB9(void) {
 /* -------------------- TIM16: PA6 (servo 1) -------------------- */
 
 void timer16_pwm_init(void) {
-    // Timer base: 50 Hz frame with 1 µs tick
+    // Timer base: 50 Hz frame and 1 µs tick
     // 72 MHz / (PSC+1) = 1 MHz  => PSC = 71
     // ARR = 20000-1 for 20 ms
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM16, ENABLE);
@@ -67,7 +66,6 @@ void timer16_pwm_init(void) {
     TIM_CtrlPWMOutputs(TIM16, ENABLE);
     TIM_Cmd(TIM16, ENABLE);
 
-    // Center by default
     TIM_SetCompare1(TIM16, (SERVO_MIN_US + SERVO_MAX_US) / 2);
 	printf("timer16 initialized");
 }
@@ -97,7 +95,6 @@ void timer17_pwm_init(void) {
     TIM_CtrlPWMOutputs(TIM17, ENABLE);
     TIM_Cmd(TIM17, ENABLE);
 
-    // Center by default
     TIM_SetCompare1(TIM17, (SERVO_MIN_US + SERVO_MAX_US) / 2);
 	printf("timer17 initialized");
 }
@@ -124,7 +121,7 @@ static inline uint16_t pot_to_pulse(uint16_t pot) {
 /* -------------------- Exercise helper -------------------- */
 
 void update_servos(void) {
-    // Read two pots on PA1/PA2 (adjust to your wiring/ADC functions)
+    // Read potentiometers
     uint16_t pot1 = ADC_measure_PA(1);
     uint16_t pot2 = ADC_measure_PA(2);
 
