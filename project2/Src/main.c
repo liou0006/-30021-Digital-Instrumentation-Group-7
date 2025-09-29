@@ -16,7 +16,6 @@ static uint8_t lcdBuffer[LCD_BUFF_SIZE];
 
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
-
 	initJoystick();
 	initLed();
 	iniEXTIA4();
@@ -27,7 +26,7 @@ int main(void) {
 	timer16_pwm_init();
 
 	//setting initial duty cycle
-	int dutyCycle = 128;
+	int dutyCycle = 200;
 	setDutyCycle(dutyCycle);
 
 	while(1) {
@@ -51,7 +50,7 @@ int main(void) {
 			float V_desired = 1.0;
 			float error = V_desired - Vch0;
 
-			float kp = 20; //increase or decrease for faster response
+			float kp = 10; //increase or decrease for faster response
 			float cp = kp * error; // Proportional controller / might need to make a integral if we desire absolute 1V
 			int newDutyCycle = dutyCycle + cp;
 
@@ -73,12 +72,12 @@ int main(void) {
 
 			char line0[24], line1[24], line2[24], line3[24];
 //			sprintf(line0, "VRef: %4u", VREF);
-//			sprintf(line1, "VDDA: %.2fV", V_DDA);
+			sprintf(line1, "Duty cycle: %d", dutyCycle);
 			sprintf(line2, "PA0: %4u", pa0);
 			sprintf(line3, "V_meas: %.2f", Vch0);
 
 //			lcd_write_string((uint8_t *)line0, lcdBuffer, 0, 0);
-//			lcd_write_string((uint8_t *)line1, lcdBuffer, 0, 1);
+			lcd_write_string((uint8_t *)line1, lcdBuffer, 0, 1);
 			lcd_write_string((uint8_t *)line2, lcdBuffer, 0, 2);
 			lcd_write_string((uint8_t *)line3, lcdBuffer, 0, 3);
 			lcd_push_buffer(lcdBuffer);
