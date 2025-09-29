@@ -122,6 +122,8 @@ static inline uint16_t pot_to_pulse(uint16_t pot) {
 
 void update_servos(void) {
     // Read potentiometers
+
+
     uint16_t pot1 = ADC_measure_PA(1);
     uint16_t pot2 = ADC_measure_PA(2);
 

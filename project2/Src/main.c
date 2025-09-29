@@ -17,6 +17,9 @@
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
+	initTimer();
+	ADC_setup_PA();
+	ADC_Setup_VREFEN();
 	timer16_pwm_init();
 	timer17_pwm_init();
 
@@ -30,10 +33,7 @@ int main(void) {
 	initJoystick();
 	initLed();
 	iniEXTIA4();
-	initTimer();
 	lcd_init_and_print();
-	ADC_setup_PA();
-	ADC_Setup_VREFEN();
 	timer16_pwm_init();
 
 	//setting initial duty cycle
