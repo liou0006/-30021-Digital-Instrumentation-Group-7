@@ -26,7 +26,7 @@ int main(void) {
 	timer16_pwm_init();
 
 	//setting initial duty cycle
-	int dutyCycle = 200;
+	int dutyCycle = 100;
 	setDutyCycle(dutyCycle);
 
 	while(1) {
