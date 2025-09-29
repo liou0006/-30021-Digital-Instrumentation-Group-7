@@ -24,12 +24,17 @@ int main(void) {
 	ADC_setup_PA();
 	ADC_Setup_VREFEN();
 	timer16_pwm_init();
+	timer17_pwm_init();
+
+
 
 	//setting initial duty cycle
 	int dutyCycle = 100;
 	setDutyCycle(dutyCycle);
 
 	while(1) {
+
+		update_servos();
 
 		static uint8_t lastDeci = 255;
 		uint8_t curDeci = timeData.hundredths / 10;
