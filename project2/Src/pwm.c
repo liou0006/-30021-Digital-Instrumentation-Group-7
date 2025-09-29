@@ -125,6 +125,8 @@ void update_servos(void) {
     uint16_t pot1 = ADC_measure_PA(1);
     uint16_t pot2 = ADC_measure_PA(2);
 
+    printf("pot1: %d",pot1);
+
     setServoPulse_TIM16(pot_to_pulse(pot1));  // PA6
     setServoPulse_TIM17(pot_to_pulse(pot2));  // PB9
 }
