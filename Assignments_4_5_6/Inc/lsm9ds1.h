@@ -6,7 +6,3 @@
 #include <stdio.h>
 
 void init_spi_gyro();
-
-void generate_line_buff();
-
-void write_line_buff();

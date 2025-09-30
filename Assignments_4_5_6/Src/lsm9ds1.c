@@ -26,52 +26,6 @@
 #define CS_AG_PORT  GPIOB
 #define CS_AG_PIN   6
 
-static inline void cs_ag_low(void)  { CS_AG_PORT->BRR  = (1U << CS_AG_PIN); }
-static inline void cs_ag_high(void) { CS_AG_PORT->BSRR = (1U << CS_AG_PIN); }
-
-/* ---------- Low-level SPI helpers ---------- */
-static uint8_t spi2_txrx(uint8_t byte)
-{
-    while (!(SPI2->SR & SPI_SR_TXE)) { /* wait */ }
-    *((__IO uint8_t*)&SPI2->DR) = byte;              // 8-bit access
-    while (!(SPI2->SR & SPI_SR_RXNE)) { /* wait */ }
-    return *((__IO uint8_t*)&SPI2->DR);
-}
-
-static void ag_write_reg(uint8_t reg, uint8_t value)
-{
-    cs_ag_low();
-    spi2_txrx(reg & 0x3F);            // write, no read bit
-    spi2_txrx(value);
-    cs_ag_high();
-}
-
-static uint8_t ag_read_reg(uint8_t reg)
-{
-    cs_ag_low();
-    spi2_txrx(LSM9DS1_SPI_READ | (reg & 0x3F));
-    uint8_t v = spi2_txrx(0x00);
-    cs_ag_high();
-    return v;
-}
-
-static void ag_write_burst(uint8_t start_reg, const uint8_t *data, uint16_t len)
-{
-    cs_ag_low();
-    spi2_txrx((start_reg & 0x3F));        // write
-    for (uint16_t i = 0; i < len; ++i) spi2_txrx(data[i]);
-    cs_ag_high();
-}
-
-static void ag_read_burst(uint8_t start_reg, uint8_t *data, uint16_t len)
-{
-    cs_ag_low();
-    spi2_txrx(LSM9DS1_SPI_READ | LSM9DS1_SPI_AUTOINC | (start_reg & 0x3F));
-    for (uint16_t i = 0; i < len; ++i) data[i] = spi2_txrx(0x00);
-    cs_ag_high();
-}
-
-/* ---------- Public init ---------- */
 void init_spi_gyro(void)
 {
     /* ---- Enable clocks ---- */
