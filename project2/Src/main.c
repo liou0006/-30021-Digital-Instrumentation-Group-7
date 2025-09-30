@@ -11,6 +11,7 @@
 #include "math.h"
 #include "pwm.h"
 
+
 #define VREFINT_CAL *((uint16_t*) ((uint32_t) 0x1FFFF7BA)) //calibrated at 3.3V@ 30
 static uint8_t lcdBuffer[LCD_BUFF_SIZE];
 
@@ -24,17 +25,28 @@ int main(void) {
 	ADC_setup_PA();
 	ADC_Setup_VREFEN();
 	timer16_pwm_init();
-	timer17_pwm_init();
+	timer2_pwm_init();
 
 
 
 	//setting initial duty cycle
 	int dutyCycle = 100;
+
+	TIM_SetCompare1(TIM16, dutyCycle);
 	setDutyCycle(dutyCycle);
+
+	 for(uint32_t i = 0; i<5000000;i++); //delay function but not good if you want the system to use the software feedback
+	 setDutyCycle(200);
+
+	 for(uint32_t i = 0; i<5000000;i++); //delay function but not good if you want the system to use the software feedback
+	 setDutyCycle(100);
+
+	 for(uint32_t i = 0; i<5000000;i++); //delay function but not good if you want the system to use the software feedback
+	 setDutyCycle(200);
 
 	while(1) {
 
-		update_servos();
+
 
 		static uint8_t lastDeci = 255;
 		uint8_t curDeci = timeData.hundredths / 10;
@@ -45,12 +57,18 @@ int main(void) {
 			float V_DDA = 3.3 * VREFINT_CAL / VREF;
 
 			uint16_t pa0 = ADC_measure_PA(1);
+//		update_servos();
+
+			setDutyCycle(pa0);
+
 
 			// when PWM has a duty cycle of 50 it switches between
 			// PA0: 0 and 4080
 			// V = 0V and 2.83V
 
 			float Vch0 = (V_DDA *pa0)/ (4095);
+			 setServoPulse_TIM16(Vch0);
+
 
 			float V_desired = 1.0;
 			float error = V_desired - Vch0;
@@ -68,9 +86,7 @@ int main(void) {
 				newDutyCycle = 255;
 			}
 
-			printf("V_meas=%.2f, Error=%.2f, Duty=%d\n", Vch0, error, dutyCycle);
-
-
+//			printf("V_meas=%.2f, Error=%.2f, Duty=%d\n", Vch0, error, dutyCycle);
 
 			setDutyCycle(newDutyCycle);
 			dutyCycle = newDutyCycle;
