@@ -9,7 +9,7 @@
 #include "flash.h"
 #include "lsm9ds1.h"
 
-
+#define WHO_AM_I     0x0F
 
 
 int main(void) {
@@ -21,7 +21,30 @@ int main(void) {
 
 	lcd_init_and_print();
 
-	init_spi_gyro();
+	init_spi_gyro_accel();
+
+
+	int8_t readWrite = 0x80;
+	int8_t address = WHO_AM_I;
+	int8_t data = 0xFF;
+
+	int16_t rwAddress = (readWrite | address) << 8;
+	int16_t writeLine = rwAddress | data;
+
+	while (!(SPI2->SR & SPI_SR_TXE));
+	SPI2->DR = rwAddress;
+	while (!(SPI2->SR & SPI_SR_RXNE));
+	uint16_t result = SPI2->DR;
+	uint8_t who = result & 0xFF; // lower 8 bits are response
+
+	GPIO_WriteBit(GPIOB, GPIO_Pin_5, 0);
+	spi_transmit(rwAddress);
+//	spi_transmit(writeLine);
+	GPIO_WriteBit(GPIOB, GPIO_Pin_5, 1);
+//int temp = SPI_ReceiveData8(SPI2);
+
+printf("%u\n",who);
+
 
 	while(1) {
 

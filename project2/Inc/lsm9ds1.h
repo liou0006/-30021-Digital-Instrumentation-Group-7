@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include "lcd.h"
 
-void init_spi_gyro();
+void init_spi_gyro_accel();
+void spi_transmit(uint8_t data);
 
 #endif
