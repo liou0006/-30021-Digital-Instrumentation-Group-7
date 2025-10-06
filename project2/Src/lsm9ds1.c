@@ -39,7 +39,6 @@ void init_spi_gyro_accel(void)
 	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_4;
 	GPIO_InitStructAll.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructAll);
-	GPIO_WriteBit(GPIOB, GPIO_Pin_4, 1);
 
 	// Sets PB5 to output LOW / enabled
 	// CSAG
@@ -49,7 +48,6 @@ void init_spi_gyro_accel(void)
 	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_5;
 	GPIO_InitStructAll.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructAll);
-	GPIO_WriteBit(GPIOB, GPIO_Pin_5, 1);
 
 	SPI2->CR1 &= 0x3040; // Clear CR1 Register
 	SPI2->CR1 |= 0x0000; // Configure direction (0x0000 - 2 Lines Full Duplex, 0x0400 - 2 Lines RX Only, 0x8000 - 1 Line RX, 0xC000 - 1 Line TX)

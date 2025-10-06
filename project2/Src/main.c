@@ -13,49 +13,21 @@
 
 uint8_t lsm9_ag_read(uint8_t reg) {
 	// CS low (use your actual AG CS pin)
-	//	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
-	//
-	//	int8_t dataline = 0x80 | reg;   // send address with READ bit
-	//	SPI_SendData8(SPI2, dataline);
-	//
-	//	SPI_SendData8(SPI2, 0x00);
-	//
-	//	int8_t val = SPI_ReceiveData8(SPI2); // dummy write to clock in data
-	//	// CS high
-	//	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
-	//
-	//
-	//	return val;
-	//
-
-	volatile uint8_t toss;
-
-	// Clear any stale RX
-	while (SPI2->SR & SPI_SR_RXNE) (void)SPI_ReceiveData8(SPI2);
-
-	// CS low
 	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
 
-	// Send address with READ bit
-	while (!(SPI2->SR & SPI_SR_TXE));
-	SPI_SendData8(SPI2, (uint8_t)(0x80 | reg));
-	while (!(SPI2->SR & SPI_SR_RXNE));
-	toss = SPI_ReceiveData8(SPI2);              // discard junk received during address
+	int8_t dataline = 0x80 | reg;   // send address with READ bit
+	SPI_SendData8(SPI2, dataline);
 
-	// Send dummy to clock in data
-	while (!(SPI2->SR & SPI_SR_TXE));
 	SPI_SendData8(SPI2, 0x00);
-	while (!(SPI2->SR & SPI_SR_RXNE));
-	uint8_t val = SPI_ReceiveData8(SPI2);       // this is WHO_AM_I
 
-	// Wait until not busy, then CS high
-	while (SPI2->SR & SPI_SR_BSY);
+	int8_t val = SPI_ReceiveData8(SPI2); // dummy write to clock in data
+	// CS high
 	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
 
-	// Clear any overrun just in case
-	if (SPI2->SR & SPI_SR_OVR) { (void)SPI2->DR; (void)SPI2->SR; }
 
 	return val;
+
+
 }
 
 int main(void) {
@@ -70,12 +42,11 @@ int main(void) {
 	init_spi_gyro_accel();
 
 
+
 	int8_t readWrite = 0x80;
 	int8_t address = WHO_AM_I;
 	int8_t data = 0xFF;
 
-	uint8_t who_ag= lsm9_ag_read(address);
-	printf("AG WHO_AM_I = %02X\r\n", who_ag);
 	//
 	//	int16_t rwAddress = (readWrite | address) << 8;
 	//	int16_t writeLine = rwAddress | data;
@@ -96,6 +67,7 @@ int main(void) {
 
 
 	while(1) {
-		printf("AG WHO_AM_I = 0x%02X\r\n", who_ag);
+	uint8_t who_ag= lsm9_ag_read(address);
+		printf("AG WHO_AM_I = 0x%02X\n", who_ag);
 	}
 }
