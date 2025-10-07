@@ -9,7 +9,7 @@
 
 void initSPI();
 void init_spi_gyro_accel();
-uint8_t spi2_transfer(uint8_t data);
+void spi2_transfer(uint8_t data);
 void enableCSPins();
 
 #endif

@@ -55,9 +55,10 @@ int main(void) {
 
 		GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
 		spi2_transfer(0x80 | 0x0F);
-		int8_t val = spi2_transfer(0x00); // dummy write to clock in data
+		spi2_transfer(0x00);
+		int8_t val = SPI_ReceiveData8(SPI2); // dummy write to clock in data
 		GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
-//		printf("AG WHO_AM_I = %x\n", val);
+		printf("AG WHO_AM_I = %x\n", val);
 
 	}
 }
