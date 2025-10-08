@@ -13,5 +13,6 @@ void spi2_transfer(uint8_t data);
 void enableCSPins();
 void readSPI2(uint8_t reg, uint16_t PIN);
 void writeSPI2(uint8_t reg, uint16_t PIN);
+uint8_t readSPI2_v2(uint8_t reg, uint16_t PIN);
 
 #endif

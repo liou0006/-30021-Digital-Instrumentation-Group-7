@@ -149,3 +149,35 @@ void writeSPI2(uint8_t reg, uint16_t PIN) {
 	int8_t val = SPI_ReceiveData8(SPI2); // dummy write to clock in data
 	GPIO_WriteBit(GPIOB, PIN, Bit_SET);
 }
+
+
+/** New version of the read functions
+ */
+uint8_t readSPI2_v2(uint8_t reg, uint16_t PIN) {
+	// Set CS low
+	GPIO_WriteBit(GPIOB, PIN, Bit_RESET);
+
+	// Send address with read bit (MSB = 1)
+	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
+	SPI_SendData8(SPI2, (uint8_t)(0x80 | reg));
+
+	// Wait for response to be available
+	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET) { }
+	(void)SPI_ReceiveData8(SPI2);
+
+	// Send dummy data to clock out register
+	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
+	SPI_SendData8(SPI, 0x00);
+
+	// Read returned register value
+	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET) { }
+	uint8_t val = (uint8_t)SPI_ReceiveData8(SPI2);
+
+	// Set CS high
+	GPIO_WriteBit(GPIOB, PIN, Bit_SET);
+
+	return val;
+}
+
+
+

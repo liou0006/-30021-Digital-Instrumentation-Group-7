@@ -25,7 +25,7 @@ int main(void) {
 
 	init_spi_gyro_accel();
 
-
+//	readSPI2(0x0F,GPIO_Pin_5);
 
 	while(1) {
 
