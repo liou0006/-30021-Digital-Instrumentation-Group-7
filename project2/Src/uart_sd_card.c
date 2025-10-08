@@ -9,6 +9,8 @@
  */
 /* ---------- OpenLog command functions ---------- */
 
+/* ---------- OpenLog command functions ---------- */
+
 // Enter OpenLog command mode (based on config.txt: baud=115200, escape=26, esc#=3)
 static HAL_StatusTypeDef openlog_enter_cmd(void) {
   // Per OpenLog documentation: 3-second quiet period before and after escape sequence
@@ -100,3 +102,4 @@ int openlog_read_text(const char *filename, char *buf, int buflen) {
 
   return total;
 }
+

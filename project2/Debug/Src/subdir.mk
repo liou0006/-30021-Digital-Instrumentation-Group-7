@@ -17,6 +17,7 @@ C_SRCS += \
 ../Src/syscalls.c \
 ../Src/system_stm32f30x.c \
 ../Src/timer.c \
+../Src/uart_sd_card.c \
 ../Src/window.c 
 
 OBJS += \
@@ -32,6 +33,7 @@ OBJS += \
 ./Src/syscalls.o \
 ./Src/system_stm32f30x.o \
 ./Src/timer.o \
+./Src/uart_sd_card.o \
 ./Src/window.o 
 
 C_DEPS += \
@@ -47,17 +49,18 @@ C_DEPS += \
 ./Src/syscalls.d \
 ./Src/system_stm32f30x.d \
 ./Src/timer.d \
+./Src/uart_sd_card.d \
 ./Src/window.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
 Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DSTM32 -DSTM32F302R8Tx -DSTM32F3 -DNUCLEO_F302R8 -DDEBUG -DUSE_STDPERIPH_DRIVER=1 -c -I"C:/Users/liou-/OneDrive - Danmarks Tekniske Universitet/Elektrotekniologi - Master/1. semester/30021 Digital Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc" -I"C:/Users/liou-/OneDrive - Danmarks Tekniske Universitet/Elektrotekniologi - Master/1. semester/30021 Digital Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc" -I"C:/Users/liou-/OneDrive - Danmarks Tekniske Universitet/Elektrotekniologi - Master/1. semester/30021 Digital Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DSTM32 -DSTM32F302R8Tx -DSTM32F3 -DNUCLEO_F302R8 -DDEBUG -DUSE_STDPERIPH_DRIVER=1 -c -I"/Users/markmalloy/STM32CubeIDE/workspace_1.19.0/repository/project2/SPL/inc" -I"/Users/markmalloy/STM32CubeIDE/workspace_1.19.0/repository/project2/Inc" -I"/Users/markmalloy/STM32CubeIDE/workspace_1.19.0/repository/project2/cmsis" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/30010_io.cyclo ./Src/30010_io.d ./Src/30010_io.o ./Src/30010_io.su ./Src/adc.cyclo ./Src/adc.d ./Src/adc.o ./Src/adc.su ./Src/flash.cyclo ./Src/flash.d ./Src/flash.o ./Src/flash.su ./Src/interrupt.cyclo ./Src/interrupt.d ./Src/interrupt.o ./Src/interrupt.su ./Src/joystick.cyclo ./Src/joystick.d ./Src/joystick.o ./Src/joystick.su ./Src/lcd.cyclo ./Src/lcd.d ./Src/lcd.o ./Src/lcd.su ./Src/led.cyclo ./Src/led.d ./Src/led.o ./Src/led.su ./Src/lsm9ds1.cyclo ./Src/lsm9ds1.d ./Src/lsm9ds1.o ./Src/lsm9ds1.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/system_stm32f30x.cyclo ./Src/system_stm32f30x.d ./Src/system_stm32f30x.o ./Src/system_stm32f30x.su ./Src/timer.cyclo ./Src/timer.d ./Src/timer.o ./Src/timer.su ./Src/window.cyclo ./Src/window.d ./Src/window.o ./Src/window.su
+	-$(RM) ./Src/30010_io.cyclo ./Src/30010_io.d ./Src/30010_io.o ./Src/30010_io.su ./Src/adc.cyclo ./Src/adc.d ./Src/adc.o ./Src/adc.su ./Src/flash.cyclo ./Src/flash.d ./Src/flash.o ./Src/flash.su ./Src/interrupt.cyclo ./Src/interrupt.d ./Src/interrupt.o ./Src/interrupt.su ./Src/joystick.cyclo ./Src/joystick.d ./Src/joystick.o ./Src/joystick.su ./Src/lcd.cyclo ./Src/lcd.d ./Src/lcd.o ./Src/lcd.su ./Src/led.cyclo ./Src/led.d ./Src/led.o ./Src/led.su ./Src/lsm9ds1.cyclo ./Src/lsm9ds1.d ./Src/lsm9ds1.o ./Src/lsm9ds1.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/system_stm32f30x.cyclo ./Src/system_stm32f30x.d ./Src/system_stm32f30x.o ./Src/system_stm32f30x.su ./Src/timer.cyclo ./Src/timer.d ./Src/timer.o ./Src/timer.su ./Src/uart_sd_card.cyclo ./Src/uart_sd_card.d ./Src/uart_sd_card.o ./Src/uart_sd_card.su ./Src/window.cyclo ./Src/window.d ./Src/window.o ./Src/window.su
 
 .PHONY: clean-Src
 
