@@ -8,66 +8,52 @@
 #include "window.h"
 #include "flash.h"
 #include "lsm9ds1.h"
+#include "uart_sd_card.h"
 
-#define WHO_AM_I     0x0F
+// ---- LSM9DS1 (AG die) registers ----
+#define WHO_AM_I_AG   0x0F   // read-only, should return 0x68
+#define CTRL_REG8     0x22   // writable
+#define IF_ADD_INC    (1u<<2)
 
-uint8_t lsm9_ag_read(uint8_t reg) {
-	// CS low (use your actual AG CS pin)
-	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
+// Prototypes from your SPI code
+uint8_t lsm9_ag_read(uint8_t reg);
+void    lsm9_ag_write(uint8_t reg, uint8_t value);
 
-	int8_t dataline = 0x80 | reg;   // send address with READ bit
-	SPI_SendData8(SPI2, dataline);
+int main(void)
+{
+    uart_init(9600);
+    initJoystick();
+    initLed();
+    iniEXTIA4();
+    initTimer();
 
-	SPI_SendData8(SPI2, 0x00);
+    lcd_init_and_print();
+    HAL_Init();
+    SystemClock_Config();
+    MX_GPIO_Init();
+    MX_USART1_UART_Init();
 
-	int8_t val = SPI_ReceiveData8(SPI2); // dummy write to clock in data
-	// CS high
-	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
+    HAL_Delay(500); // allow OpenLog to boot and show '>'
 
+    while (1)
+    {
+        HAL_Delay(1000); // Allow OpenLog idle time
 
-	return val;
+        // Write to SD
+        HAL_StatusTypeDef st = openlog_write_text("log.txt", "Hello from STM32!\r\nLine 2...\r\n");
+        if (st != HAL_OK) {
+        	printf("Problem writing to SD Card");
+        }
 
+        HAL_Delay(2000); // Allow OpenLog to flush and blink LEDs
 
-}
+        // Read back file
+        char readbuf[512];
+        int n = openlog_read_text("log.txt", readbuf, sizeof(readbuf));
 
-int main(void) {
-	uart_init( 9600 ); // Initialize USB serial at 9600 baud
-	initJoystick();
-	initLed();
-	iniEXTIA4();
-	initTimer();
-
-	lcd_init_and_print();
-
-	init_spi_gyro_accel();
-
-
-
-	int8_t readWrite = 0x80;
-	int8_t address = WHO_AM_I;
-	int8_t data = 0xFF;
-
-	//
-	//	int16_t rwAddress = (readWrite | address) << 8;
-	//	int16_t writeLine = rwAddress | data;
-	//
-	//	while (!(SPI2->SR & SPI_SR_TXE));
-	//	SPI2->DR = rwAddress;
-	//	while (!(SPI2->SR & SPI_SR_RXNE));
-	//	uint16_t result = SPI2->DR;
-	//	uint8_t who = result & 0xFF; // lower 8 bits are response
-	//
-	//	GPIO_WriteBit(GPIOB, GPIO_Pin_5, 0);
-	//	spi_transmit(rwAddress);
-	////	spi_transmit(writeLine);
-	//	GPIO_WriteBit(GPIOB, GPIO_Pin_5, 1);
-	////int temp = SPI_ReceiveData8(SPI2);
-	//
-	//printf("%u\n",who);
+        // Optionally use readbuf data internally here
+        HAL_Delay(5000); // Pause before next cycle
+    }
 
 
-	while(1) {
-	uint8_t who_ag= lsm9_ag_read(address);
-		printf("AG WHO_AM_I = 0x%02X\n", who_ag);
-	}
 }
