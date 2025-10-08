@@ -1,3 +1,12 @@
+#include "main.h"           // includes stm32f3xx_hal.h and peripheral handles
+#include "uart_sd_card.h"
+#include <stdio.h>
+#include <string.h>
+
+/*
+ * PINS TO USE FOR UART COMMUNICATION (preliminary):
+ * PA9 TX, PA10 RX, PA12 RTS
+ */
 /* ---------- OpenLog command functions ---------- */
 
 // Enter OpenLog command mode (based on config.txt: baud=115200, escape=26, esc#=3)

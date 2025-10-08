@@ -33,11 +33,11 @@ int main(void)
     MX_GPIO_Init();
     MX_USART1_UART_Init();
 
-    HAL_Delay(500); // allow OpenLog to boot and show '>'
+    HAL_Delay(500); // allow OpenLog to boot and show '>' in the terminal
 
     while (1)
     {
-        HAL_Delay(1000); // Allow OpenLog idle time
+        HAL_Delay(1000); // Allow OpenLog idle time before writing to the SD card
 
         // Write to SD
         HAL_StatusTypeDef st = openlog_write_text("log.txt", "Hello from STM32!\r\nLine 2...\r\n");
@@ -45,13 +45,13 @@ int main(void)
         	printf("Problem writing to SD Card");
         }
 
-        HAL_Delay(2000); // Allow OpenLog to flush and blink LEDs
+        HAL_Delay(2000); // Allow OpenLog to flush and blink LEDs before reading
 
         // Read back file
         char readbuf[512];
         int n = openlog_read_text("log.txt", readbuf, sizeof(readbuf));
 
-        // Optionally use readbuf data internally here
+        // TODO: test/see if one should use readbuf data struct here to read from the SD card
         HAL_Delay(5000); // Pause before next cycle
     }
 
