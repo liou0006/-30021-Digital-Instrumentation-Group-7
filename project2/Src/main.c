@@ -20,17 +20,18 @@ int main(void) {
 	//	iniEXTIA4();
 	initTimer();
 	//	lcd_init_and_print();
-	//	enableCSPins();
-	//	initSPI();
 
-	init_spi_gyro_accel();
+	init_SPI_CS();
 
-	//	readSPI2(0x0F,GPIO_Pin_5);
+	writeAG(0x10,0b01100000);
 
 	while(1) {
 
-		int8_t val = readSPI2(0x0F,GPIO_Pin_5);
-		printf("%X\n",val);
+		int16_t gyroX = readGAxis(0x18);
+		int16_t gyroY = readGAxis(0x1A);
+		int16_t gyroZ = readGAxis(0x1C);
+
+		printf("GyroX= %d | GyroY= %d | GyroZ= %d\n",gyroX,gyroY,gyroZ);
 
 		for (int i= 0 ; i<= 10000;i++); // hold to make the signal not osciliate very fast
 

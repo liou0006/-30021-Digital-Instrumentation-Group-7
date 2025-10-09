@@ -3,7 +3,7 @@
 /* ---------- LSM9DS1 (Accel/Gyro die) registers ---------- */
 #define WHO_AM_I     0x0F
 
-void init_spi_gyro_accel(void)
+void init_SPI_CS(void)
 {
 	// Enable Clocks
 	RCC->AHBENR  |= 0x00020000 | 0x00040000;    // Enable Clock for GPIO Banks A and B
@@ -66,82 +66,46 @@ void init_spi_gyro_accel(void)
 
 }
 
-//void enableCSPins(){
-//	// Sets PB4 to output HIGH / disabled - CSAG
-//	// CSM
-//	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);	// Port B
-//	GPIO_InitTypeDef GPIO_InitStructAll;
-//	GPIO_StructInit(&GPIO_InitStructAll);
-//	GPIO_InitStructAll.GPIO_Mode = GPIO_Mode_OUT;
-//	GPIO_InitStructAll.GPIO_OType = GPIO_OType_PP;
-//	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_4;
-//	GPIO_InitStructAll.GPIO_Speed = GPIO_Speed_2MHz;
-//	GPIO_Init(GPIOB, &GPIO_InitStructAll);
-//
-//	// Sets PB5 to output LOW / enabled
-//	// CSAG
-//	GPIO_StructInit(&GPIO_InitStructAll);
-//	GPIO_InitStructAll.GPIO_Mode = GPIO_Mode_OUT;
-//	GPIO_InitStructAll.GPIO_OType = GPIO_OType_PP;
-//	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_5;
-//	GPIO_InitStructAll.GPIO_Speed = GPIO_Speed_2MHz;
-//	GPIO_Init(GPIOB, &GPIO_InitStructAll);
-//
-//}
-
-
-
-int8_t spi2_transfer(uint8_t data) {
-    while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
-    SPI_SendData8(SPI2, data);
-    while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
-    return SPI_ReceiveData8(SPI2);
+uint8_t spi2_transfer(uint8_t data) {
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
+	SPI_SendData8(SPI2, data);
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
+	return SPI_ReceiveData8(SPI2);
 }
 
-int8_t readSPI2(uint8_t reg, uint8_t PIN) {
-    GPIO_WriteBit(GPIOB, PIN, Bit_RESET);
-    spi2_transfer(0x80 | reg);           // send address
-    int8_t val = spi2_transfer(0x00);    // send dummy & read value
-    while (SPI2->SR & SPI_SR_BSY);
-    GPIO_WriteBit(GPIOB, PIN, Bit_SET);
-    return val;
-}
-
-void writeSPI2(uint8_t reg, uint16_t PIN) {
-	GPIO_WriteBit(GPIOB, PIN, Bit_RESET);
-	spi2_transfer(0x00 | reg);
-	spi2_transfer(0x00);
-	int8_t val = SPI_ReceiveData8(SPI2); // dummy write to clock in data
-	GPIO_WriteBit(GPIOB, PIN, Bit_SET);
-}
-
-
-/** New version of the read functions
- */
-uint8_t readSPI2_v2(uint8_t reg, uint16_t PIN) {
-	// Set CS low
-	GPIO_WriteBit(GPIOB, PIN, Bit_RESET);
-
-	// Send address with read bit (MSB = 1)
-	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
-	SPI_SendData8(SPI2, (uint8_t)(0x80 | reg));
-
-	// Wait for response to be available
-	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET) { }
-	(void)SPI_ReceiveData8(SPI2);
-
-	// Send dummy data to clock out register
-	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
-	SPI_SendData8(SPI2, 0x00);
-
-	// Read returned register value
-	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET) { }
-	uint8_t val = (uint8_t)SPI_ReceiveData8(SPI2);
-
-	// Set CS high
-	GPIO_WriteBit(GPIOB, PIN, Bit_SET);
-
+uint8_t readAG(uint8_t reg) {
+	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
+	spi2_transfer(0x80 | reg);           // send address
+	int8_t val = spi2_transfer(0x00);    // send dummy & read value
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
 	return val;
+}
+
+void writeAG(uint8_t reg, uint8_t data) {
+	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
+	spi2_transfer(0x7F & reg); // makes sure bit 7 is 0
+	spi2_transfer(data);
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
+}
+
+uint8_t readM(uint8_t reg) {
+	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_RESET);
+	spi2_transfer(0x80 | reg);           // send address
+	int8_t val = spi2_transfer(0x00);    // send dummy & read value
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
+	return val;
+}
+
+int16_t readGAxis(uint8_t lowReg){
+	uint8_t lower = readAG(lowReg);
+	uint8_t higher = readAG(lowReg+1);
+
+	int16_t Gvalue = ((higher << 8) | lower);
+
+	return Gvalue;
 }
 
 
