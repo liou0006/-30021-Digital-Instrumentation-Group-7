@@ -9,8 +9,6 @@
 #include "flash.h"
 #include "lsm9ds1.h"
 
-#define WHO_AM_I     0x0F
-
 
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
@@ -23,22 +21,16 @@ int main(void) {
 
 	init_SPI_CS();
 
-	//enable Gyroscope
+
 	initAG();
 	initMag();
 
 	while(1) {
 
+		readTempteratureC();
 		//		printGyroXYZ();
 		//		printAccelXYZ();
-
-		printMagnetXYZ();
-
-		//		uint8_t val = readM(0x0F);
-		//
-		//		printf("WHOAMI reg = %02x\n",val);
-
-		for (int i= 0 ; i<= 10000;i++); // hold to make the signal not osciliate very fast
+		//		printMagnetXYZ();
 
 	}
 }

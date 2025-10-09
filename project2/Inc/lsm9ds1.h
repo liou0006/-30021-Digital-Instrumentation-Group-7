@@ -17,6 +17,7 @@ void writeAG(uint8_t reg, uint8_t data);
 
 void printGyroXYZ();
 void printAccelXYZ();
+void readTempteratureC();
 
 uint8_t readM(uint8_t reg);
 void writeM(uint8_t reg, uint8_t data);

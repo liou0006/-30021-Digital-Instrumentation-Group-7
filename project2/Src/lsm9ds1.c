@@ -116,6 +116,14 @@ void printAccelXYZ(){
 	printf("accelX= %d | accelY= %d | accelZ= %d\n",accelX,accelY,accelZ);
 }
 
+void readTempteratureC(){
+
+	int16_t tempVal = readOutput(0x15);
+	float tempC = 25.0f + (tempVal /16.0f);
+
+	printf("Temperature in C = %f\n", tempC);
+}
+
 uint8_t readM(uint8_t reg) {
 	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_RESET);
 	spi2_transfer(0x80 | reg);           // send address
