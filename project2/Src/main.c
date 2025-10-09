@@ -18,33 +18,21 @@ int main(void) {
 	//	initJoystick();
 	//	initLed();
 	//	iniEXTIA4();
-	//	initTimer();
+	initTimer();
 	//	lcd_init_and_print();
 	//	enableCSPins();
 	//	initSPI();
 
 	init_spi_gyro_accel();
 
-//	readSPI2(0x0F,GPIO_Pin_5);
+	//	readSPI2(0x0F,GPIO_Pin_5);
 
 	while(1) {
 
-		//		char line1[24];
+		int8_t val = readSPI2(0x0F,GPIO_Pin_5);
+		printf("%X\n",val);
 
-
-//		int8_t val = readSPI2_v2(0x0F,GPIO_Pin_5);
-//		printf("%x",val);
-		for (int i= 0 ; i<= 10000;i++);
-
-
-		GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
-		while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
-		spi2_transfer(0x80 | 0x0F);
-		spi2_transfer(0x00);
-//		int8_t val = SPI_ReceiveData8(SPI2); // dummy write to clock in data
-		while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
-		GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
-//		printf("AG WHO_AM_I = %d , %x, % u \n", val, val, val);
+		for (int i= 0 ; i<= 10000;i++); // hold to make the signal not osciliate very fast
 
 	}
 }

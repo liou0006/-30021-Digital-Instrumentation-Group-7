@@ -12,29 +12,22 @@ void init_spi_gyro_accel(void)
 	// Connect pins to SPI2
 	GPIOB->AFR[13 >> 0x03] &= ~(0x0000000F << ((13 & 0x00000007) * 4)); // Clear alternate function for PB13
 	GPIOB->AFR[13 >> 0x03] |=  (0x00000005 << ((13 & 0x00000007) * 4)); // Set alternate 5 function for PB13 - SCLK
+
+	GPIOB->AFR[14 >> 0x03] &= ~(0x0000000F << ((14 & 0x00000007) * 4)); // Clear alternate function for PB13
+	GPIOB->AFR[14 >> 0x03] |=  (0x00000005 << ((14 & 0x00000007) * 4)); // Set alternate 5 function for PB13 - SCLK
+
 	GPIOB->AFR[15 >> 0x03] &= ~(0x0000000F << ((15 & 0x00000007) * 4)); // Clear alternate function for PB15
 	GPIOB->AFR[15 >> 0x03] |=  (0x00000005 << ((15 & 0x00000007) * 4)); // Set alternate 5 function for PB15 - MOSI
 
 	// Configure pins PB13 and PB15 for 10 MHz alternate function
-	GPIOB->OSPEEDR &= ~(0x00000003 << (13 * 2) | 0x00000003 << (15 * 2));    // Clear speed register
-	GPIOB->OSPEEDR |=  (0x00000001 << (13 * 2) | 0x00000001 << (15 * 2));    // set speed register (0x01 - 10 MHz, 0x02 - 2 MHz, 0x03 - 50 MHz)
-	GPIOB->OTYPER  &= ~(0x0001     << (13)     | 0x0001     << (15));        // Clear output type register
-	GPIOB->OTYPER  |=  (0x0000     << (13)     | 0x0000     << (15));        // Set output type register (0x00 - Push pull, 0x01 - Open drain)
-	GPIOB->MODER   &= ~(0x00000003 << (13 * 2) | 0x00000003 << (15 * 2));    // Clear mode register
-	GPIOB->MODER   |=  (0x00000002 << (13 * 2) | 0x00000002 << (15 * 2));    // Set mode register (0x00 - Input, 0x01 - Output, 0x02 - Alternate Function, 0x03 - Analog in/out)
-	GPIOB->PUPDR   &= ~(0x00000003 << (13 * 2) | 0x00000003 << (15 * 2));    // Clear push/pull register
-	GPIOB->PUPDR   |=  (0x00000000 << (13 * 2) | 0x00000000 << (15 * 2));    // Set push/pull register (0x00 - No pull, 0x01 - Pull-up, 0x02 - Pull-down)
-
-	// Initialize REEST, nCS, and A0
-	// Configure pins PB6 and PB14 for 10 MHz output
-	GPIOB->OSPEEDR &= ~(0x00000003 << (6 * 2) | 0x00000003 << (14 * 2));    // Clear speed register
-	GPIOB->OSPEEDR |=  (0x00000001 << (6 * 2) | 0x00000001 << (14 * 2));    // set speed register (0x01 - 10 MHz, 0x02 - 2 MHz, 0x03 - 50 MHz)
-	GPIOB->OTYPER  &= ~(0x0001     << (6)     | 0x0001     << (14));        // Clear output type register
-	GPIOB->OTYPER  |=  (0x0000     << (6)     | 0x0000     << (14));        // Set output type register (0x00 - Push pull, 0x01 - Open drain)
-	GPIOB->MODER   &= ~(0x00000003 << (6 * 2) | 0x00000003 << (14 * 2));    // Clear mode register
-	GPIOB->MODER   |=  (0x00000001 << (6 * 2) | 0x00000001 << (14 * 2));    // Set mode register (0x00 - Input, 0x01 - Output, 0x02 - Alternate Function, 0x03 - Analog in/out)
-	GPIOB->PUPDR   &= ~(0x00000003 << (6 * 2) | 0x00000003 << (14 * 2));    // Clear push/pull register
-	GPIOB->PUPDR   |=  (0x00000000 << (6 * 2) | 0x00000000 << (14 * 2));    // Set push/pull register (0x00 - No pull, 0x01 - Pull-up, 0x02 - Pull-down)
+	GPIOB->OSPEEDR &= ~(0x00000003 << (13 * 2) | 0x00000003 << (14 * 2) | 0x00000003 << (15 * 2));    // Clear speed register
+	GPIOB->OSPEEDR |=  (0x00000001 << (13 * 2) | 0x00000001 << (14 * 2) | 0x00000001 << (15 * 2));    // set speed register (0x01 - 10 MHz, 0x02 - 2 MHz, 0x03 - 50 MHz)
+	GPIOB->OTYPER  &= ~(0x0001     << (13)     | 0x0001 	<< (14) 	| 0x0001     << (15));        // Clear output type register
+	GPIOB->OTYPER  |=  (0x0000     << (13)     | 0x0000 	<< (14) 	| 0x0000     << (15));        // Set output type register (0x00 - Push pull, 0x01 - Open drain)
+	GPIOB->MODER   &= ~(0x00000003 << (13 * 2) | 0x00000003 << (14 * 2) | 0x00000003 << (15 * 2));    // Clear mode register
+	GPIOB->MODER   |=  (0x00000002 << (13 * 2) | 0x00000002 << (14 * 2) | 0x00000002 << (15 * 2));    // Set mode register (0x00 - Input, 0x01 - Output, 0x02 - Alternate Function, 0x03 - Analog in/out)
+	GPIOB->PUPDR   &= ~(0x00000003 << (13 * 2) | 0x00000003 << (13 * 2) | 0x00000003 << (15 * 2));    // Clear push/pull register
+	GPIOB->PUPDR   |=  (0x00000000 << (13 * 2) | 0x00000000 << (13 * 2) | 0x00000000 << (15 * 2));    // Set push/pull register (0x00 - No pull, 0x01 - Pull-up, 0x02 - Pull-down)
 
 	// Configure SPI2
 	SPI2->CR1 &= 0x3040; // Clear CR1 Register
@@ -53,7 +46,7 @@ void init_spi_gyro_accel(void)
 	SPI2->CR2 |= 0x1000; // Configure RXFIFO return at (0x0000 - Half-full (16 bits), 0x1000 - Quarter-full (8 bits))
 	SPI2->CR1 |= 0x0040; // Enable SPI2
 
-//	lcd_reset();
+	//	lcd_reset();
 
 	// CSM = PB4/D5 ;; CSAG = PB5/D4
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);	// Port B
@@ -98,20 +91,20 @@ void init_spi_gyro_accel(void)
 
 
 
-void spi2_transfer(uint8_t data) {
-	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
-	SPI_SendData8(SPI2, data);
-	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
+int8_t spi2_transfer(uint8_t data) {
+    while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
+    SPI_SendData8(SPI2, data);
+    while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
+    return SPI_ReceiveData8(SPI2);
 }
 
-void readSPI2(uint8_t reg, uint16_t PIN) {
-	GPIO_WriteBit(GPIOB, PIN, Bit_RESET);
-	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
-	spi2_transfer(0x80 | reg);
-	spi2_transfer(0x00);
-//	int8_t val = SPI_ReceiveData8(SPI2); // dummy write to clock in data
-	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
-	GPIO_WriteBit(GPIOB, PIN, Bit_SET);
+int8_t readSPI2(uint8_t reg, uint8_t PIN) {
+    GPIO_WriteBit(GPIOB, PIN, Bit_RESET);
+    spi2_transfer(0x80 | reg);           // send address
+    int8_t val = spi2_transfer(0x00);    // send dummy & read value
+    while (SPI2->SR & SPI_SR_BSY);
+    GPIO_WriteBit(GPIOB, PIN, Bit_SET);
+    return val;
 }
 
 void writeSPI2(uint8_t reg, uint16_t PIN) {
