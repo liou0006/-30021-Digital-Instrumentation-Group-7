@@ -32,15 +32,18 @@ int main(void) {
 		//		char line1[24];
 
 
-		readSPI2(0x0F,GPIO_Pin_5);
-
+//		int8_t val = readSPI2_v2(0x0F,GPIO_Pin_5);
+//		printf("%x",val);
 		for (int i= 0 ; i<= 10000;i++);
 
-//		GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
-//		spi2_transfer(0x80 | 0x0F);
-//		spi2_transfer(0x00);
+
+		GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
+		while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
+		spi2_transfer(0x80 | 0x0F);
+		spi2_transfer(0x00);
 //		int8_t val = SPI_ReceiveData8(SPI2); // dummy write to clock in data
-//		GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
+		while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
+		GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
 //		printf("AG WHO_AM_I = %d , %x, % u \n", val, val, val);
 
 	}

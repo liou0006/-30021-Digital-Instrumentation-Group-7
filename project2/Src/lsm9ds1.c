@@ -35,23 +35,6 @@ void init_spi_gyro_accel(void)
 	GPIOB->MODER   |=  (0x00000001 << (6 * 2) | 0x00000001 << (14 * 2));    // Set mode register (0x00 - Input, 0x01 - Output, 0x02 - Alternate Function, 0x03 - Analog in/out)
 	GPIOB->PUPDR   &= ~(0x00000003 << (6 * 2) | 0x00000003 << (14 * 2));    // Clear push/pull register
 	GPIOB->PUPDR   |=  (0x00000000 << (6 * 2) | 0x00000000 << (14 * 2));    // Set push/pull register (0x00 - No pull, 0x01 - Pull-up, 0x02 - Pull-down)
-	// Configure pin PA8 for 10 MHz output
-	GPIOA->OSPEEDR &= ~0x00000003 << (8 * 2);    // Clear speed register
-	GPIOA->OSPEEDR |=  0x00000001 << (8 * 2);    // set speed register (0x01 - 10 MHz, 0x02 - 2 MHz, 0x03 - 50 MHz)
-	GPIOA->OTYPER  &= ~0x0001     << (8);        // Clear output type register
-	GPIOA->OTYPER  |=  0x0000     << (8);        // Set output type register (0x00 - Push pull, 0x01 - Open drain)
-
-
-	GPIOA->MODER   &= ~0x00000003 << (8 * 2);    // Clear mode register
-	GPIOA->MODER   |=  0x00000001 << (8 * 2);    // Set mode register (0x00 - Input, 0x01 - Output, 0x02 - Alternate Function, 0x03 - Analog in/out)
-
-	GPIOA->MODER   &= ~(0x00000003 << (2 * 2) | 0x00000003 << (3 * 2));    // This is needed for UART to work. It makes no sense.
-	GPIOA->MODER   |=  (0x00000002 << (2 * 2) | 0x00000002 << (3 * 2));
-
-	GPIOA->PUPDR   &= ~0x00000003 << (8 * 2);    // Clear push/pull register
-	GPIOA->PUPDR   |=  0x00000000 << (8 * 2);    // Set push/pull register (0x00 - No pull, 0x01 - Pull-up, 0x02 - Pull-down)
-
-	GPIOB->ODR |=  (0x0001 << 6); // CS = 1
 
 	// Configure SPI2
 	SPI2->CR1 &= 0x3040; // Clear CR1 Register
@@ -60,7 +43,7 @@ void init_spi_gyro_accel(void)
 	SPI2->CR1 |= 0x0002; // Configure clock polarity (0x0000 - Low, 0x0002 - High)
 	SPI2->CR1 |= 0x0001; // Configure clock phase (0x0000 - 1 Edge, 0x0001 - 2 Edge)
 	SPI2->CR1 |= 0x0200; // Configure chip select (0x0000 - Hardware based, 0x0200 - Software based)
-	SPI2->CR1 |= 0x0008; // Set Baud Rate Prescaler (0x0000 - 2, 0x0008 - 4, 0x0018 - 8, 0x0020 - 16, 0x0028 - 32, 0x0028 - 64, 0x0030 - 128, 0x0038 - 128)
+	SPI2->CR1 |= 0x0018; // Set Baud Rate Prescaler (0x0000 - 2, 0x0008 - 4, 0x0018 - 8, 0x0020 - 16, 0x0028 - 32, 0x0028 - 64, 0x0030 - 128, 0x0038 - 128)
 	SPI2->CR1 |= 0x0000; // Set Bit Order (0x0000 - MSB First, 0x0080 - LSB First)
 	SPI2->CR2 &= ~0x0F00; // Clear CR2 Register
 	SPI2->CR2 |= 0x0700; // Set Number of Bits (0x0300 - 4, 0x0400 - 5, 0x0500 - 6, ...);
@@ -70,29 +53,20 @@ void init_spi_gyro_accel(void)
 	SPI2->CR2 |= 0x1000; // Configure RXFIFO return at (0x0000 - Half-full (16 bits), 0x1000 - Quarter-full (8 bits))
 	SPI2->CR1 |= 0x0040; // Enable SPI2
 
-	lcd_reset();
+//	lcd_reset();
 
-	// Sets PB4/D5 to output HIGH / disabled - CSAG
-	// CSM
+	// CSM = PB4/D5 ;; CSAG = PB5/D4
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);	// Port B
 	GPIO_InitTypeDef GPIO_InitStructAll;
 	GPIO_StructInit(&GPIO_InitStructAll);
 	GPIO_InitStructAll.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStructAll.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_4;
-	GPIO_InitStructAll.GPIO_Speed = GPIO_Speed_2MHz;
+	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5;
+	GPIO_InitStructAll.GPIO_Speed = GPIO_Speed_10MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructAll);
 
-	// Sets PB5/D4 to output LOW / enabled
-	// CSAG
-	GPIO_StructInit(&GPIO_InitStructAll);
-	GPIO_InitStructAll.GPIO_Mode = GPIO_Mode_OUT;
-	GPIO_InitStructAll.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_5;
-	GPIO_InitStructAll.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_Init(GPIOB, &GPIO_InitStructAll);
-
-
+	// Bit_SET = high / disabled
+	// Bit_RESET = low / enabled
 	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
 	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
 
@@ -165,7 +139,7 @@ uint8_t readSPI2_v2(uint8_t reg, uint16_t PIN) {
 
 	// Send dummy data to clock out register
 	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
-	SPI_SendData8(SPI, 0x00);
+	SPI_SendData8(SPI2, 0x00);
 
 	// Read returned register value
 	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET) { }
