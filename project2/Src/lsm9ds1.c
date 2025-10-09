@@ -125,11 +125,9 @@ void init_spi_gyro_accel(void)
 
 
 void spi2_transfer(uint8_t data) {
-//	GPIOB->ODR &= ~(0x0001 << 5); // CS = 0 - Start Transmission
 	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
 	SPI_SendData8(SPI2, data);
 	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
-//	GPIOB->ODR |=  (0x0001 << 5); // CS = 1 - End Transmission}
 }
 
 void readSPI2(uint8_t reg, uint16_t PIN) {
