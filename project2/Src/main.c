@@ -23,15 +23,18 @@ int main(void) {
 
 	init_SPI_CS();
 
+	//enable Gyroscope
 	writeAG(0x10,0b01100000);
+
+	//enable Accelerometer
+	writeAG(0x19,0b01111000);
+	writeAG(0x20,0b01000000);
+
 
 	while(1) {
 
-		int16_t gyroX = readGAxis(0x18);
-		int16_t gyroY = readGAxis(0x1A);
-		int16_t gyroZ = readGAxis(0x1C);
-
-		printf("GyroX= %d | GyroY= %d | GyroZ= %d\n",gyroX,gyroY,gyroZ);
+//		printGyroXYZ();
+		printAccelXYZ();
 
 		for (int i= 0 ; i<= 10000;i++); // hold to make the signal not osciliate very fast
 

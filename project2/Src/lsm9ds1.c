@@ -99,7 +99,7 @@ uint8_t readM(uint8_t reg) {
 	return val;
 }
 
-int16_t readGAxis(uint8_t lowReg){
+int16_t readOutput(uint8_t lowReg){
 	uint8_t lower = readAG(lowReg);
 	uint8_t higher = readAG(lowReg+1);
 
@@ -108,5 +108,20 @@ int16_t readGAxis(uint8_t lowReg){
 	return Gvalue;
 }
 
+void printGyroXYZ(){
+	int16_t gyroX = readOutput(0x18);
+	int16_t gyroY = readOutput(0x1A);
+	int16_t gyroZ = readOutput(0x1C);
+
+	printf("GyroX= %d | GyroY= %d | GyroZ= %d\n",gyroX,gyroY,gyroZ);
+}
+
+void printAccelXYZ(){
+	int16_t accelX = readOutput(0x28);
+	int16_t accelY = readOutput(0x2A);
+	int16_t accelZ = readOutput(0x2C);
+
+	printf("accelX= %d | accelY= %d | accelZ= %d\n",accelX,accelY,accelZ);
 
 
+}
