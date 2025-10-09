@@ -10,14 +10,20 @@
 void init_SPI_CS();
 uint8_t spi2_transfer(uint8_t data);
 
+int16_t readOutput(uint8_t lowReg);
+
 uint8_t readAG(uint8_t reg);
 void writeAG(uint8_t reg, uint8_t data);
 
-int16_t readOutput(uint8_t lowReg);
 void printGyroXYZ();
 void printAccelXYZ();
 
 uint8_t readM(uint8_t reg);
+void writeM(uint8_t reg, uint8_t data);
 
+void printMagnetXYZ();
+
+void initAG();
+void initMag();
 
 #endif

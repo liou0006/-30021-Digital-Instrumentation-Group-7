@@ -24,17 +24,19 @@ int main(void) {
 	init_SPI_CS();
 
 	//enable Gyroscope
-	writeAG(0x10,0b01100000);
-
-	//enable Accelerometer
-	writeAG(0x19,0b01111000);
-	writeAG(0x20,0b01000000);
-
+	initAG();
+	initMag();
 
 	while(1) {
 
-//		printGyroXYZ();
-		printAccelXYZ();
+		//		printGyroXYZ();
+		//		printAccelXYZ();
+
+		printMagnetXYZ();
+
+		//		uint8_t val = readM(0x0F);
+		//
+		//		printf("WHOAMI reg = %02x\n",val);
 
 		for (int i= 0 ; i<= 10000;i++); // hold to make the signal not osciliate very fast
 

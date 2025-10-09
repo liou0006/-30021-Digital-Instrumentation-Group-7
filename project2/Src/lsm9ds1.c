@@ -90,14 +90,6 @@ void writeAG(uint8_t reg, uint8_t data) {
 	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
 }
 
-uint8_t readM(uint8_t reg) {
-	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_RESET);
-	spi2_transfer(0x80 | reg);           // send address
-	int8_t val = spi2_transfer(0x00);    // send dummy & read value
-	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
-	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
-	return val;
-}
 
 int16_t readOutput(uint8_t lowReg){
 	uint8_t lower = readAG(lowReg);
@@ -122,6 +114,46 @@ void printAccelXYZ(){
 	int16_t accelZ = readOutput(0x2C);
 
 	printf("accelX= %d | accelY= %d | accelZ= %d\n",accelX,accelY,accelZ);
+}
 
+uint8_t readM(uint8_t reg) {
+	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_RESET);
+	spi2_transfer(0x80 | reg);           // send address
+	int8_t val = spi2_transfer(0x00);    // send dummy & read value
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
+	return val;
+}
 
+void writeM(uint8_t reg, uint8_t data) {
+	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_RESET);
+	spi2_transfer(0x7F & reg); // makes sure bit 7 is 0
+	spi2_transfer(data);
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
+}
+
+void printMagnetXYZ(){
+	int16_t magnetX = readOutput(0x28);
+	int16_t magnetY = readOutput(0x2A);
+	int16_t magnetZ = readOutput(0x2C);
+
+	printf("magnetX= %d | magnetY= %d | magnetZ= %d\n",magnetX,magnetY,magnetZ);
+}
+
+void initAG(){
+	//enable Gyroscope
+	writeAG(0x10,0b01100000);
+
+	//enable Accelerometer
+	writeAG(0x19,0b01111000);
+	writeAG(0x20,0b01000000);
+}
+
+void initMag(){
+	//enable Magnetometer
+	writeM(0x20,0b00010000);
+	writeM(0x21,0b00000000);
+	writeM(0x22,0b10000111);
+	writeM(0x23,0b00000000);
 }
