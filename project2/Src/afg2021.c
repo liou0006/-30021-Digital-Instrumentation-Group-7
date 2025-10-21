@@ -28,12 +28,11 @@ void GPIO_set_AF1_PA0() {
 	TIM_TimeBaseInitTypeDef TIM_InitStruct;
 	TIM_TimeBaseStructInit(&TIM_InitStruct);
 
-
 	// --- From Table 23 in the datasheet APB1 clock frequency is 36MHz
 	uint32_t timer_clock = 36000000;          // TIM2 clock (2 × APB1 = 72 MHz)
 	uint32_t target_freq = 1000000;           // 1 MHz
 	uint16_t prescaler = (timer_clock / target_freq) - 1;  // = 71
-	uint32_t period = 0xFFFFFFFF; 							// max
+	uint32_t period = 0xFFFF; 							// max
 
 	TIM_InitStruct.TIM_Prescaler = prescaler;
 	TIM_InitStruct.TIM_CounterMode = TIM_CounterMode_Up;
@@ -44,31 +43,36 @@ void GPIO_set_AF1_PA0() {
 
 	// 3. Configure TIM_ICInitStrct
 	TIM_ICInitTypeDef TIM_ICInitStruct;
-//	TIM_ICInit(TIM2, &TIM_ICInitStruct);
 	TIM_ICStructInit(&TIM_ICInitStruct);
 
 	TIM_ICInitStruct.TIM_Channel = TIM_Channel_1;
 	TIM_ICInitStruct.TIM_ICPolarity = TIM_ICPolarity_Rising;
-	TIM_ICInitStruct.TIM_ICFilter = 0;
 	TIM_ICInitStruct.TIM_ICSelection = TIM_ICSelection_DirectTI;
 	TIM_ICInitStruct.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+	TIM_ICInitStruct.TIM_ICFilter = 0;
 
-	// 5.
+	// 5. Configure PWM input mode
 	TIM_PWMIConfig(TIM2, &TIM_ICInitStruct);
-	TIM_CCxCmd(TIM2, TIM_Channel_1, TIM_CCx_Enable); // can maybe be deleted if unnecessary
-	TIM_CCxCmd(TIM2, TIM_Channel_2, TIM_CCx_Enable);
 
-	// Configure trigger/slave mode
+	// Select input trigger as TI1FP1
 	TIM_SelectInputTrigger(TIM2, TIM_TS_TI1FP1);
-	TIM_SelectSlaveMode(TIM2, TIM_SlaveMode_Reset);
+
+	// Reset mode
+	TIM_SelectSlaveMode(TIM2, TIM_SlaveMode_Reset);		// timer resets on every rising edge
 	TIM_SelectMasterSlaveMode(TIM2, TIM_MasterSlaveMode_Enable);
+
+	TIM_SetCounter(TIM2, 0);  // reset the counter to start correctly
+
+	// Enable both CC1 and CC2 captures
+//	TIM_CCxCmd(TIM2, TIM_Channel_1, TIM_CCx_Enable);
+//	TIM_CCxCmd(TIM2, TIM_Channel_2, TIM_CCx_Enable);
 
 	// 6. Enable NVIC
 	uint8_t priority = 2;
 	NVIC_SetPriority(TIM2_IRQn, priority);		// set interrupt priority interrupts
 	NVIC_EnableIRQ(TIM2_IRQn);					// enable interrupt
 
-	TIM_ClearITPendingBit(TIM2, TIM_IT_CC1 | TIM_IT_CC2);
+	TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);
 
 	// 7. Enable corresponding interrupt to read captured value
 	TIM_ITConfig(TIM2, TIM_IT_CC1, ENABLE);
@@ -78,31 +82,25 @@ void GPIO_set_AF1_PA0() {
 }
 
 void TIM2_IRQHandler(void) {
-    // Check for capture on Channel 1
-    if (TIM_GetITStatus(TIM2, TIM_IT_CC1) != RESET) {
-        TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);
+	// Check for capture on Channel 1
+	if (TIM_GetITStatus(TIM2, TIM_IT_CC1) != RESET) {
+		TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);
 
-    	// Clear the interrupt flag
-        // Read captured value for period (rising-to-rising)
-        uint32_t capture1 = TIM_GetCapture1(TIM2);
+		// Clear the interrupt flag
+		// Read captured value for period (rising-to-rising)
+		uint32_t capture1 = TIM_GetCapture1(TIM2);	// read capture1 for period
+		uint32_t capture2 = TIM_GetCapture2(TIM2);	// read capture2 for pulse width
 
-        // Optionally, read capture2 for pulse width
-        uint32_t capture2 = TIM_GetCapture2(TIM2);
+		// --- Compute results ---
+		// Timer tick period = 1 µs (1 MHz counter)
+		float period_us = (float)capture1;
+		float high_us   = (float)capture2;
 
-        flag = 1;
+		if (period_us > 0) {
+			freq = 1e6f / period_us;
+			duty = (high_us / period_us) * 100.0f;
+		}
 
-        // --- Compute results ---
-        // Timer tick period = 1 µs (1 MHz counter)
-        float period_us = (float)capture1;
-        float high_us   = (float)capture2;
-
-        freq = (float)capture1;
-        duty = (float)capture2;
-//        freq = period_us / 1e6f ;        // in Hz
-//        duty = (high_us / period_us) * 100.0f; // in %
-
-        // You could store these in global/static variables:
-//        float measuredFreq = freq;
-//        float measuredDuty = duty;
-    }
+		flag = 1;
+	}
 }

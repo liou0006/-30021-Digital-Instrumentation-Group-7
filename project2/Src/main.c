@@ -18,17 +18,13 @@ extern volatile uint8_t flag;
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
-
 	GPIO_set_AF1_PA0();
+
 	while(1) {
-
 		if (flag == 1){
-			float measFreq = freq;
-			float measDuty = duty;
 			flag = 0;
-
-			printf("freq: %f | duty: %f\n",measFreq,measDuty);
+//			printf("CC1: %.0f | CC2: %.0f | freq: %f | duty %f\n", TIM_GetCapture1(TIM2)*1.0f, TIM_GetCapture2(TIM2)*1.0f, freq, duty);
+			printf("freq: %f | duty: %f\n", freq, duty);
 		}
-
 	}
 }

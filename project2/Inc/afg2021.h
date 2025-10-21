@@ -6,9 +6,6 @@
 #include <stdio.h>
 #include "30010_io.h"
 
-//extern float measuredFreq = 0;
-//extern float measuredDuty = 0;
-
 void GPIO_set_AF1_PA0();
 void TIM2_IRQHandler(void);
 
