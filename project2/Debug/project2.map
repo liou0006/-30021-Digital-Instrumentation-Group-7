@@ -4181,6 +4181,155 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 ./Src/main.o
  .debug_macro   0x00000000      0x146 ./Src/main.o
  .debug_macro   0x00000000       0x22 ./Src/main.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .group         0x00000000        0xc ./Src/pwm.o
+ .text          0x00000000        0x0 ./Src/pwm.o
+ .data          0x00000000        0x0 ./Src/pwm.o
+ .bss           0x00000000        0x0 ./Src/pwm.o
+ .text.timer16_pwm_init
+                0x00000000       0xb4 ./Src/pwm.o
+ .text.GPIO_set_AF1_PA12
+                0x00000000       0x4a ./Src/pwm.o
+ .text.setDutyCycle
+                0x00000000       0x20 ./Src/pwm.o
+ .text.timer2_pwm_init
+                0x00000000       0xb4 ./Src/pwm.o
+ .text.GPIO_set_AF1_PB11
+                0x00000000       0x4c ./Src/pwm.o
+ .text.clamp_u16
+                0x00000000       0x34 ./Src/pwm.o
+ .text.setServoPulse_TIM16
+                0x00000000       0x34 ./Src/pwm.o
+ .text.setServoPulse_TIM17
+                0x00000000       0x34 ./Src/pwm.o
+ .text.pot_to_pulse
+                0x00000000       0x3c ./Src/pwm.o
+ .rodata        0x00000000        0xa ./Src/pwm.o
+ .text.update_servos
+                0x00000000       0x50 ./Src/pwm.o
+ .debug_info    0x00000000      0x91e ./Src/pwm.o
+ .debug_abbrev  0x00000000      0x24b ./Src/pwm.o
+ .debug_aranges
+                0x00000000       0x68 ./Src/pwm.o
+ .debug_rnglists
+                0x00000000       0x4b ./Src/pwm.o
+ .debug_macro   0x00000000      0x28e ./Src/pwm.o
+ .debug_macro   0x00000000      0xaea ./Src/pwm.o
+ .debug_macro   0x00000000       0x7a ./Src/pwm.o
+ .debug_macro   0x00000000       0x35 ./Src/pwm.o
+ .debug_macro   0x00000000       0x22 ./Src/pwm.o
+ .debug_macro   0x00000000       0x8e ./Src/pwm.o
+ .debug_macro   0x00000000       0x51 ./Src/pwm.o
+ .debug_macro   0x00000000      0x103 ./Src/pwm.o
+ .debug_macro   0x00000000       0x6a ./Src/pwm.o
+ .debug_macro   0x00000000      0x1df ./Src/pwm.o
+ .debug_macro   0x00000000       0x18 ./Src/pwm.o
+ .debug_macro   0x00000000       0x42 ./Src/pwm.o
+ .debug_macro   0x00000000      0x8cb ./Src/pwm.o
+ .debug_macro   0x00000000     0x769b ./Src/pwm.o
+ .debug_macro   0x00000000       0x35 ./Src/pwm.o
+ .debug_macro   0x00000000      0x5a6 ./Src/pwm.o
+ .debug_macro   0x00000000      0x3cf ./Src/pwm.o
+ .debug_macro   0x00000000       0x46 ./Src/pwm.o
+ .debug_macro   0x00000000      0x231 ./Src/pwm.o
+ .debug_macro   0x00000000      0x196 ./Src/pwm.o
+ .debug_macro   0x00000000       0x8e ./Src/pwm.o
+ .debug_macro   0x00000000      0x3a8 ./Src/pwm.o
+ .debug_macro   0x00000000      0x114 ./Src/pwm.o
+ .debug_macro   0x00000000      0x1e4 ./Src/pwm.o
+ .debug_macro   0x00000000      0x1b6 ./Src/pwm.o
+ .debug_macro   0x00000000      0x1df ./Src/pwm.o
+ .debug_macro   0x00000000      0x29a ./Src/pwm.o
+ .debug_macro   0x00000000       0x70 ./Src/pwm.o
+ .debug_macro   0x00000000      0x10c ./Src/pwm.o
+ .debug_macro   0x00000000       0xb8 ./Src/pwm.o
+ .debug_macro   0x00000000      0x5c6 ./Src/pwm.o
+ .debug_macro   0x00000000      0x551 ./Src/pwm.o
+ .debug_macro   0x00000000      0x3ab ./Src/pwm.o
+ .debug_macro   0x00000000      0x8d8 ./Src/pwm.o
+ .debug_macro   0x00000000      0x364 ./Src/pwm.o
+ .debug_macro   0x00000000       0x34 ./Src/pwm.o
+ .debug_macro   0x00000000       0x89 ./Src/pwm.o
+ .debug_macro   0x00000000       0x61 ./Src/pwm.o
+ .debug_macro   0x00000000       0x2a ./Src/pwm.o
+ .debug_macro   0x00000000       0x43 ./Src/pwm.o
+ .debug_macro   0x00000000       0x34 ./Src/pwm.o
+ .debug_macro   0x00000000       0x16 ./Src/pwm.o
+ .debug_macro   0x00000000       0x9e ./Src/pwm.o
+ .debug_macro   0x00000000      0x370 ./Src/pwm.o
+ .debug_macro   0x00000000      0x112 ./Src/pwm.o
+ .debug_macro   0x00000000       0x10 ./Src/pwm.o
+ .debug_macro   0x00000000       0x16 ./Src/pwm.o
+ .debug_macro   0x00000000       0x4a ./Src/pwm.o
+ .debug_macro   0x00000000       0x34 ./Src/pwm.o
+ .debug_macro   0x00000000       0x10 ./Src/pwm.o
+ .debug_macro   0x00000000       0x58 ./Src/pwm.o
+ .debug_macro   0x00000000       0x8e ./Src/pwm.o
+ .debug_macro   0x00000000       0x1c ./Src/pwm.o
+ .debug_macro   0x00000000      0x185 ./Src/pwm.o
+ .debug_macro   0x00000000       0x16 ./Src/pwm.o
+ .debug_macro   0x00000000       0x16 ./Src/pwm.o
+ .debug_macro   0x00000000      0x146 ./Src/pwm.o
+ .debug_line    0x00000000      0xb52 ./Src/pwm.o
+ .debug_str     0x00000000    0x56df2 ./Src/pwm.o
+ .comment       0x00000000       0x44 ./Src/pwm.o
+ .debug_frame   0x00000000      0x180 ./Src/pwm.o
+ .ARM.attributes
+                0x00000000       0x34 ./Src/pwm.o
  .group         0x00000000        0xc ./Src/syscalls.o
  .group         0x00000000        0xc ./Src/syscalls.o
  .group         0x00000000        0xc ./Src/syscalls.o
@@ -5018,6 +5167,7 @@ LOAD ./Src/lcd.o
 LOAD ./Src/led.o
 LOAD ./Src/lsm9ds1.o
 LOAD ./Src/main.o
+LOAD ./Src/pwm.o
 LOAD ./Src/syscalls.o
 LOAD ./Src/system_stm32f30x.o
 LOAD ./Src/timer.o

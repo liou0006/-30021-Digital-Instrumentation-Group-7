@@ -3876,9 +3876,9 @@ void initMag(){
  8001d76:	bd80      	pop	{r7, pc}
 
 08001d78 <main>:
-#include "window.h"
 #include "flash.h"
 #include "lsm9ds1.h"
+
 
 
 int main(void) {

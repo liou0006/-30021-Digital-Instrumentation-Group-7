@@ -10,6 +10,7 @@
 #include "lsm9ds1.h"
 
 
+
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
