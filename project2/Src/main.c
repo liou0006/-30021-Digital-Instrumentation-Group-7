@@ -7,30 +7,17 @@
 #include "timer.h"
 #include "window.h"
 #include "flash.h"
-#include "lsm9ds1.h"
-
+//#include "lsm9ds1.h"
+#include "afg2021.h"
 
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
-	//	initJoystick();
-	//	initLed();
-	//	iniEXTIA4();
-	initTimer();
-	//	lcd_init_and_print();
-
-	init_SPI_CS();
-
-
-	initAG();
-	initMag();
+	GPIO_set_AF1_PA0();
 
 	while(1) {
-
-		readTempteratureC();
-		//		printGyroXYZ();
-		//		printAccelXYZ();
-		//		printMagnetXYZ();
-
+//		printf("TIM_GetCapture1 value = %ld\n", TIM_GetCapture1(TIM2));
+		printf("Meas. freq.: %f\n", measuredFreq);
+		printf("Meas. duty: %f\n\n", measuredDuty);
 	}
 }
