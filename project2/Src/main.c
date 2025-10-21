@@ -29,10 +29,6 @@ int main(void) {
 
 			printf("freq: %f | duty: %f\n",measFreq,measDuty);
 		}
-		//printf("irq: %u\n",tim2_hits);
 
-		//		printf("TIM_GetCapture1 value = %ld\n", TIM_GetCapture1(TIM2));
-		//		printf("Meas. freq.: %f\n", measuredFreq);
-		//		printf("Meas. duty: %f\n\n", measuredDuty);
 	}
 }

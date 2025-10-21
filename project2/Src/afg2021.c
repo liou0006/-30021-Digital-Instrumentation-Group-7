@@ -3,7 +3,7 @@
 volatile float freq = 0;
 volatile float duty = 0;
 volatile uint32_t tim2_hits = 0;
-volatile uint8_t flag = 1;
+volatile uint8_t flag = 0;
 
 void GPIO_set_AF1_PA0() {
 	// Initializes the selected pins in AF mode
@@ -89,7 +89,7 @@ void TIM2_IRQHandler(void) {
         // Optionally, read capture2 for pulse width
         uint32_t capture2 = TIM_GetCapture2(TIM2);
 
-        uint8_t flag = 1;
+        flag = 1;
 
         // --- Compute results ---
         // Timer tick period = 1 µs (1 MHz counter)
