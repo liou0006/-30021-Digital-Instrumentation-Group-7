@@ -1,59 +1,52 @@
 /*
- * uart_sd_card.c
+ * uart_sd_card.c  (OpenLog streaming mode, HAL-free)
  *
- * HAL-free UART driver + minimal OpenLog helpers for STM32F302R8.
- * TARGET UART: USART2 on PA2 (TX / D1) and PA3 (RX / D0) at 57600 8N1.
+ * USART1 mapped to:
+ *   TX  = PC4 (AF7)
+ *   RX  = PC5 (AF7)
+ *   RTS = (unused)  // PA12 not connected; hardware RTS disabled
  *
- * Wiring (as per your photo):
- *   OpenLog TX  -> Nucleo RX / D0 (PA3 / USART2_RX)
- *   OpenLog RX  -> Nucleo TX / D1 (PA2 / USART2_TX)
+ * Baud: 57600, 8N1
  *
- * Notes:
- * - This uses a tiny SysTick timebase for delays/timeouts (no HAL).
- * - The OpenLog "command mode" uses Ctrl+Z. We create/overwrite data.txt
- *   and write a string via the "write" command, then terminate with Ctrl+Z.
- * - Ensure OpenLog's baud in config.txt is set to 57600 to match this side.
+ * OpenLog notes:
+ * - In NewLog mode (mode=0), OpenLog prints "12<" at boot and logs any bytes you send
+ *   to LOG#####.TXT automatically (no filename required).
+ * - In Sequential mode (mode=1), OpenLog appends to SEQLOG.txt (also prints "12<").
+ * - Send Ctrl+Z (0x1A) three times to enter command mode (prompt '>') if you need file commands.
+ *
+ * Make sure OpenLog's config.txt baud matches 57600.
  */
 
 #include "stm32f30x.h"
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <string.h>
 
-/* Public prototypes (usually in uart_sd_card.h) */
-void serial1_init_57600(void); /* actually initializes USART2 at 57600 */
+/* ===== Public API (match your header) ===== */
+void serial1_init_57600(void);                 /* initializes USART1 on PC4/PC5 @ 57600 */
+void delay_ms(uint32_t ms);
+void delay_us(uint32_t us);
 void serial1_write_byte(uint8_t b);
 void serial1_write(const uint8_t *data, size_t len);
 int  serial1_read_byte_timeout(uint8_t *b, uint32_t timeout_ms);
 
+/* OpenLog (streaming) */
+bool openlog_wait_newlog_prompt(uint32_t timeout_ms);   /* wait for '<' after power-up (optional) */
+void openlog_log_write(const char *text);               /* write string as-is */
+void openlog_log_writeline(const char *text);           /* write string + CRLF */
+
+/* Optional: command-mode helper (Ctrl+Z x3) */
 bool openlog_enter_command_mode(void);
-bool openlog_create_data_txt(void);
-bool openlog_write_data_txt(const char *text);
 
-void delay_ms(uint32_t ms);
-void delay_us(uint32_t us);
-
-/* ===== Configuration ===== */
-/* APB1 clock that feeds USART2. If you run default HSI=8 MHz without PLL, leave 8 MHz.
- * If you later set your clocks so APB1 differs, update UART_PCLK accordingly. */
-#ifndef UART_PCLK
-#define UART_PCLK 8000000u
-#endif
-
-#define OPENLOG_BAUD 57600u
-
-/* ===== Tiny timebase (SysTick-based, HAL-free) ===== */
+/* ===== Tiny timebase (SysTick-based) ===== */
 static volatile uint32_t systick_ms = 0;
-
-void SysTick_Handler(void) {
-    systick_ms++;
-}
+void SysTick_Handler(void) { systick_ms++; }
 
 static void timebase_init(void) {
-    /* Configure SysTick to 1 kHz using core clock. Assume SystemCoreClock is set. */
-    uint32_t hclk = SystemCoreClock;
-    if (hclk == 0u) hclk = 8000000u;
-    SysTick->LOAD  = (hclk / 1000u) - 1u;
+    /* Use SystemCoreClock if available (system_stm32f30x.c), else fall back to 8 MHz */
+    uint32_t hclk = (SystemCoreClock ? SystemCoreClock : 8000000u);
+    SysTick->LOAD  = (hclk / 1000u) - 1u;              /* 1 kHz tick */
     SysTick->VAL   = 0u;
     SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
                      SysTick_CTRL_TICKINT_Msk   |
@@ -66,153 +59,137 @@ void delay_ms(uint32_t ms) {
 }
 
 void delay_us(uint32_t us) {
-    /* Very crude loop based on CPU frequency; good enough for short waits */
+    /* very crude micro delay using CPU cycles */
     uint32_t core = (SystemCoreClock ? SystemCoreClock : 8000000u);
     uint32_t cycles = (core / 1000000u) * us / 5u;
     while (cycles--) { __NOP(); }
 }
 
-/* ===== USART2 @ 57600, 8N1, TX/RX on PA2/PA3 =====
-   Functions keep the "serial1_*" naming for compatibility, but they use USART2. */
+/* ===== Clock helpers (runtime APB2 frequency) ===== */
+static uint32_t apb2_freq_hz(void) {
+    /* HCLK is SystemCoreClock; APB2 prescaler in RCC->CFGR PPRE2[2:0] (bits 13:11) */
+    uint32_t hclk  = (SystemCoreClock ? SystemCoreClock : 8000000u);
+    uint32_t ppre2 = (RCC->CFGR >> 11) & 0x7u;
+
+    uint32_t div;
+    switch (ppre2) {                     /* RM0316: 0xx:/1, 100:/2, 101:/4, 110:/8, 111:/16 */
+        case 0: case 1: case 2: div = 1;  break;
+        case 4: div = 2;  break;
+        case 5: div = 4;  break;
+        case 6: div = 8;  break;
+        case 7: div = 16; break;
+        default: div = 1;  break;
+    }
+    return hclk / div;
+}
+
+/* ===== USART1 @ 57600, 8N1, TX/RX on PC4/PC5 ===== */
 void serial1_init_57600(void) {
-    /* Enable clocks: GPIOA (PA2/PA3), USART2 on APB1 */
-    RCC->AHBENR  |= RCC_AHBENR_GPIOAEN;
-    RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
+    /* Enable GPIOC (PC4/PC5) and USART1 clocks */
+    RCC->AHBENR  |= RCC_AHBENR_GPIOCEN;
+    RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
 
-    /* Configure PA2 -> AF7 (USART2_TX), PA3 -> AF7 (USART2_RX) */
+    /* --- PC4 (TX), PC5 (RX) to AF7 (USART1) --- */
     /* MODER: 10b = Alternate function */
-    /* MODER2/3: 10b = Alternate function */
-    GPIOA->MODER &= ~((3u << (2u*2u)) | (3u << (3u*2u)));
-    GPIOA->MODER |=  ((2u << (2u*2u)) | (2u << (3u*2u)));
+    GPIOC->MODER   &= ~((3u << (4u*2u)) | (3u << (5u*2u)));
+    GPIOC->MODER   |=  ((2u << (4u*2u)) | (2u << (5u*2u)));
+    /* OTYPER: push-pull */
+    GPIOC->OTYPER  &= ~((1u << 4) | (1u << 5));
+    /* PUPDR: no pull (adjust to PU if needed) */
+    GPIOC->PUPDR   &= ~((3u << (4u*2u)) | (3u << (5u*2u)));
+    /* OSPEEDR: high speed */
+    GPIOC->OSPEEDR |=  ((3u << (4u*2u)) | (3u << (5u*2u)));
+    /* AFRL for pins 0..7 on port C: AF7 on PC4/PC5 */
+    GPIOC->AFR[0]  &= ~((0xFu << (4u*4u)) | (0xFu << (5u*4u)));
+    GPIOC->AFR[0]  |=  ((7u  << (4u*4u)) | (7u  << (5u*4u)));
 
-    /* OTYPER: Push-pull */
-    GPIOA->OTYPER &= ~((1u << 2) | (1u << 3));
+    /* Disable USART before (re)config */
+    USART1->CR1 = 0u;
+    USART1->CR2 = 0u;
+    USART1->CR3 = 0u;                     /* RTS/CTS disabled (no flow control) */
 
-    /* PUPDR: no pull or pull-up as you prefer; OpenLog has its own drive.
-       We'll leave floating (00) which works fine. */
-    GPIOA->PUPDR &= ~((3u << (2u*2u)) | (3u << (3u*2u)));
+    /* 8N1, oversampling by 16 */
+    USART1->CR1 &= ~USART_CR1_M;          /* 8-bit */
+    USART1->CR1 &= ~USART_CR1_PCE;        /* no parity */
+    USART1->CR2 &= ~USART_CR2_STOP;       /* 1 stop */
 
-    /* AFRL for pins 0..7: select AF7 on PA2/PA3 */
-    GPIOA->AFR[0] &= ~((0xF << (2 * 4)) | (0xF << (3 * 4)));
-    GPIOA->AFR[0] |=  ((7   << (2 * 4)) | (7   << (3 * 4)));
+    /* Baud = 57600, OVER8 = 0 (oversampling by 16), using runtime APB2 */
+    const uint32_t baud = 57600u;
+    uint32_t pclk = apb2_freq_hz();
+    uint32_t br_x16 = (pclk * 16u + (baud / 2u)) / baud;   /* rounded */
+    USART1->BRR = ((br_x16 / 16u) << 4) | (br_x16 & 0xFu);
 
-    /* Disable USART before config */
-    USART2->CR1 = 0u;
-    USART2->CR2 = 0u;
-    USART2->CR3 = 0u;
+    /* Enable TX, RX, then USART */
+    USART1->CR1 |= USART_CR1_TE | USART_CR1_RE;
+    USART1->CR1 |= USART_CR1_UE;
 
-    /* Word length, parity, stop bits: 8N1, oversampling by 16 */
-    USART2->CR1 &= ~USART_CR1_M;     /* 8-bit */
-    USART2->CR1 &= ~USART_CR1_PCE;   /* no parity */
-    USART2->CR2 &= ~USART_CR2_STOP;  /* 1 stop bit */
-    USART2->CR3  = 0u;               /* no flow control */
+    /* Small settle */
+    for (volatile uint32_t i=0; i<1000u; ++i) { __NOP(); }
 
-    /* Baud rate: BRR for oversampling by 16:
-       USARTDIV = UART_PCLK / (16 * baud) -> BRR = mantissa<<4 | fraction */
-    uint32_t usartdiv_x16 = (UART_PCLK + (OPENLOG_BAUD/2)) / OPENLOG_BAUD; /* = USARTDIV * 16 */
-    uint32_t mantissa = usartdiv_x16 / 16u;
-    uint32_t fraction = usartdiv_x16 - (mantissa * 16u);
-    USART2->BRR = (mantissa << 4) | (fraction & 0xFu);
-
-    /* Enable TX, RX and USART */
-    USART2->CR1 |= USART_CR1_TE | USART_CR1_RE;
-    USART2->CR1 |= USART_CR1_UE;
-
-    /* Small settle delay */
-    for (volatile uint32_t i = 0; i < 1000u; ++i) { __NOP(); }
-
-    /* Start SysTick timebase if not already running */
+    /* Start SysTick 1 kHz if not already running */
     timebase_init();
 }
 
+/* ===== Basic TX/RX helpers ===== */
 void serial1_write_byte(uint8_t b) {
-    while ((USART2->ISR & USART_ISR_TXE) == 0u) { /* wait */ }
-    USART2->TDR = b;
+    while ((USART1->ISR & USART_ISR_TXE) == 0u) { /* wait */ }
+    USART1->TDR = b;
 }
 
 void serial1_write(const uint8_t *data, size_t len) {
-    for (size_t i = 0; i < len; ++i) serial1_write_byte(data[i]);
+    for (size_t i = 0; i < len; ++i) {
+        serial1_write_byte(data[i]);
+    }
 }
 
 int serial1_read_byte_timeout(uint8_t *b, uint32_t timeout_ms) {
     uint32_t start = systick_ms;
     while ((uint32_t)(systick_ms - start) < timeout_ms) {
-        if (USART2->ISR & USART_ISR_RXNE) {
-            *b = (uint8_t)USART2->RDR;
+        if (USART1->ISR & USART_ISR_RXNE) {
+            *b = (uint8_t)USART1->RDR;
             return 1;
         }
     }
     return 0; /* timeout */
 }
 
-/* ===== OpenLog helpers ===== */
+/* ===== OpenLog Streaming ===== */
 
-/* Enter command mode: send Ctrl+Z three times, expect '>' prompt (some fw may vary) */
-bool openlog_enter_command_mode(void) {
-    uint8_t ctrlz = 0x1A; /* Ctrl+Z */
-    serial1_write(&ctrlz, 1);
-    delay_ms(20);
-    serial1_write(&ctrlz, 1);
-    delay_ms(20);
-    serial1_write(&ctrlz, 1);
-    delay_ms(20);
-
-    /* Wait for '>' prompt */
-    uint8_t ch;
-    uint32_t start = systick_ms;
-    while ((uint32_t)(systick_ms - start) < 1500u) {
-        if (serial1_read_byte_timeout(&ch, 10u)) {
-            if (ch == '>') return true;
-        }
-    }
-
-    /* Some firmware may not immediately show '>'—try forcing with '?' */
-    const char q = '?';
-    serial1_write((const uint8_t *)&q, 1);
-    serial1_write((const uint8_t *)"\r\n", 2);
-    start = systick_ms;
-    while ((uint32_t)(systick_ms - start) < 500u) {
-        if (serial1_read_byte_timeout(&ch, 10u) && ch == '>') return true;
-    }
-    return false;
-}
-
-/* Internal helpers */
-static void send_str(const char *s) {
-    while (*s) serial1_write_byte((uint8_t)*s++);
-}
-
-/* Drain incoming bytes until '>' or timeout */
-static void drain_to_prompt(uint32_t timeout_ms) {
+/* Wait for "<" character from the "12<" banner after power-up.
+   Many firmwares send this; if we miss it due to timing, we still proceed. */
+bool openlog_wait_newlog_prompt(uint32_t timeout_ms) {
     uint8_t ch;
     uint32_t start = systick_ms;
     while ((uint32_t)(systick_ms - start) < timeout_ms) {
         if (serial1_read_byte_timeout(&ch, 10u)) {
-            if (ch == '>') break;
+            if (ch == '<') return true; /* ready marker seen */
         }
     }
+    return true; /* proceed even if not seen */
 }
 
-/* Create/overwrite an empty data.txt using 'write data.txt' then immediate Ctrl+Z */
-bool openlog_create_data_txt(void) {
-    if (!openlog_enter_command_mode()) return false;
-    send_str("write data.txt\r\n");
-    uint8_t ctrlz = 0x1A;
-    serial1_write(&ctrlz, 1); /* end file immediately => empty file created */
-    drain_to_prompt(1500u);
-    return true;
+void openlog_log_write(const char *text) {
+    if (!text) return;
+    serial1_write((const uint8_t*)text, strlen(text));
 }
 
-/* Overwrite data.txt with provided text; Ctrl+Z to finish and save */
-bool openlog_write_data_txt(const char *text) {
-    if (text == NULL) return false;
-    if (!openlog_enter_command_mode()) return false;
+void openlog_log_writeline(const char *text) {
+    if (text) serial1_write((const uint8_t*)text, strlen(text));
+    serial1_write((const uint8_t*)"\r\n", 2);
+}
 
-    send_str("write LOG00134.TXT\r\n");
-    send_str(text);
-    uint8_t ctrlz = 0x1A;
-    serial1_write(&ctrlz, 1);
+/* ===== Optional: Command Mode (Ctrl+Z x3) ===== */
+bool openlog_enter_command_mode(void) {
+    uint8_t ctrlz = 0x1A; /* ASCII 26 */
+    serial1_write(&ctrlz, 1); delay_ms(15);
+    serial1_write(&ctrlz, 1); delay_ms(15);
+    serial1_write(&ctrlz, 1); delay_ms(15);
 
-    drain_to_prompt(3000u);
-    return true;
+    /* Wait briefly for '>' prompt */
+    uint8_t ch;
+    uint32_t start = systick_ms;
+    while ((uint32_t)(systick_ms - start) < 1500u) {
+        if (serial1_read_byte_timeout(&ch, 10u) && ch == '>') return true;
+    }
+    return false;
 }
