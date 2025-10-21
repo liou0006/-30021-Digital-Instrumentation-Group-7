@@ -5,35 +5,31 @@
  *      Author: markmalloy
  */
 
-#ifndef UART_SD_CARD_H_
-#define UART_SD_CARD_H_
 
-#include "main.h"          // Brings in HAL types and pin defs used by the app
+#ifndef UART_SD_CARD_H
+#define UART_SD_CARD_H
+
 #include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
 
-/* Extern UART handle (defined in uart_sd_card.c) */
-extern UART_HandleTypeDef huart1;
+/* Initialize USART1 (PA9=TX, PA10=RX) at 57600 8N1 (no flow control). */
+void serial1_init_57600(void);
 
-/* ---------- Public OpenLog API ---------- */
-/**
- * @brief Write a text buffer to a file on OpenLog.
- * @param filename  Null-terminated filename (e.g., "log.txt")
- * @param text      Null-terminated text buffer to write
- * @return HAL status
- */
-HAL_StatusTypeDef openlog_write_text(const char *filename, const char *text);
+/* Send / receive bytes */
+void serial1_write_byte(uint8_t b);
+void serial1_write(const uint8_t *data, size_t len);
+int  serial1_read_byte_timeout(uint8_t *b, uint32_t timeout_ms);
 
-/**
- * @brief Read a text file from OpenLog into a buffer.
- * @param filename  Null-terminated filename
- * @param buf       Destination buffer
- * @param buflen    Size of destination buffer in bytes
- * @return Number of bytes copied into buf (not including terminating NUL), or 0 on failure
- */
-int openlog_read_text(const char *filename, char *buf, int buflen);
+/* OpenLog helpers (UART command interface) */
+bool openlog_enter_command_mode(void);
+/* Create/overwrite "data.txt" and write the provided string (null-terminated). */
+bool openlog_write_data_txt(const char *text);
+/* Create empty "data.txt" (if it exists it will be overwritten). */
+bool openlog_create_data_txt(void);
 
-/* ---------- System hooks supplied by the application ---------- */
-void SystemClock_Config(void);
-void Error_Handler(void);
+/* Tiny delay helpers (busy-wait, approximate) */
+void delay_ms(uint32_t ms);
+void delay_us(uint32_t us);
 
-#endif /* UART_SD_CARD_H_ */
+#endif /* UART_SD_CARD_H */
