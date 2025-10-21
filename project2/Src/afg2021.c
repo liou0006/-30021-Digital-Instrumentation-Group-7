@@ -24,15 +24,17 @@ void GPIO_set_AF1_PA0() {
 	TIM_TimeBaseStructInit(&TIM_InitStruct);
 
 	// --- From Table 23 in the datasheet APB1 clock frequency is 36MHz
-	uint32_t timer_clock = 36000000;
-	uint16_t prescaler = (timer_clock / 1000000) - 1;	// 1 MHz counter
-	uint16_t period = 0xFFFF;							// max
+	uint32_t timer_clock = 36000000;          // TIM2 clock (2 × APB1 = 72 MHz)
+	uint32_t target_freq = 1000000;           // 1 MHz
+	uint16_t prescaler = (timer_clock / target_freq) - 1;  // = 71
+	uint32_t period = 0xFFFFFFFF; 							// max
 
 	TIM_InitStruct.TIM_Prescaler = prescaler;
 	TIM_InitStruct.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_InitStruct.TIM_Period = period;
 	TIM_InitStruct.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseInit(TIM2, &TIM_InitStruct);
+	TIM_SetAutoreload(TIM2, 0xFFFFFFFF);
 
 	// 3. Configure TIM_ICInitStrct
 	TIM_ICInitTypeDef TIM_ICInitStruct;
@@ -49,6 +51,7 @@ void GPIO_set_AF1_PA0() {
 	TIM_PWMIConfig(TIM2, &TIM_ICInitStruct);
 
 	// Configure trigger/slave mode
+	TIM_SelectInputTrigger(TIM2, TIM_TS_TI1FP1);
 	TIM_SelectInputTrigger(TIM2, TIM_SlaveMode_Reset);
 	TIM_SelectMasterSlaveMode(TIM2, TIM_MasterSlaveMode_Enable);
 
@@ -86,8 +89,10 @@ void TIM2_IRQHandler(void) {
         float freq = 1e6f / period_us;        // in Hz
         float duty = (high_us / period_us) * 100.0f; // in %
 
+        printf("%f\n",freq);
+
         // You could store these in global/static variables:
-        float measuredFreq = freq;
-        float measuredDuty = duty;
+//        float measuredFreq = freq;
+//        float measuredDuty = duty;
     }
 }

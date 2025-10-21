@@ -14,11 +14,11 @@
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
-	GPIO_set_AF1_PA0();
 
+	GPIO_set_AF1_PA0();
 	while(1) {
 //		printf("TIM_GetCapture1 value = %ld\n", TIM_GetCapture1(TIM2));
-		printf("Meas. freq.: %f\n", measuredFreq);
-		printf("Meas. duty: %f\n\n", measuredDuty);
+//		printf("Meas. freq.: %f\n", measuredFreq);
+//		printf("Meas. duty: %f\n\n", measuredDuty);
 	}
 }
