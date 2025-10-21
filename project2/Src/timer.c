@@ -40,7 +40,6 @@ void initTimer() {
 	TIM2->CR1 = 0x0001;		// configure timer 2
 	TIM2->ARR = 0x03FF;		// set reload value
 	TIM2->PSC = 0x0270;		// set prescale value
-
 	TIM2->DIER |= 0x0001;	// enable timer 2 interrupts
 
 	uint8_t priority = 2;

@@ -1,5 +1,10 @@
 #include "afg2021.h"
 
+volatile float freq = 0;
+volatile float duty = 0;
+volatile uint32_t tim2_hits = 0;
+volatile uint8_t flag = 1;
+
 void GPIO_set_AF1_PA0() {
 	// Initializes the selected pins in AF mode
 
@@ -22,6 +27,7 @@ void GPIO_set_AF1_PA0() {
 	// 2.5 Configure TimeBaseInit
 	TIM_TimeBaseInitTypeDef TIM_InitStruct;
 	TIM_TimeBaseStructInit(&TIM_InitStruct);
+
 
 	// --- From Table 23 in the datasheet APB1 clock frequency is 36MHz
 	uint32_t timer_clock = 36000000;          // TIM2 clock (2 × APB1 = 72 MHz)
@@ -49,10 +55,12 @@ void GPIO_set_AF1_PA0() {
 
 	// 5.
 	TIM_PWMIConfig(TIM2, &TIM_ICInitStruct);
+	TIM_CCxCmd(TIM2, TIM_Channel_1, TIM_CCx_Enable); // can maybe be deleted if unnecessary
+	TIM_CCxCmd(TIM2, TIM_Channel_2, TIM_CCx_Enable);
 
 	// Configure trigger/slave mode
 	TIM_SelectInputTrigger(TIM2, TIM_TS_TI1FP1);
-	TIM_SelectInputTrigger(TIM2, TIM_SlaveMode_Reset);
+	TIM_SelectSlaveMode(TIM2, TIM_SlaveMode_Reset);
 	TIM_SelectMasterSlaveMode(TIM2, TIM_MasterSlaveMode_Enable);
 
 	// 6. Enable NVIC
@@ -72,24 +80,26 @@ void GPIO_set_AF1_PA0() {
 void TIM2_IRQHandler(void) {
     // Check for capture on Channel 1
     if (TIM_GetITStatus(TIM2, TIM_IT_CC1) != RESET) {
+        TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);
+
+    	// Clear the interrupt flag
         // Read captured value for period (rising-to-rising)
-        uint16_t capture1 = TIM_GetCapture1(TIM2);
+        uint32_t capture1 = TIM_GetCapture1(TIM2);
 
         // Optionally, read capture2 for pulse width
-        uint16_t capture2 = TIM_GetCapture2(TIM2);
+        uint32_t capture2 = TIM_GetCapture2(TIM2);
 
-        // Clear the interrupt flag
-        TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);
+        uint8_t flag = 1;
 
         // --- Compute results ---
         // Timer tick period = 1 µs (1 MHz counter)
         float period_us = (float)capture1;
         float high_us   = (float)capture2;
 
-        float freq = 1e6f / period_us;        // in Hz
-        float duty = (high_us / period_us) * 100.0f; // in %
-
-        printf("%f\n",freq);
+        freq = (float)capture1;
+        duty = (float)capture2;
+//        freq = period_us / 1e6f ;        // in Hz
+//        duty = (high_us / period_us) * 100.0f; // in %
 
         // You could store these in global/static variables:
 //        float measuredFreq = freq;
