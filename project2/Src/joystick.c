@@ -32,6 +32,8 @@ void initJoystick(){
 	GPIO_InitStructAll.GPIO_PuPd = GPIO_PuPd_DOWN;
 	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
 	GPIO_Init(GPIOC, &GPIO_InitStructAll);
+
+	setLed('d');
 }
 
 

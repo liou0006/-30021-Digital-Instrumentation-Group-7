@@ -1,13 +1,8 @@
 #include "afg2021.h"
 
-volatile uint32_t capture1 = 0;
-volatile uint32_t capture2 = 0;
-
 volatile float freq = 0;
 volatile float duty = 0;
-volatile float high_us = 0;
-volatile uint32_t tim2_hits = 0;
-volatile uint8_t flag = 0;
+volatile uint8_t readCapture = 0;   // 1=run, 0=pause
 
 void TimeBaseInit(){
 	// 1. Enable TIM clock
@@ -20,8 +15,9 @@ void TimeBaseInit(){
 	// --- From Table 23 in the datasheet APB1 clock frequency is 36MHz
 	uint32_t timer_clock = 72000000;          // TIM2 clock (2 × APB1 = 72 MHz) something about we
 	uint32_t target_freq = 1000000;           // 1 MHz
-	uint16_t prescaler = (timer_clock / target_freq) - 1;  // = 71
+	uint16_t prescaler = (timer_clock / target_freq) - 1u;  // = 71
 	uint32_t period = 0xFFFFFFFF; 	 //TIM2 is 32-bit - look at page 550 in RM
+	uint8_t prescalerCalibrated = prescaler - 8; // 63 which means TIM2 clock frequency should be 64 Mhz
 
 	TIM_InitStruct.TIM_Prescaler = prescaler;
 	TIM_InitStruct.TIM_CounterMode = TIM_CounterMode_Up;
@@ -63,11 +59,11 @@ void TimeICInit(){
 
 
 	// 6. Enable NVIC
-	uint8_t priority = 2;
+	uint8_t priority = 1;
 	NVIC_SetPriority(TIM2_IRQn, priority);		// set interrupt priority interrupts
 	NVIC_EnableIRQ(TIM2_IRQn);					// enable interrupt
 
-	TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);
+	TIM_ClearITPendingBit(TIM2, TIM_IT_CC1 | TIM_IT_CC2);
 
 	// 7. Enable corresponding interrupt to read captured value
 	TIM_ITConfig(TIM2, TIM_IT_CC1, ENABLE);
@@ -87,7 +83,7 @@ void GPIO_set_AF1_PA0() {
 	GPIO_StructInit(&GPIO_InitStruct);
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0;
-	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_DOWN;
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL; //changed to NOPULL and duty works
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
 
 	GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -99,21 +95,39 @@ void TIM2_IRQHandler(void) {
 	if (TIM_GetITStatus(TIM2, TIM_IT_CC1) != RESET) {
 		TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);
 
-		// Clear the interrupt flag
+		if (!readCapture) return;
+		// Clear the interrupt readCapture
 		// Read captured value for period (rising-to-rising)
-		 capture1 = TIM_GetCapture1(TIM2);	// read capture1 for period
-		 capture2 = TIM_GetCapture2(TIM2);	// read capture2 for pulse width
+		uint32_t capture1 = TIM_GetCapture1(TIM2);	// read capture1 for period
+		uint32_t capture2 = TIM_GetCapture2(TIM2);	// read capture2 for pulse width
 
 		// --- Compute results ---
 		// Timer tick period = 1 µs (1 MHz counter)
 		float period_us = (float)capture1;
-		high_us   = (float)capture2;
+		float high_us   = (float)capture2;
 
 		if (period_us > 0) {
 			freq = 1e6f / period_us;
 			duty = (high_us / period_us) * 100.0f;
 		}
 
-		flag = 1;
+	}
+}
+
+void joystickIC(){
+
+	static int8_t currentState = 0;  // remember last state
+
+	int8_t nextState = readJoystick();
+
+	if ((currentState == 0x10) && !(nextState == 0x10)) {
+		if (readCapture == 1){
+			readCapture = 0;
+			setLed('r');
+		} else {
+			readCapture = 1;
+			setLed('g');
+		}
+
 	}
 }
