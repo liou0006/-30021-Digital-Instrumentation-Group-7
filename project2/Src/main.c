@@ -18,18 +18,14 @@ int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
 	TimeICInit();
+	initLed();
 	initJoystick();
 
 	while(1) {
 		joystickIC();
 		if (readCapture == 1){
-			readCapture = 0;
 			printf("period: %.1f | freq: %f | duty: %f \n", 1e6f/freq, freq, duty);
 		}
-		else{
-			printf("Paused\n");
-		}
-
 
 	}
 }

@@ -3,6 +3,7 @@
 volatile float freq = 0;
 volatile float duty = 0;
 volatile uint8_t readCapture = 0;   // 1=run, 0=pause
+volatile uint8_t readAverage = 0;
 
 void TimeBaseInit(){
 	// 1. Enable TIM clock
@@ -91,18 +92,15 @@ void GPIO_set_AF1_PA0() {
 }
 
 void TIM2_IRQHandler(void) {
-	// Check for capture on Channel 1
 	if (TIM_GetITStatus(TIM2, TIM_IT_CC1) != RESET) {
 		TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);
 
 		if (!readCapture) return;
-		// Clear the interrupt readCapture
+
 		// Read captured value for period (rising-to-rising)
 		uint32_t capture1 = TIM_GetCapture1(TIM2);	// read capture1 for period
 		uint32_t capture2 = TIM_GetCapture2(TIM2);	// read capture2 for pulse width
 
-		// --- Compute results ---
-		// Timer tick period = 1 µs (1 MHz counter)
 		float period_us = (float)capture1;
 		float high_us   = (float)capture2;
 
@@ -111,23 +109,61 @@ void TIM2_IRQHandler(void) {
 			duty = (high_us / period_us) * 100.0f;
 		}
 
+		if (readAverage == 1){
+
+			uint8_t sample = 10;
+
+			for (uint8_t i = 0 ; i < sample; i++){
+
+				float freqAvg[10];
+				float periodAvg[10];
+				float dutyAvg[10];
+
+				freqAvg[i] = freq;
+				periodAvg[i] = 1e6f/freq;
+				dutyAvg[i] = duty;
+
+			}
+
+
+			readAverage = 0;
+			readCapture = 0;
+		}
+
 	}
 }
 
 void joystickIC(){
 
-	static int8_t currentState = 0;  // remember last state
-
+	static int8_t currentState = 0;
 	int8_t nextState = readJoystick();
 
-	if ((currentState == 0x10) && !(nextState == 0x10)) {
-		if (readCapture == 1){
-			readCapture = 0;
-			setLed('r');
-		} else {
-			readCapture = 1;
+	if (nextState!= currentState) {
+		switch(nextState){
+		case 0x10:
+
+			if (readCapture == 1){
+				readCapture = 0;
+				setLed('r');
+			} else {
+				readCapture = 1;
+				setLed('g');
+			}
+			break;
+
+		case 0x1:
+
 			setLed('g');
+			readCapture = 1;
+			readAverage = 1;
+
+
+			setLed('m');
+
+			break;
 		}
 
 	}
+
+	currentState = nextState;
 }
