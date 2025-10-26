@@ -1,23 +1,22 @@
-
 #include "stm32f30x.h"
+#include "ultrasonic_sensor.h"
 #include <stdint.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include "uart_sd_card.h"
 
-int main(void) {
-    // led_init(); // enable if you want a status blink
-    serial1_init_57600();          // USART2 on PA2/PA3 @ 57600 (matches config.txt)
-	printf("Initialize Complete.. Waiting for newlog prompt");	// moves cursor to row 4 column 20
-    (void)openlog_wait_newlog_prompt(1500); // optional: look for '<'
 
-    /* Stream a couple of lines into LOG#####.TXT */
-    //openlog_log_writeline("ValueA=123, ValueB=456");
 
-    /* Idle loop */
+ int main(void) {
+    SystemInit();
+    SystemCoreClockUpdate();          // ensures APB1 freq is correct for BRR
+    ultrasonic_init();                // sets up PA8/PA9 + TIM2, EXTI
+
     while (1) {
-        // led_toggle();
-        openlog_log_writeline("X");
-        delay_ms(1000);
+        uint32_t cm;
+        if (ultrasonic_measure_cm(60, &cm)) {
+            // prints "Distance: NN cm" inside the function
+        }
+        for (volatile uint32_t d=0; d<800000; ++d) __NOP();
     }
 }
+
+
+
