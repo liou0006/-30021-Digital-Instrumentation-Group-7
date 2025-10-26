@@ -154,7 +154,7 @@ void initAG(){
 	writeAG(0x10,0b01100000);
 
 	//enable Accelerometer
-	writeAG(0x19,0b01111000);
+	writeAG(0x1F,0b01111000);
 	writeAG(0x20,0b01000000);
 }
 
