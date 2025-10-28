@@ -7,8 +7,9 @@
 #include "timer.h"
 #include "window.h"
 #include "flash.h"
-#include "lsm9ds1.h"
 
+//#include "lsm9ds1.h"
+#include "spiMaster.h"
 
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud

@@ -1,0 +1,2 @@
+../Src/adc.c:10:6:ADC_setup_PA	7
+../Src/adc.c:58:10:ADC_measure_PA	3
