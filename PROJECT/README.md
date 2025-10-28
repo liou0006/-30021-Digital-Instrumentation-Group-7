@@ -2,6 +2,8 @@
 
 **Course:** 30021 Digital Instrumentation
 
+Not updated.
+
 Simple overview of use/purpose.
 
 ## Description
@@ -37,11 +39,11 @@ command to run if program contains helper info
 
 ## Authors
 
-+ Mark Calum Malloy (s153679)
-+ Emma Louise Blair (s214680)
-+ Liou Xia (s224028)
-+ Guilherme Henriques de Almeida Ter\c{c}a (s243020)
-+ Francisco Cadima Almeida (s243042)
+* Mark Calum Malloy (s153679)
+* Emma Louise Blair (s214680)
+* Liou Xia (s224028)
+* Guilherme Henriques de Almeida Terca (s243020)
+* Francisco Cadima Almeida (s243042)
 
 ## Version History
 
@@ -51,15 +53,7 @@ command to run if program contains helper info
 * 0.1
     * Initial Release
 
-## License
-
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
-
 ## Acknowledgments
 
 Inspiration, code snippets, etc.
 * [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
