@@ -14,14 +14,7 @@
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
-	//	initJoystick();
-	//	initLed();
-	//	iniEXTIA4();
-	initTimer();
-	//	lcd_init_and_print();
-
-	init_SPI_CS();
-
+	initMasterSPI();
 
 	initAG();
 	initMag();
