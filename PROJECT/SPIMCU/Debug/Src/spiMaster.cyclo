@@ -1,13 +1,1 @@
-../Src/spiMaster.c:6:6:init_SPI_CS	1
-../Src/spiMaster.c:69:9:spi2_transfer	3
-../Src/spiMaster.c:76:9:readAG	2
-../Src/spiMaster.c:85:6:writeAG	2
-../Src/spiMaster.c:94:9:readOutput	1
-../Src/spiMaster.c:103:6:printGyroXYZ	1
-../Src/spiMaster.c:111:6:printAccelXYZ	1
-../Src/spiMaster.c:119:6:readTempteratureC	1
-../Src/spiMaster.c:127:9:readM	2
-../Src/spiMaster.c:136:6:writeM	2
-../Src/spiMaster.c:144:6:printMagnetXYZ	1
-../Src/spiMaster.c:152:6:initAG	1
-../Src/spiMaster.c:161:6:initMag	1
+../Src/spiMaster.c:3:6:initMasterSPI	1

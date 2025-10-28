@@ -8,7 +8,7 @@
 #include "window.h"
 #include "flash.h"
 
-//#include "lsm9ds1.h"
+#include "lsm9ds1.h"
 #include "spiMaster.h"
 
 int main(void) {
