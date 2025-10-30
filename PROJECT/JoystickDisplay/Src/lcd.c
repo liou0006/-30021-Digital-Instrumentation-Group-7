@@ -188,7 +188,7 @@ void write_line_buff(uint8_t * linebuff, uint8_t * lcdbuff, uint8_t xoffset, uin
     //          Otherwise, it will be capped.
     if (scrollena > 0){
         for(uint8_t idx = 0; idx<LCD_LINE_SIZE; idx++){
-            lcdbuff[idx+yoffset*LCD_LINE_SIZE] = linebuff[(idx + xoffset) & LCD_LINE_BUFF_SIZE-1];
+            lcdbuff[idx+yoffset*LCD_LINE_SIZE] = linebuff[(idx + xoffset) & (LCD_LINE_BUFF_SIZE-1)];
         }
     }else{
         memcpy(lcdbuff + xoffset+yoffset*LCD_LINE_SIZE, linebuff, sizeof(uint8_t) * LCD_LINE_SIZE-xoffset);
@@ -207,33 +207,33 @@ void lcd_write_string(uint8_t * str, uint8_t * lcdBuff, uint8_t xoffset, uint8_t
 }
 
 
-/* Function added to the given lcd file
- * Can be called from main.c with this line before the while(1) loop:
- * lcd_init_and_print();
- */
-void lcd_init_and_print(void) {
-//    static uint8_t lcdBuffer[LCD_BUFF_SIZE];	// Frame buffer for LCD
-//
-//    init_spi_lcd();        // Initialize SPI + GPIOs and reset LCD
-//    memset(lcdBuffer, 0x00, LCD_BUFF_SIZE);		// Clear buffer
-//
-//    // Write to multiple lines with x offset
-////    lcd_write_string((uint8_t *)"1line", lcdBuffer, 10, 0);
-////    lcd_write_string((uint8_t *)"2line", lcdBuffer, 0, 1);
-////    lcd_write_string((uint8_t *)"3line", lcdBuffer, 10, 2);
-////    lcd_write_string((uint8_t *)"4line", lcdBuffer, 0, 3);
-//
-//    // Write formatted text
-//    char buffer[32];	// adjust size for LCD width
-//
-//    int val1 = 42;
-//    float val2 = 3.3;
-//
-////    snprintf(buffer, sizeof(buffer), "Val1=%d, Val2=%.2f", val1, val2);	// format string into buffer
-////    sprintf(buffer, "Val1=%d, Val2=%.2f", val1, val2);
-//
-//    lcd_write_string((uint8_t *)buffer, lcdBuffer, 0, 0);
-//
-//    // Push buffer content to LCD
-//    lcd_push_buffer(lcdBuffer);
-}
+///* Function added to the given lcd file
+// * Can be called from main.c with this line before the while(1) loop:
+// * lcd_init_and_print();
+// */
+//void lcd_init_and_print(void) {
+////    static uint8_t lcdBuffer[LCD_BUFF_SIZE];	// Frame buffer for LCD
+////
+////    init_spi_lcd();        // Initialize SPI + GPIOs and reset LCD
+////    memset(lcdBuffer, 0x00, LCD_BUFF_SIZE);		// Clear buffer
+////
+////    // Write to multiple lines with x offset
+//////    lcd_write_string((uint8_t *)"1line", lcdBuffer, 10, 0);
+//////    lcd_write_string((uint8_t *)"2line", lcdBuffer, 0, 1);
+//////    lcd_write_string((uint8_t *)"3line", lcdBuffer, 10, 2);
+//////    lcd_write_string((uint8_t *)"4line", lcdBuffer, 0, 3);
+////
+////    // Write formatted text
+////    char buffer[32];	// adjust size for LCD width
+////
+////    int val1 = 42;
+////    float val2 = 3.3;
+////
+//////    snprintf(buffer, sizeof(buffer), "Val1=%d, Val2=%.2f", val1, val2);	// format string into buffer
+//////    sprintf(buffer, "Val1=%d, Val2=%.2f", val1, val2);
+////
+////    lcd_write_string((uint8_t *)buffer, lcdBuffer, 0, 0);
+////
+////    // Push buffer content to LCD
+////    lcd_push_buffer(lcdBuffer);
+//}

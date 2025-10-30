@@ -4,24 +4,35 @@
 //#include "led.h"
 //#include "interrupts.h"
 #include "lcd.h"
-//#include <math.h>
+#include "lcd_graphics.h"
+#include <math.h>
 
-//#define SAMPLE_RATE		8000.0f	// Hz
-//#define FFT_SIZE		256
-//#define DISPLAY_WIDTH	128
-//#define DISPLAY_HEIGHT	32
-
-void lcd_draw_vertical_line(uint8_t *lcdBuffer, uint8_t x, uint8_t y_start, uint8_t y_end)
-{
-    if (x >= 128) return;  // limit check
-    if (y_start > y_end) { uint8_t tmp = y_start; y_start = y_end; y_end = tmp; }
-
-    for (uint8_t y = y_start; y <= y_end; y++) {
-        uint8_t page = y / 8;        // 0–3
-        uint8_t bit  = y % 8;        // 0–7
-        lcdBuffer[page * 128 + x] |= (1 << bit);
-    }
-}
+// From CHATGPT to test if printing works
+//void lcd_test_cosine_wave(void) {
+//	static uint8_t buffer[LCD_BUFF_SIZE];
+//	lcd_clear_buffer(buffer);
+//
+//	const int num_points = LCD_LINE_SIZE;	// one bar per column
+//	const float amplitude = 16.0f;			// half the LCD height (32)
+//	const float offset = 16.0f;				// center vertically
+//	const float freq = 2.0f;				// no. of cosine periods across screen
+//
+//	float magnitude[num_points];
+//
+//    // Generate cosine wave magnitudes
+//    for (int i = 0; i < num_points; i++) {
+//        float angle = 2.0f * M_PI * freq * i / num_points;
+//        float value = cosf(angle);
+//
+//        // Map to vertical coordinate (centered on screen)
+//        float y_float = offset + amplitude * value;
+//        uint8_t y = (uint8_t)(LCD_HEIGHT_SIZE - 1 - y_float); // invert Y (0 = top)
+//        lcd_draw_pixel(buffer, i, y);
+//    }
+//
+//    // Push to LCD
+//    lcd_push_buffer(buffer);
+//}
 
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
@@ -53,18 +64,42 @@ int main(void) {
 //
 //	while(1);
 
-	// === Full height vertical line every 8 pixels
-	static uint8_t lcdBuffer[512];	// 128 x 32 = 512 bytes
+
+	// ================== LCD GRAPHICS =================
+
+	// Initialize SPI for LCD
 	init_spi_lcd();
-	memset(lcdBuffer, 0x00, sizeof(lcdBuffer));
 
-	// Draw some vertical lines
-	for (int i = 0; i < 128; i += 8) {	// every 8 pixels
-		lcd_draw_vertical_line(lcdBuffer, i, 0, 31);	// full height line
-	}
+	// Initialize and clear buffer
+	static uint8_t buffer[LCD_BUFF_SIZE];	// 512 bytes
+	lcd_clear_buffer(buffer);
 
-	// Push buffer to LCD
-	lcd_push_buffer(lcdBuffer);
+//	lcd_test_cosine_wave();
+
+//	lcd_draw_horizontal_line(buffer, 2, 29, 10);
+//	lcd_draw_axis(buffer);
+
+//	lcd_draw_char3x5(buffer, 8, 27, '1');
+//	lcd_draw_char3x5(buffer, 12, 27, '0');
+//
+//	lcd_draw_char3x5(buffer, 16, 25, '1');
+//	lcd_draw_char3x5(buffer, 20, 25, '0');
+//
+//	lcd_draw_char3x5(buffer, 24, 22, '1');
+//	lcd_draw_char3x5(buffer, 28, 22, '0');
+
+	lcd_draw_char3x5(buffer, 0, 27, '0');
+	lcd_draw_char3x5(buffer, 4, 27, '1');
+	lcd_draw_char3x5(buffer, 8, 27, '2');
+	lcd_draw_char3x5(buffer, 12, 27, '3');
+	lcd_draw_char3x5(buffer, 16, 27, '4');
+	lcd_draw_char3x5(buffer, 20, 27, '5');
+	lcd_draw_char3x5(buffer, 24, 27, '6');
+	lcd_draw_char3x5(buffer, 28, 27, '7');
+	lcd_draw_char3x5(buffer, 32, 27, '8');
+	lcd_draw_char3x5(buffer, 36, 27, '9');
+
+	lcd_push_buffer(buffer);
 
 	while(1);
 }
