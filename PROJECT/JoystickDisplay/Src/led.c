@@ -83,19 +83,4 @@ void setLed(char sel) {
 		GPIO_WriteBit(GPIOC, GPIO_Pin_7, 1);	// green
 		GPIO_WriteBit(GPIOA, GPIO_Pin_9, 1);	// blue
 	}
-
-
-//	GPIO_WriteBit(GPIOA, GPIO_Pin_9, Bit_SET);
-//	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
-//	GPIO_WriteBit(GPIOC, GPIO_Pin_7, Bit_SET);
-
-//	// Initialize joystick state variable
-//	int8_t state = 0;
-//
-//	// Read joystick pins
-//	int8_t up = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4);		// PA4
-//	int8_t down = GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0);		// PB0
-//	int8_t center = GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_5);	// PB5
-//	int8_t right = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_0);	// PC0
-//	int8_t left = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_1);		// PC1
 }

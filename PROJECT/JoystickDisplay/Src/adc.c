@@ -77,12 +77,3 @@ uint16_t ADC_measure_PA(uint8_t ch) {
 	// Return read ADC value (0..4095)
 	return ADC_GetConversionValue(ADC1);
 }
-
-// --- More smooth values ---
-uint16_t ADC_measure_PA_avg(uint8_t ch, uint8_t samples) {
-	uint32_t sum = 0;
-	for (uint8_t i = 0; i < samples; i++) {
-		sum += ADC_measure_PA(ch);
-	}
-	return (uint16_t)(sum / samples);
-}

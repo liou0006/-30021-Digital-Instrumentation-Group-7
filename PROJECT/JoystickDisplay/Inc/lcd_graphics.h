@@ -12,7 +12,7 @@
  ***********************************************************/
 #define LCD_HEIGHT 32
 #define LCD_SLICE_SIZE 8	// Row height (4 rows each with 128 slices)
-#define LCD_VIRTUAL_WIDTH	// Virtual buffer width to enable horizontal scrolling
+//#define LCD_VIRTUAL_SIZE	// Virtual buffer width to enable horizontal scrolling
 
 /***********************************************************
  * Functions

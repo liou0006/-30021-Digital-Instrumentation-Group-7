@@ -12,7 +12,6 @@ typedef struct {
 
 extern timestruct_t timeData;
 
-
 /* Exported functions ------------------------------------------------------- */
 void initTimer();
 void TIM2_IRQHandler(void);

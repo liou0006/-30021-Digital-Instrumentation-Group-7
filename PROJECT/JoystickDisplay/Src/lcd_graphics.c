@@ -61,12 +61,14 @@ void lcd_draw_horizontal_line(uint8_t *buffer, uint8_t x_start, uint8_t x_end, u
 		x_end = temp;
 	}
 	if (x_start >= LCD_LINE_SIZE) return;
+//	if (x_start >= LCD_BUFF_SIZE) return;
 
 	uint8_t row = y / LCD_SLICE_SIZE;	// Find row
 	uint8_t bit = y % LCD_SLICE_SIZE;	// Find bit
 
 	for (uint8_t x = x_start; x <= x_end; x++) {
 		buffer[row * LCD_LINE_SIZE + x] |= (1 << bit);
+//		buffer[row * LCD_BUFF_SIZE + x] |= (1 << bit);
 	}
 }
 
@@ -90,6 +92,13 @@ void lcd_draw_char3x5(uint8_t *buffer, uint8_t x, uint8_t y, char c) {
 
 
 
+void lcd_draw_fft(uint8_t *buffer) {
+	// Needs more inputs
+
+	// Inputs: buffer, x, y_start, y_end, magnitude_scale??
+}
+
+
 
 
 
@@ -105,13 +114,6 @@ void lcd_draw_axis(uint8_t *buffer) {
 
 	lcd_draw_horizontal_line(buffer, 9, LCD_LINE_SIZE-1, 24);
 	lcd_draw_vertical_line(buffer, 9, 0, 24);
-}
-
-
-void lcd_draw_fft(uint8_t *buffer) {
-	// Needs more inputs
-
-	// Inputs: buffer, x, y_start, y_end, magnitude_scale??
 }
 
 void lcd_draw_histogram(uint8_t *buffer) {

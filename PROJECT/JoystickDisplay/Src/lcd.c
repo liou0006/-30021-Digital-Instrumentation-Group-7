@@ -205,35 +205,3 @@ void lcd_write_string(uint8_t * str, uint8_t * lcdBuff, uint8_t xoffset, uint8_t
     //  (horizontal scrolling is always disabled!)
     write_line_buff(lineBuff, lcdBuff, xoffset, yoffset, 0);
 }
-
-
-///* Function added to the given lcd file
-// * Can be called from main.c with this line before the while(1) loop:
-// * lcd_init_and_print();
-// */
-//void lcd_init_and_print(void) {
-////    static uint8_t lcdBuffer[LCD_BUFF_SIZE];	// Frame buffer for LCD
-////
-////    init_spi_lcd();        // Initialize SPI + GPIOs and reset LCD
-////    memset(lcdBuffer, 0x00, LCD_BUFF_SIZE);		// Clear buffer
-////
-////    // Write to multiple lines with x offset
-//////    lcd_write_string((uint8_t *)"1line", lcdBuffer, 10, 0);
-//////    lcd_write_string((uint8_t *)"2line", lcdBuffer, 0, 1);
-//////    lcd_write_string((uint8_t *)"3line", lcdBuffer, 10, 2);
-//////    lcd_write_string((uint8_t *)"4line", lcdBuffer, 0, 3);
-////
-////    // Write formatted text
-////    char buffer[32];	// adjust size for LCD width
-////
-////    int val1 = 42;
-////    float val2 = 3.3;
-////
-//////    snprintf(buffer, sizeof(buffer), "Val1=%d, Val2=%.2f", val1, val2);	// format string into buffer
-//////    sprintf(buffer, "Val1=%d, Val2=%.2f", val1, val2);
-////
-////    lcd_write_string((uint8_t *)buffer, lcdBuffer, 0, 0);
-////
-////    // Push buffer content to LCD
-////    lcd_push_buffer(lcdBuffer);
-//}
