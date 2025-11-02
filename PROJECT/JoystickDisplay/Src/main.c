@@ -31,23 +31,18 @@ int main(void) {
 
 		static uint8_t last_deci = 255;
 		uint8_t current_deci = timeData.hundredths / 10;	// Update every 0.1 s
-//		uint8_t current_deci = timeData.hundredths / 50;	// Update every 0.5 s
 		if (current_deci != last_deci) {
 			last_deci = current_deci;
 
-			uint16_t pa0 = ADC_measure_PA(1);
-			uint16_t pa1 = ADC_measure_PA(2);
-//			uint16_t pa0 = ADC_measure_PA_avg(1, 8);
-//			uint16_t pa1 = ADC_measure_PA_avg(2, 8);
+			pa0_f = pa0_f * (1 - alpha) + alpha * ADC_measure_PA(1);
+			pa1_f = pa1_f * (1 - alpha) + alpha * ADC_measure_PA(2);
 
-			pa0_f = pa0_f * (1 - alpha) + alpha * pa0;
-			pa1_f = pa1_f * (1 - alpha) + alpha * pa1;
-
+			// Convert read ADC value to string
 			char line0[24], line1[24];
-
 			sprintf(line0, "PA0: %4u", (uint16_t)pa0_f);
 			sprintf(line1, "PA1: %4u", (uint16_t)pa1_f);
 
+			// Write strings to LCD buffer
 			lcd_write_string((uint8_t *)line0, lcdBuffer, 0, 1);
 			lcd_write_string((uint8_t *)line1, lcdBuffer, 0, 2);
 
@@ -55,6 +50,51 @@ int main(void) {
 			lcd_push_buffer(lcdBuffer);
 		}
 	}
+
+
+
+
+
+//	initJoystick();		// Enabling GPIO pins for joystick
+//	initLed();			// Enabling GPIO pins for LED
+//	initTimer();
+//	init_spi_lcd();		// Initialize SPI for LCD
+//	ADC_setup_PA();		// Enabling GPIO pins for ADC
+//
+//	// Initialize and clear buffer
+//	static uint8_t lcdBuffer[LCD_BUFF_SIZE];
+//	lcd_clear_buffer(lcdBuffer);
+//
+//	while(1) {
+//		static float pa0_f = 0, pa1_f = 0;
+//		const float alpha = 0.1;	// Smoothing factor, smaller means smoother
+//
+//		static uint8_t last_deci = 255;
+//		uint8_t current_deci = timeData.hundredths / 10;	// Update every 0.1 s
+////		uint8_t current_deci = timeData.hundredths / 50;	// Update every 0.5 s
+//		if (current_deci != last_deci) {
+//			last_deci = current_deci;
+//
+//			uint16_t pa0 = ADC_measure_PA(1);
+//			uint16_t pa1 = ADC_measure_PA(2);
+////			uint16_t pa0 = ADC_measure_PA_avg(1, 8);
+////			uint16_t pa1 = ADC_measure_PA_avg(2, 8);
+//
+//			pa0_f = pa0_f * (1 - alpha) + alpha * pa0;
+//			pa1_f = pa1_f * (1 - alpha) + alpha * pa1;
+//
+//			char line0[24], line1[24];
+//
+//			sprintf(line0, "PA0: %4u", (uint16_t)pa0_f);
+//			sprintf(line1, "PA1: %4u", (uint16_t)pa1_f);
+//
+//			lcd_write_string((uint8_t *)line0, lcdBuffer, 0, 1);
+//			lcd_write_string((uint8_t *)line1, lcdBuffer, 0, 2);
+//
+//			// Push buffer to LCD
+//			lcd_push_buffer(lcdBuffer);
+//		}
+//	}
 
 
 //	float value;	// sensor reading
