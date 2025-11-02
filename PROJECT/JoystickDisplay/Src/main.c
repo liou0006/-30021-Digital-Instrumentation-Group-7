@@ -7,10 +7,6 @@
 #include "lcd.h"
 #include "lcd_graphics.h"
 #include "adc.h"
-//#include <math.h>
-
-#define NUM_BINS 16
-uint16_t histogram[NUM_BINS] = {0};	// Each bin counts occurrences
 
 int main(void) {
 	uart_init( 9600 );	// Initialize USB serial at 9600 baud
