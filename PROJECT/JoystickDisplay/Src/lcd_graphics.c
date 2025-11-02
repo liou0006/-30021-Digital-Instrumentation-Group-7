@@ -1,12 +1,9 @@
 #include "lcd_graphics.h"
 
-/*
- * Each function will update the contents of the LCD buffer.
- */
-
-/*
- * 3x5 fonts for digits '0'-'9'
- */
+/***********************************************************
+ * Constants (local)
+ ***********************************************************/
+// 3x5 fonts for digits '0'-'9'
 const uint8_t font3x5[][3] = {
 		{0x1F, 0x11, 0x1F},	// 0
 		{0x00, 0x00, 0x1F},	// 1
@@ -20,107 +17,11 @@ const uint8_t font3x5[][3] = {
 		{0x17, 0x15, 0x1F}	// 9
 };
 
-/*
- * Draws a 5-row x 3-col number (num). The position (x, y)
- * indicates the top left corner of the number.
- */
-void lcd_draw_char3x5(uint8_t *buffer, uint8_t x, uint8_t y, char c) {
-	if (c < '0' || c > '9') return;
-
-	uint8_t index = c - '0';
-	for (int col = 0; col < 3; col++) {
-		uint8_t bits = font3x5[index][col];
-		for (int row = 0; row < 5; row++) {
-			if (bits & (1 << row)) {
-				lcd_draw_pixel(buffer, x + col, y + row);
-			}
-		}
-	}
-}
-
-//void lcd_init_and_print(void) {
-//	static uint8_t lcdBuffer[LCD_BUFF_SIZE];	// 512 bytes
-//	init_spi_lcd();
-//	memset(lcdBuffer, 0x00, sizeof(lcdBuffer));
-//
-//	// Draw some vertical lines
-//	for (int i = 0; i < 128; i += 8) {	// every 8 pixels
-//		lcd_draw_vertical_line(lcdBuffer, i, 0, 31);	// full height line
-//	}
-//
-//	// Push buffer to LCD
-//	lcd_push_buffer(lcdBuffer);
-//}
-
+/***********************************************************
+ * Functions
+ ********************Y***************************************/
 void lcd_clear_buffer(uint8_t *buffer) {
 	memset(buffer, 0x00, LCD_BUFF_SIZE);
-}
-
-void lcd_draw_fft_window(uint8_t *buffer) {
-	//
-}
-
-/*
- * Draws a 5-row x 3-col number (num), note to start with
- * we assume we are drawing only 1 or 2 digit numbers.
- * The position (x, y) indicates the top left corner of the
- * number.
- */
-void lcd_draw_number(uint8_t *buffer, int num, uint8_t x, uint8_t y) {
-	if (num < 0 || num > 100) return;
-
-	// We assume other bounds have been checked
-
-	if (num == 0) {
-		/*
-		 * XXX
-		 * X X
-		 * X X
-		 * X X
-		 * XXX
-		 */
-
-//		// First row (from top)
-//		uint8_t row = y / LCD_SLICE_SIZE;		// Finds slice row
-//		uint8_t bit = y % LCD_SLICE_SIZE;		// Finds vertical offset within slice
-//		buffer[row * LCD_LINE_SIZE + x] |= (1 << bit);
-//		buffer[row * LCD_LINE_SIZE + x + 1] |= (1 << bit);
-//		buffer[row * LCD_LINE_SIZE + x + 2] |= (1 << bit);
-//
-//		// 2nd row (from top)
-//		uint8_t row = (y+1) / LCD_SLICE_SIZE;		// Finds slice row
-//		uint8_t bit = (y+1) % LCD_SLICE_SIZE;		// Finds vertical offset within slice
-//		buffer[row * LCD_LINE_SIZE + x] |= (1 << bit);
-////		buffer[row * LCD_LINE_SIZE + x + 1] |= (1 << bit);
-//		buffer[row * LCD_LINE_SIZE + x + 2] |= (1 << bit);
-//
-//		// 3rd row (from top)
-//		uint8_t row = (y+2) / LCD_SLICE_SIZE;		// Finds slice row
-//		uint8_t bit = (y+2) % LCD_SLICE_SIZE;		// Finds vertical offset within slice
-//		buffer[row * LCD_LINE_SIZE + x] |= (1 << bit);
-////		buffer[row * LCD_LINE_SIZE + x + 1] |= (1 << bit);
-//		buffer[row * LCD_LINE_SIZE + x + 2] |= (1 << bit);
-//
-//		// 2nd row (from top)
-//		uint8_t row = (y+1) / LCD_SLICE_SIZE;		// Finds slice row
-//		uint8_t bit = (y+1) % LCD_SLICE_SIZE;		// Finds vertical offset within slice
-//		buffer[row * LCD_LINE_SIZE + x] |= (1 << bit);
-////		buffer[row * LCD_LINE_SIZE + x + 1] |= (1 << bit);
-//		buffer[row * LCD_LINE_SIZE + x + 2] |= (1 << bit);
-	}
-}
-
-//void lcd_draw_x_axis(uint8_t *buffer, uint8_t x_start, uint8_t x_end) {
-//	// Insert check bounds code
-//
-//	lcd_draw_horizontal_line(buffer, 9, LCD_LINE_SIZE-1, 24);
-//	lcd_draw_vertical_line(buffer, 9, 0, 24);
-//}
-void lcd_draw_axis(uint8_t *buffer) {
-	// Insert check bounds code
-
-	lcd_draw_horizontal_line(buffer, 9, LCD_LINE_SIZE-1, 24);
-	lcd_draw_vertical_line(buffer, 9, 0, 24);
 }
 
 /*
@@ -169,6 +70,42 @@ void lcd_draw_horizontal_line(uint8_t *buffer, uint8_t x_start, uint8_t x_end, u
 	}
 }
 
+/*
+ * Draws a 5-row x 3-col number (num). The position (x, y)
+ * indicates the top left corner of the number.
+ */
+void lcd_draw_char3x5(uint8_t *buffer, uint8_t x, uint8_t y, char c) {
+	if (c < '0' || c > '9') return;
+
+	uint8_t index = c - '0';
+	for (int col = 0; col < 3; col++) {
+		uint8_t bits = font3x5[index][col];
+		for (int row = 0; row < 5; row++) {
+			if (bits & (1 << row)) {
+				lcd_draw_pixel(buffer, x + col, y + row);
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+void lcd_draw_fft_window(uint8_t *buffer) {
+	//
+}
+
+void lcd_draw_axis(uint8_t *buffer) {
+	// Insert check bounds code
+
+	lcd_draw_horizontal_line(buffer, 9, LCD_LINE_SIZE-1, 24);
+	lcd_draw_vertical_line(buffer, 9, 0, 24);
+}
 
 
 void lcd_draw_fft(uint8_t *buffer) {
@@ -180,8 +117,6 @@ void lcd_draw_fft(uint8_t *buffer) {
 void lcd_draw_histogram(uint8_t *buffer) {
 	// Not implemented yet
 }
-
-
 
 
 void lcd_draw_bar(uint8_t *buffer, uint8_t x, uint8_t height, uint8_t max_height) {
