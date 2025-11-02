@@ -61,5 +61,6 @@ dkms.conf
 # debug information files
 *.dwo
 PROJECT/JoystickDisplay/JoystickDisplay Debug.launch
-/PROJECT/JoystickDisplay/Debug
+/PROJECT/JoystickDisplay/Debug/
 /PROJECT/JoystickDisplay/.settings
+/PROJECT/JoystickDisplay/Additional/
