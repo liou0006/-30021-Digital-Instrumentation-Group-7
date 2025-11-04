@@ -41,15 +41,23 @@ void lcd_draw_pixel(uint8_t *buffer, uint8_t x, uint8_t y) {
 /*
  * Draws a vertical line at x which goes from y_start to y_end
  */
-void lcd_draw_vertical_line(uint8_t *buffer, uint8_t x, uint8_t y_start, uint8_t y_end) {
-    if (x >= LCD_LINE_SIZE) return;  // limit check
-    if (y_start > y_end) { uint8_t tmp = y_start; y_start = y_end; y_end = tmp; }
-
-    for (uint8_t y = y_start; y <= y_end; y++) {
-        uint8_t page = y / 8;        // 0-3
-        uint8_t bit  = y % 8;        // 0-7
-        buffer[page * LCD_LINE_SIZE + x] |= (1 << bit);
-    }
+void lcd_draw_vertical_line(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t y_start, uint16_t y_end) {
+//	// Check bounds
+//	if (x >= buff_width) x = buff_width - 1;	// Clamp to right edge
+//	if (y_start > y_end) {
+//		uint16_t temp = y_start;
+//		y_start = y_end;
+//		y_end = temp;
+//	}
+//	if (y_end >= LCD_HEIGHT) return;
+//
+//	for (uint16_t y = y_start; y <= y_end; y++) {
+//		uint16_t row = y / LCD_SLICE_SIZE;	// Find row
+//		uint16_t bit  = y % LCD_SLICE_SIZE;	// Find bit
+//		uint16_t base = row * buff_width;
+//
+//		buffer[base + x] |= (1 << bit);
+//	}
 }
 
 /*
@@ -57,7 +65,7 @@ void lcd_draw_vertical_line(uint8_t *buffer, uint8_t x, uint8_t y_start, uint8_t
  * Specify the buffer width and the function works for both the
  * LCD buffer and the virtual buffer.
  */
-void lcd_draw_horizontal_line(uint8_t *buffer, uint16_t buf_width, uint16_t x_start, uint16_t x_end, uint16_t y) {
+void lcd_draw_horizontal_line(uint8_t *buffer, uint16_t buff_width, uint16_t x_start, uint16_t x_end, uint16_t y) {
 	// Check bounds
 	if (y >= LCD_HEIGHT) return;
 	if (x_start > x_end) {
@@ -65,12 +73,12 @@ void lcd_draw_horizontal_line(uint8_t *buffer, uint16_t buf_width, uint16_t x_st
 		x_start = x_end;
 		x_end = temp;
 	}
-	if (x_start >= buf_width) return;
-	if (x_end >= buf_width) x_end = buf_width - 1;	// Clamp to right edge
+	if (x_start >= buff_width) return;
+	if (x_end >= buff_width) x_end = buff_width - 1;	// Clamp to right edge
 
 	uint16_t row = y / LCD_SLICE_SIZE;	// Find row
 	uint16_t bit = y % LCD_SLICE_SIZE;	// Find bit
-	uint16_t base = row * buf_width;
+	uint16_t base = row * buff_width;
 
 	for (uint16_t x = x_start; x <= x_end; x++) {
 		buffer[base + x] |= (1 << bit);
@@ -97,7 +105,8 @@ void lcd_draw_char3x5(uint8_t *buffer, uint8_t x, uint8_t y, char c) {
 
 /*
  * Copies the visible window of the virtual buffer to the
- * physical LCD buffer based on the given scroll offset.
+ * physical LCD buffer based on the calculated scroll
+ * offset.
  */
 void update_lcdBuffer() {
 	// Map potentiometer value to scroll offset
@@ -140,7 +149,7 @@ void lcd_draw_axis(uint8_t *buffer) {
 	// Insert check bounds code
 
 //	lcd_draw_horizontal_line(buffer, 9, LCD_LINE_SIZE-1, 24);
-	lcd_draw_vertical_line(buffer, 9, 0, 24);
+//	lcd_draw_vertical_line(buffer, 9, 0, 24);
 }
 
 void lcd_draw_histogram(uint8_t *buffer) {
