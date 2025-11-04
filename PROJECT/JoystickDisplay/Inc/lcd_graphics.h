@@ -31,7 +31,7 @@ void lcd_draw_pixel(uint8_t *buffer, uint8_t x, uint8_t y);
 void lcd_draw_vertical_line(uint8_t *buffer, uint8_t x, uint8_t y_start, uint8_t y_end);
 void lcd_draw_horizontal_line(uint8_t *buffer, uint16_t buf_width, uint16_t x_start, uint16_t x_end, uint16_t y);
 void lcd_draw_char3x5(uint8_t *buffer, uint8_t x, uint8_t y, char c);
-void update_lcdBuffer(uint16_t scroll_offset);
+void update_lcdBuffer();
 
 void lcd_draw_fft_window(uint8_t *buffer);
 void lcd_draw_axis(uint8_t *buffer);

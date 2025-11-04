@@ -31,13 +31,8 @@ int main(void) {
 	lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, 128, 255, 0);
 
 	while(1) {
-		// Map potentiometer value to scroll offset
-		uint16_t pot2_val = ADC_measure_PA(2);
-		uint16_t max_scroll = VIRTUAL_WIDTH_SIZE - LCD_LINE_SIZE;
-		uint16_t scroll_offset = (pot2_val * max_scroll) / 4095;
-
 		// Copy visible window to physical LCD buffer
-		update_lcdBuffer(scroll_offset);
+		update_lcdBuffer();
 
 		// Push LCD buffer
 		lcd_push_buffer(lcdBuffer);

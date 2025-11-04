@@ -17,6 +17,8 @@ const uint8_t font3x5[][3] = {
 		{0x17, 0x15, 0x1F}	// 9
 };
 
+const uint16_t max_scroll = VIRTUAL_WIDTH_SIZE - LCD_LINE_SIZE;
+
 /***********************************************************
  * Functions
  ********************Y***************************************/
@@ -97,7 +99,12 @@ void lcd_draw_char3x5(uint8_t *buffer, uint8_t x, uint8_t y, char c) {
  * Copies the visible window of the virtual buffer to the
  * physical LCD buffer based on the given scroll offset.
  */
-void update_lcdBuffer(uint16_t scroll_offset) {
+void update_lcdBuffer() {
+	// Map potentiometer value to scroll offset
+	uint16_t pot2_val = ADC_measure_PA(2);
+	uint16_t scroll_offset = (pot2_val * max_scroll) / 4095;
+
+	// Copy visible window to physical LCD buffer
 	for (uint8_t row = 0; row < LCD_ROWS; row++) {
 		uint16_t v_offset = row * VIRTUAL_WIDTH_SIZE;	// Start of virtual row
 		uint16_t l_offset = row * LCD_LINE_SIZE;		// Start of LCD row
