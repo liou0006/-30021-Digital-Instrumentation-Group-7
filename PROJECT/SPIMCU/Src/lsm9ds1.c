@@ -91,7 +91,7 @@ void writeAG(uint8_t reg, uint8_t data) {
 }
 
 
-int16_t readOutput(uint8_t lowReg){
+int16_t readOutputAG(uint8_t lowReg){
 	uint8_t lower = readAG(lowReg);
 	uint8_t higher = readAG(lowReg+1);
 
@@ -101,24 +101,24 @@ int16_t readOutput(uint8_t lowReg){
 }
 
 void printGyroXYZ(){
-	int16_t gyroX = readOutput(0x18);
-	int16_t gyroY = readOutput(0x1A);
-	int16_t gyroZ = readOutput(0x1C);
+	int16_t gyroX = readOutputAG(0x18);
+	int16_t gyroY = readOutputAG(0x1A);
+	int16_t gyroZ = readOutputAG(0x1C);
 
 	printf("GyroX= %d | GyroY= %d | GyroZ= %d\n",gyroX,gyroY,gyroZ);
 }
 
 void printAccelXYZ(){
-	int16_t accelX = readOutput(0x28);
-	int16_t accelY = readOutput(0x2A);
-	int16_t accelZ = readOutput(0x2C);
+	int16_t accelX = readOutputAG(0x28);
+	int16_t accelY = readOutputAG(0x2A);
+	int16_t accelZ = readOutputAG(0x2C);
 
 	printf("accelX= %d | accelY= %d | accelZ= %d\n",accelX,accelY,accelZ);
 }
 
 void readTempteratureC(){
 
-	int16_t tempVal = readOutput(0x15);
+	int16_t tempVal = readOutputAG(0x15);
 	float tempC = 25.0f + (tempVal /16.0f);
 
 	printf("Temperature in C = %f\n", tempC);
@@ -141,10 +141,19 @@ void writeM(uint8_t reg, uint8_t data) {
 	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
 }
 
+int16_t readOutputM(uint8_t lowReg){
+	uint8_t lower = readM(lowReg);
+	uint8_t higher = readM(lowReg+1);
+
+	int16_t Gvalue = ((higher << 8) | lower);
+
+	return Gvalue;
+}
+
 void printMagnetXYZ(){
-	int16_t magnetX = readOutput(0x28);
-	int16_t magnetY = readOutput(0x2A);
-	int16_t magnetZ = readOutput(0x2C);
+	int16_t magnetX = readM(0x28);
+	int16_t magnetY = readM(0x2A);
+	int16_t magnetZ = readM(0x2C);
 
 	printf("magnetX= %d | magnetY= %d | magnetZ= %d\n",magnetX,magnetY,magnetZ);
 }
@@ -155,7 +164,7 @@ void initAG(){
 
 	//enable Accelerometer
 	writeAG(0x1F,0b01111000);
-	writeAG(0x20,0b01000000);
+	writeAG(0x20,0b00000000);
 }
 
 void initMag(){

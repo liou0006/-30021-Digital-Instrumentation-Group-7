@@ -50,20 +50,20 @@ void initSlaveSPI(void)
 	SPI2->CR2 |= 0x1000; // Configure RXFIFO return at (0x0000 - Half-full (16 bits), 0x1000 - Quarter-full (8 bits))
 	SPI2->CR1 |= 0x0040; // Enable SPI2
 
-	// CSM = PB4/D5 ;; CSAG = PB5/D4
+	// CS = D2
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);	// Port B
 	GPIO_InitTypeDef GPIO_InitStructAll;
 	GPIO_StructInit(&GPIO_InitStructAll);
 	GPIO_InitStructAll.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStructAll.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5;
+	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_3;
 	GPIO_InitStructAll.GPIO_Speed = GPIO_Speed_10MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructAll);
 
 	// Bit_SET = high / disabled
 	// Bit_RESET = low / enabled
-	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
-	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
+	// PB3
+	GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
 
 
 }

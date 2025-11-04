@@ -2,12 +2,13 @@
 ../Src/lsm9ds1.c:69:9:spi2_transfer	3
 ../Src/lsm9ds1.c:76:9:readAG	2
 ../Src/lsm9ds1.c:85:6:writeAG	2
-../Src/lsm9ds1.c:94:9:readOutput	1
+../Src/lsm9ds1.c:94:9:readOutputAG	1
 ../Src/lsm9ds1.c:103:6:printGyroXYZ	1
 ../Src/lsm9ds1.c:111:6:printAccelXYZ	1
 ../Src/lsm9ds1.c:119:6:readTempteratureC	1
 ../Src/lsm9ds1.c:127:9:readM	2
 ../Src/lsm9ds1.c:136:6:writeM	2
-../Src/lsm9ds1.c:144:6:printMagnetXYZ	1
-../Src/lsm9ds1.c:152:6:initAG	1
-../Src/lsm9ds1.c:161:6:initMag	1
+../Src/lsm9ds1.c:144:9:readOutputM	1
+../Src/lsm9ds1.c:153:6:printMagnetXYZ	1
+../Src/lsm9ds1.c:161:6:initAG	1
+../Src/lsm9ds1.c:170:6:initMag	1
