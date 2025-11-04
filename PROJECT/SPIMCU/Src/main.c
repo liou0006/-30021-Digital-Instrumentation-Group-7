@@ -14,7 +14,7 @@
 #define SPISLAVE_BUFFER_SIZE 10
 
 int main(void) {
-	uart_init( 9600 ); // Initialize USB serial at 9600 baud
+	uart_init( 115200 ); // Initialize USB serial at 9600 baud
 
 	initMasterSPI();
 	initAG();
@@ -22,16 +22,16 @@ int main(void) {
 
 	//	int16_t txSize[SPISLAVE_BUFFER_SIZE];
 	int sizeTemp = 3;
-	int8_t txSize[sizeTemp*2];
+	uint8_t txSize[sizeTemp*2];
 
-	int16_t dataArray[sizeTemp];
+	uint16_t dataArray[sizeTemp];
 
 
 	while(1) {
 
-		int16_t gyroX = readOutputAG(0x18);
-		int16_t gyroY = readOutputAG(0x1A);
-		int16_t gyroZ = readOutputAG(0x1C);
+		uint16_t gyroX = readOutputAG(0x18);
+		uint16_t gyroY = readOutputAG(0x1A);
+		uint16_t gyroZ = readOutputAG(0x1C);
 
 //		int16_t accelX = readOutputAG(0x28);
 //		int16_t accelY = readOutputAG(0x2A);
@@ -48,17 +48,21 @@ int main(void) {
 		dataArray[1] = gyroY;
 		dataArray[2] = gyroZ;
 
+//		printf("%d\n",dataArray[0]);
 
-		printf("%u\n",dataArray[0]);
 
-		//		for (int i = 0; i < sizeTemp; i++){
-		//			txSize[i] = (int8_t)(dataArray[i] >> 8);
-		//		}
+//for (int i = 0; i < 10000; i++);
+
+
+				for (int i = 0; i < sizeTemp; i++){
+					txSize[i * 2] 		= (uint8_t)(dataArray[i] >> 8);
+					txSize[i * 2 + 1 ] 	= (uint8_t)(dataArray[i] & 0xFF);
+
+				}
 
 		// sending data to SPI
-
 		//		write to other MCUs SPI
-		for (int i = 0; i < sizeTemp; i++){
+		for (int i = 0; i < sizeTemp * 2; i++){
 			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_RESET);
 			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
 			SPI_SendData8(SPI2, txSize[i]);
@@ -66,6 +70,8 @@ int main(void) {
 			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
 			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
 		}
+
+		memset(dataArray, 0, sizeof(dataArray));
 
 
 		//		readTempteratureC();

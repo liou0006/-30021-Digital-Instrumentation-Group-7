@@ -76,7 +76,7 @@ uint8_t spi2_transfer(uint8_t data) {
 uint8_t readAG(uint8_t reg) {
 	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
 	spi2_transfer(0x80 | reg);           // send address
-	int8_t val = spi2_transfer(0x00);    // send dummy & read value
+	uint8_t val = spi2_transfer(0x00);    // send dummy & read value
 	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
 	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
 	return val;
@@ -91,34 +91,34 @@ void writeAG(uint8_t reg, uint8_t data) {
 }
 
 
-int16_t readOutputAG(uint8_t lowReg){
+uint16_t readOutputAG(uint8_t lowReg){
 	uint8_t lower = readAG(lowReg);
 	uint8_t higher = readAG(lowReg+1);
 
-	int16_t Gvalue = ((higher << 8) | lower);
+	uint16_t Gvalue = ((higher << 8) | lower);
 
 	return Gvalue;
 }
 
 void printGyroXYZ(){
-	int16_t gyroX = readOutputAG(0x18);
-	int16_t gyroY = readOutputAG(0x1A);
-	int16_t gyroZ = readOutputAG(0x1C);
+	uint16_t gyroX = readOutputAG(0x18);
+	uint16_t gyroY = readOutputAG(0x1A);
+	uint16_t gyroZ = readOutputAG(0x1C);
 
 	printf("GyroX= %d | GyroY= %d | GyroZ= %d\n",gyroX,gyroY,gyroZ);
 }
 
 void printAccelXYZ(){
-	int16_t accelX = readOutputAG(0x28);
-	int16_t accelY = readOutputAG(0x2A);
-	int16_t accelZ = readOutputAG(0x2C);
+	uint16_t accelX = readOutputAG(0x28);
+	uint16_t accelY = readOutputAG(0x2A);
+	uint16_t accelZ = readOutputAG(0x2C);
 
 	printf("accelX= %d | accelY= %d | accelZ= %d\n",accelX,accelY,accelZ);
 }
 
 void readTempteratureC(){
 
-	int16_t tempVal = readOutputAG(0x15);
+	uint16_t tempVal = readOutputAG(0x15);
 	float tempC = 25.0f + (tempVal /16.0f);
 
 	printf("Temperature in C = %f\n", tempC);
@@ -127,7 +127,7 @@ void readTempteratureC(){
 uint8_t readM(uint8_t reg) {
 	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_RESET);
 	spi2_transfer(0x80 | reg);           // send address
-	int8_t val = spi2_transfer(0x00);    // send dummy & read value
+	uint8_t val = spi2_transfer(0x00);    // send dummy & read value
 	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
 	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
 	return val;
@@ -141,19 +141,19 @@ void writeM(uint8_t reg, uint8_t data) {
 	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
 }
 
-int16_t readOutputM(uint8_t lowReg){
+uint16_t readOutputM(uint8_t lowReg){
 	uint8_t lower = readM(lowReg);
 	uint8_t higher = readM(lowReg+1);
 
-	int16_t Gvalue = ((higher << 8) | lower);
+	uint16_t Gvalue = ((higher << 8) | lower);
 
 	return Gvalue;
 }
 
 void printMagnetXYZ(){
-	int16_t magnetX = readM(0x28);
-	int16_t magnetY = readM(0x2A);
-	int16_t magnetZ = readM(0x2C);
+	uint16_t magnetX = readM(0x28);
+	uint16_t magnetY = readM(0x2A);
+	uint16_t magnetZ = readM(0x2C);
 
 	printf("magnetX= %d | magnetY= %d | magnetZ= %d\n",magnetX,magnetY,magnetZ);
 }
