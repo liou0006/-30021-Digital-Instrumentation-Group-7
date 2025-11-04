@@ -29,6 +29,8 @@ int main(void) {
 	// Give virtual buffer values
 	lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, 0, 127, 31);
 	lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, 128, 255, 0);
+	lcd_draw_vertical_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, 0, 0, 31);
+	lcd_draw_vertical_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, 255, 0, 31);
 
 	while(1) {
 		// Copy visible window to physical LCD buffer

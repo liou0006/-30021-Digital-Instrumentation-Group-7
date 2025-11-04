@@ -42,22 +42,22 @@ void lcd_draw_pixel(uint8_t *buffer, uint8_t x, uint8_t y) {
  * Draws a vertical line at x which goes from y_start to y_end
  */
 void lcd_draw_vertical_line(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t y_start, uint16_t y_end) {
-//	// Check bounds
-//	if (x >= buff_width) x = buff_width - 1;	// Clamp to right edge
-//	if (y_start > y_end) {
-//		uint16_t temp = y_start;
-//		y_start = y_end;
-//		y_end = temp;
-//	}
-//	if (y_end >= LCD_HEIGHT) return;
-//
-//	for (uint16_t y = y_start; y <= y_end; y++) {
-//		uint16_t row = y / LCD_SLICE_SIZE;	// Find row
-//		uint16_t bit  = y % LCD_SLICE_SIZE;	// Find bit
-//		uint16_t base = row * buff_width;
-//
-//		buffer[base + x] |= (1 << bit);
-//	}
+	// Check bounds
+	if (x >= buff_width) x = buff_width - 1;	// Clamp to right edge
+	if (y_start > y_end) {
+		uint16_t temp = y_start;
+		y_start = y_end;
+		y_end = temp;
+	}
+	if (y_end >= LCD_HEIGHT) y_end = LCD_HEIGHT - 1;
+
+	for (uint16_t y = y_start; y <= y_end; y++) {
+		uint16_t row = y / LCD_SLICE_SIZE;	// Find row
+		uint16_t bit  = y % LCD_SLICE_SIZE;	// Find bit
+		uint16_t base = row * buff_width;
+
+		buffer[base + x] |= (1 << bit);
+	}
 }
 
 /*
@@ -73,7 +73,6 @@ void lcd_draw_horizontal_line(uint8_t *buffer, uint16_t buff_width, uint16_t x_s
 		x_start = x_end;
 		x_end = temp;
 	}
-	if (x_start >= buff_width) return;
 	if (x_end >= buff_width) x_end = buff_width - 1;	// Clamp to right edge
 
 	uint16_t row = y / LCD_SLICE_SIZE;	// Find row
@@ -111,7 +110,9 @@ void lcd_draw_char3x5(uint8_t *buffer, uint8_t x, uint8_t y, char c) {
 void update_lcdBuffer() {
 	// Map potentiometer value to scroll offset
 	uint16_t pot2_val = ADC_measure_PA(2);
-	uint16_t scroll_offset = (pot2_val * max_scroll) / 4095;
+	uint16_t scroll_offset = (pot2_val * max_scroll) / 4080;	// Should be 4095 but our pots never reach this
+
+	if (scroll_offset > max_scroll) scroll_offset = max_scroll;
 
 	// Copy visible window to physical LCD buffer
 	for (uint8_t row = 0; row < LCD_ROWS; row++) {
@@ -161,5 +162,5 @@ void lcd_draw_bar(uint8_t *buffer, uint8_t x, uint8_t height, uint8_t max_height
 	if (height > max_height) height = max_height;
 	uint8_t y_end = 31;		// bottom of the screen
 	uint8_t y_start = y_end - height + 1;
-	lcd_draw_vertical_line(buffer, x, y_start, y_end);
+//	lcd_draw_vertical_line(buffer, x, y_start, y_end);
 }
