@@ -1,4 +1,13 @@
+/*
+ * led.c
+ *
+ *  Created on: Sep 9, 2025
+ *      Author: emma
+ */
+
 #include "led.h"
+
+// Code needed in main.c is included in the bottom of the file
 
 void initLed() {
 	// Enable clock for GPIO Ports
@@ -13,6 +22,7 @@ void initLed() {
 	GPIO_InitStructAll.GPIO_OType = GPIO_OType_PP;		// Set as Push-Pull
 	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_9;			// Set so the configuration is on pin 9
 	GPIO_InitStructAll.GPIO_Speed = GPIO_Speed_2MHz;	// Set speed to 2 MHz
+														// For all options see SPL/inc/stm32f30x_gpio.h
 	GPIO_Init(GPIOA, &GPIO_InitStructAll); 				// Setup of GPIO with the settings chosen
 
 	// Sets PB4 (RED) to output
@@ -41,10 +51,10 @@ void setLed(char sel) {
 	 */
 
 	/*			R	G	B
-	 * White: 	255 255 255		11111111 11111111 11111111
-	 * Red:		255 0	0		11111111 00000000 00000000
-	 * Blue:	0	0	255		00000000 00000000 11111111
-	 * Green:	0	255	0		00000000
+	 * White: 	255 255 255
+	 * Red:		255 0	0
+	 * Blue:	0	0	255
+	 * Green:	0	255	0
 	 * Yellow	255	255	0
 	 * Cyan:	0	255	255
 	 * Magenta:	255	0	255
@@ -84,3 +94,48 @@ void setLed(char sel) {
 		GPIO_WriteBit(GPIOA, GPIO_Pin_9, 1);	// blue
 	}
 }
+
+
+// main.c code
+/*
+#include "stm32f30x_conf.h" // STM32 config
+#include "30010_io.h" // Input/output library for this course
+
+#include "joystick.h"
+#include "led.h"
+
+int main(void) {
+	uart_init( 9600 ); // Initialize USB serial at 9600 baud
+
+	initJoystick();
+	initLED();
+
+	int8_t prev_state = readJoystick();
+	int8_t current_state;
+
+	while(1) {
+		current_state = readJoystick();
+		if (prev_state != current_state) {
+			if (current_state == 1) {
+				setLED('r');
+				printf("UP (red)\n");
+			} else if (current_state == 2) {
+				setLED('g');
+				printf("DOWN (green)\n");
+			} else if (current_state == 4) {
+				setLED('b');
+				printf("LEFT (blue)\n");
+			} else if (current_state == 8) {
+				setLED('c');
+				printf("RIGHT (cyan)\n");
+			} else if (current_state == 16) {
+				setLED('m');
+				printf("CENTER (magenta)\n");
+			} else {
+				setLED('d');
+			}
+			prev_state = current_state;
+		}
+	}
+}
+*/

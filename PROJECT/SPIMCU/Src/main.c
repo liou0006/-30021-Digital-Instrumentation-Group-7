@@ -13,6 +13,8 @@
 
 #define SPISLAVE_BUFFER_SIZE 10
 
+// master main
+
 int main(void) {
 	uart_init( 115200 ); // Initialize USB serial at 9600 baud
 
@@ -29,25 +31,6 @@ int main(void) {
 
 	while(1) {
 
-		uint16_t gyroX = readOutputAG(0x18);
-		uint16_t gyroY = readOutputAG(0x1A);
-		uint16_t gyroZ = readOutputAG(0x1C);
-
-//		int16_t accelX = readOutputAG(0x28);
-//		int16_t accelY = readOutputAG(0x2A);
-//		int16_t accelZ = readOutputAG(0x2C);
-//
-//		int16_t tempVal = readOutputAG(0x15);
-//		float tempC = 25.0f + (tempVal /16.0f);
-//
-//		int16_t magnetX = readOutputM(0x28);
-//		int16_t magnetY = readOutputM(0x2A);
-//		int16_t magnetZ = readOutputM(0x2C);
-
-		dataArray[0] = gyroX;
-		dataArray[1] = gyroY;
-		dataArray[2] = gyroZ;
-
 //		printf("%d\n",dataArray[0]);
 
 
@@ -57,11 +40,12 @@ int main(void) {
 				for (int i = 0; i < sizeTemp; i++){
 					txSize[i * 2] 		= (uint8_t)(dataArray[i] >> 8);
 					txSize[i * 2 + 1 ] 	= (uint8_t)(dataArray[i] & 0xFF);
-
 				}
 
 		// sending data to SPI
 		//		write to other MCUs SPI
+
+
 		for (int i = 0; i < sizeTemp * 2; i++){
 			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_RESET);
 			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);

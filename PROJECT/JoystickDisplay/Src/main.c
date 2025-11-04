@@ -2,39 +2,87 @@
 #include "30010_io.h" 		// Input/output library for this course
 #include "joystick.h"
 #include "led.h"
-#include "interrupts.h"
-#include "timer.h"
 #include "lcd.h"
-#include "lcd_graphics.h"
-#include "adc.h"
+#include "interrupt.h"
+#include "timer.h"
+#include "window.h"
+#include "flash.h"
 
-// Initialize LCD and virtual buffer
-uint8_t lcdBuffer[LCD_BUFF_SIZE];
-uint8_t virtualBuffer[VIRTUAL_WIDTH_SIZE * LCD_ROWS];
+#include "lsm9ds1.h"
+#include "spiMaster.h"
+
+#define SPISLAVE_BUFFER_SIZE 10
+
+// Slave main
 
 int main(void) {
-	uart_init( 9600 );	// Initialize USB serial at 9600 baud
+	uart_init( 115200 ); // Initialize USB serial at 9600 baud
 
-	// ================== Initialize ===================
-	initJoystick();		// Enabling GPIO pins for joystick
-	initLed();			// Enabling GPIO pins for LED
-	initTimer();
-	init_spi_lcd();		// Initialize SPI for LCD
-	ADC_setup_PA();		// Enabling GPIO pins for ADC
+	initMasterSPI();
+	initAG();
+	initMag();
 
-	// Clear LCD buffer and virtual buffer
-	lcd_clear_buffer(lcdBuffer, 0);
-	lcd_clear_buffer(virtualBuffer, 1);
+	//	int16_t txSize[SPISLAVE_BUFFER_SIZE];
+	int sizeTemp = 3;
+	uint8_t txSize[sizeTemp*2];
 
-	// Give virtual buffer values
-	lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, 0, 127, 31);
-	lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, 128, 255, 0);
+	uint16_t dataArray[sizeTemp];
+
 
 	while(1) {
-		// Copy visible window to physical LCD buffer
-		update_lcdBuffer();
 
-		// Push LCD buffer
-		lcd_push_buffer(lcdBuffer);
+		uint16_t gyroX = readOutputAG(0x18);
+		uint16_t gyroY = readOutputAG(0x1A);
+		uint16_t gyroZ = readOutputAG(0x1C);
+
+//		int16_t accelX = readOutputAG(0x28);
+//		int16_t accelY = readOutputAG(0x2A);
+//		int16_t accelZ = readOutputAG(0x2C);
+//
+//		int16_t tempVal = readOutputAG(0x15);
+//		float tempC = 25.0f + (tempVal /16.0f);
+//
+//		int16_t magnetX = readOutputM(0x28);
+//		int16_t magnetY = readOutputM(0x2A);
+//		int16_t magnetZ = readOutputM(0x2C);
+
+		dataArray[0] = gyroX;
+		dataArray[1] = gyroY;
+		dataArray[2] = gyroZ;
+
+//		printf("%d\n",dataArray[0]);
+
+
+//for (int i = 0; i < 10000; i++);
+
+
+				for (int i = 0; i < sizeTemp; i++){
+					txSize[i * 2] 		= (uint8_t)(dataArray[i] >> 8);
+					txSize[i * 2 + 1 ] 	= (uint8_t)(dataArray[i] & 0xFF);
+
+				}
+
+		// sending data to SPI
+		//		write to other MCUs SPI
+		for (int i = 0; i < sizeTemp * 2; i++){
+			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_RESET);
+			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
+			SPI_SendData8(SPI2, txSize[i]);
+			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
+			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
+		}
+
+		memset(dataArray, 0, sizeof(dataArray));
+
+
+		//		readTempteratureC();
+		//		printGyroXYZ();
+		//		printAccelXYZ();
+		//		printMagnetXYZ();
+
+
+
+
 	}
 }

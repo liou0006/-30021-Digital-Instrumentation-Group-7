@@ -1,6 +1,9 @@
-#include "spiMaster.h"
+#include "lsm9ds1.h"
 
-void initMasterSPI(void)
+/* ---------- LSM9DS1 (Accel/Gyro die) registers ---------- */
+#define WHO_AM_I     0x0F
+
+void init_SPI_CS(void)
 {
 	// Enable Clocks
 	RCC->AHBENR  |= 0x00020000 | 0x00040000;    // Enable Clock for GPIO Banks A and B
@@ -23,8 +26,8 @@ void initMasterSPI(void)
 	GPIOB->OTYPER  |=  (0x0000     << (13)     | 0x0000 	<< (14) 	| 0x0000     << (15));        // Set output type register (0x00 - Push pull, 0x01 - Open drain)
 	GPIOB->MODER   &= ~(0x00000003 << (13 * 2) | 0x00000003 << (14 * 2) | 0x00000003 << (15 * 2));    // Clear mode register
 	GPIOB->MODER   |=  (0x00000002 << (13 * 2) | 0x00000002 << (14 * 2) | 0x00000002 << (15 * 2));    // Set mode register (0x00 - Input, 0x01 - Output, 0x02 - Alternate Function, 0x03 - Analog in/out)
-	GPIOB->PUPDR   &= ~(0x00000003 << (13 * 2) | 0x00000003 << (14 * 2) | 0x00000003 << (15 * 2));    // Clear push/pull register
-	GPIOB->PUPDR   |=  (0x00000000 << (13 * 2) | 0x00000000 << (14 * 2) | 0x00000000 << (15 * 2));    // Set push/pull register (0x00 - No pull, 0x01 - Pull-up, 0x02 - Pull-down)
+	GPIOB->PUPDR   &= ~(0x00000003 << (13 * 2) | 0x00000003 << (13 * 2) | 0x00000003 << (15 * 2));    // Clear push/pull register
+	GPIOB->PUPDR   |=  (0x00000000 << (13 * 2) | 0x00000000 << (13 * 2) | 0x00000000 << (15 * 2));    // Set push/pull register (0x00 - No pull, 0x01 - Pull-up, 0x02 - Pull-down)
 
 	// Configure SPI2
 	SPI2->CR1 &= 0x3040; // Clear CR1 Register
@@ -43,22 +46,131 @@ void initMasterSPI(void)
 	SPI2->CR2 |= 0x1000; // Configure RXFIFO return at (0x0000 - Half-full (16 bits), 0x1000 - Quarter-full (8 bits))
 	SPI2->CR1 |= 0x0040; // Enable SPI2
 
-	// CS slave = PB3/D3
-	// CSAG 	= PB5/D4
-	// CSM 		= PB4/D5
+	//	lcd_reset();
+
+	// CSM = PB4/D5 ;; CSAG = PB5/D4
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);	// Port B
 	GPIO_InitTypeDef GPIO_InitStructAll;
 	GPIO_StructInit(&GPIO_InitStructAll);
 	GPIO_InitStructAll.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStructAll.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5;
+	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5;
 	GPIO_InitStructAll.GPIO_Speed = GPIO_Speed_10MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructAll);
 
 	// Bit_SET = high / disabled
 	// Bit_RESET = low / enabled
-	GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
-	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
 	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
+	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
 
+
+}
+
+uint8_t spi2_transfer(uint8_t data) {
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
+	SPI_SendData8(SPI2, data);
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
+	return SPI_ReceiveData8(SPI2);
+}
+
+uint8_t readAG(uint8_t reg) {
+	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
+	spi2_transfer(0x80 | reg);           // send address
+	uint8_t val = spi2_transfer(0x00);    // send dummy & read value
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
+	return val;
+}
+
+void writeAG(uint8_t reg, uint8_t data) {
+	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
+	spi2_transfer(0x7F & reg); // makes sure bit 7 is 0
+	spi2_transfer(data);
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
+}
+
+
+uint16_t readOutputAG(uint8_t lowReg){
+	uint8_t lower = readAG(lowReg);
+	uint8_t higher = readAG(lowReg+1);
+
+	uint16_t Gvalue = ((higher << 8) | lower);
+
+	return Gvalue;
+}
+
+void printGyroXYZ(){
+	uint16_t gyroX = readOutputAG(0x18);
+	uint16_t gyroY = readOutputAG(0x1A);
+	uint16_t gyroZ = readOutputAG(0x1C);
+
+	printf("GyroX= %d | GyroY= %d | GyroZ= %d\n",gyroX,gyroY,gyroZ);
+}
+
+void printAccelXYZ(){
+	uint16_t accelX = readOutputAG(0x28);
+	uint16_t accelY = readOutputAG(0x2A);
+	uint16_t accelZ = readOutputAG(0x2C);
+
+	printf("accelX= %d | accelY= %d | accelZ= %d\n",accelX,accelY,accelZ);
+}
+
+void readTempteratureC(){
+
+	uint16_t tempVal = readOutputAG(0x15);
+	float tempC = 25.0f + (tempVal /16.0f);
+
+	printf("Temperature in C = %f\n", tempC);
+}
+
+uint8_t readM(uint8_t reg) {
+	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_RESET);
+	spi2_transfer(0x80 | reg);           // send address
+	uint8_t val = spi2_transfer(0x00);    // send dummy & read value
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
+	return val;
+}
+
+void writeM(uint8_t reg, uint8_t data) {
+	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_RESET);
+	spi2_transfer(0x7F & reg); // makes sure bit 7 is 0
+	spi2_transfer(data);
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
+}
+
+uint16_t readOutputM(uint8_t lowReg){
+	uint8_t lower = readM(lowReg);
+	uint8_t higher = readM(lowReg+1);
+
+	uint16_t Gvalue = ((higher << 8) | lower);
+
+	return Gvalue;
+}
+
+void printMagnetXYZ(){
+	uint16_t magnetX = readM(0x28);
+	uint16_t magnetY = readM(0x2A);
+	uint16_t magnetZ = readM(0x2C);
+
+	printf("magnetX= %d | magnetY= %d | magnetZ= %d\n",magnetX,magnetY,magnetZ);
+}
+
+void initAG(){
+	//enable Gyroscope
+	writeAG(0x10,0b01100000);
+
+	//enable Accelerometer
+	writeAG(0x1F,0b01111000);
+	writeAG(0x20,0b00000000);
+}
+
+void initMag(){
+	//enable Magnetometer
+	writeM(0x20,0b00010000);
+	writeM(0x21,0b00000000);
+	writeM(0x22,0b10000111);
+	writeM(0x23,0b00000000);
 }
