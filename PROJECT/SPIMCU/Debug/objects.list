@@ -30,7 +30,6 @@
 "./Src/lsm9ds1.o"
 "./Src/main.o"
 "./Src/spiMaster.o"
-"./Src/spiSlave.o"
 "./Src/syscalls.o"
 "./Src/system_stm32f30x.o"
 "./Src/timer.o"

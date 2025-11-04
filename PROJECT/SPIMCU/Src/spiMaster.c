@@ -3,8 +3,8 @@
 void initMasterSPI(void)
 {
 	// Enable Clocks
-	RCC->AHBENR  |= 0x00020000 | 0x00040000;    // Enable Clock for GPIO Banks A and B
-	RCC->APB1ENR |= 0x00004000;                 // Enable Clock for SPI2
+	RCC->AHBENR 	|= 0x00020000 | 0x00040000;   // Enable Clock for GPIO Banks A and B
+	RCC->APB1ENR 	|= 0x00004000;                 // Enable Clock for SPI2
 
 	// Connect pins to SPI2
 	GPIOB->AFR[13 >> 0x03] &= ~(0x0000000F << ((13 & 0x00000007) * 4)); // Clear alternate function for PB13

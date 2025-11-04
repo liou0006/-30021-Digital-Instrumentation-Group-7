@@ -6,7 +6,7 @@
 void init_SPI_CS(void)
 {
 	// Enable Clocks
-	RCC->AHBENR  |= 0x00020000 | 0x00040000;    // Enable Clock for GPIO Banks A and B
+	RCC->AHBENR  |= 0x00040000;    // Enable Clock for GPIO Banksd B
 	RCC->APB1ENR |= 0x00004000;                 // Enable Clock for SPI2
 
 	// Connect pins to SPI2
@@ -26,8 +26,8 @@ void init_SPI_CS(void)
 	GPIOB->OTYPER  |=  (0x0000     << (13)     | 0x0000 	<< (14) 	| 0x0000     << (15));        // Set output type register (0x00 - Push pull, 0x01 - Open drain)
 	GPIOB->MODER   &= ~(0x00000003 << (13 * 2) | 0x00000003 << (14 * 2) | 0x00000003 << (15 * 2));    // Clear mode register
 	GPIOB->MODER   |=  (0x00000002 << (13 * 2) | 0x00000002 << (14 * 2) | 0x00000002 << (15 * 2));    // Set mode register (0x00 - Input, 0x01 - Output, 0x02 - Alternate Function, 0x03 - Analog in/out)
-	GPIOB->PUPDR   &= ~(0x00000003 << (13 * 2) | 0x00000003 << (13 * 2) | 0x00000003 << (15 * 2));    // Clear push/pull register
-	GPIOB->PUPDR   |=  (0x00000000 << (13 * 2) | 0x00000000 << (13 * 2) | 0x00000000 << (15 * 2));    // Set push/pull register (0x00 - No pull, 0x01 - Pull-up, 0x02 - Pull-down)
+	GPIOB->PUPDR   &= ~(0x00000003 << (13 * 2) | 0x00000003 << (14 * 2) | 0x00000003 << (15 * 2));    // Clear push/pull register
+	GPIOB->PUPDR   |=  (0x00000000 << (13 * 2) | 0x00000000 << (14 * 2) | 0x00000000 << (15 * 2));    // Set push/pull register (0x00 - No pull, 0x01 - Pull-up, 0x02 - Pull-down)
 
 	// Configure SPI2
 	SPI2->CR1 &= 0x3040; // Clear CR1 Register
@@ -121,7 +121,7 @@ void readTempteratureC(){
 	uint16_t tempVal = readOutputAG(0x15);
 	float tempC = 25.0f + (tempVal /16.0f);
 
-	printf("Temperature in C = %f\n", tempC);
+	printf("Temperature in C = %d\n", tempVal);
 }
 
 uint8_t readM(uint8_t reg) {

@@ -16,16 +16,17 @@
 // master main
 
 int main(void) {
-	uart_init( 115200 ); // Initialize USB serial at 9600 baud
+	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
-	initMasterSPI();
+//	initMasterSPI();
+
+	init_SPI_CS();
 	initAG();
 	initMag();
 
 	//	int16_t txSize[SPISLAVE_BUFFER_SIZE];
 	int sizeTemp = 3;
 	uint8_t txSize[sizeTemp*2];
-
 	uint16_t dataArray[sizeTemp];
 
 
@@ -37,30 +38,31 @@ int main(void) {
 //for (int i = 0; i < 10000; i++);
 
 
-				for (int i = 0; i < sizeTemp; i++){
-					txSize[i * 2] 		= (uint8_t)(dataArray[i] >> 8);
-					txSize[i * 2 + 1 ] 	= (uint8_t)(dataArray[i] & 0xFF);
-				}
+//				for (int i = 0; i < sizeTemp; i++){
+//					txSize[i * 2] 		= (uint8_t)(dataArray[i] >> 8);
+//					txSize[i * 2 + 1 ] 	= (uint8_t)(dataArray[i] & 0xFF);
+//				}
 
 		// sending data to SPI
 		//		write to other MCUs SPI
 
 
-		for (int i = 0; i < sizeTemp * 2; i++){
-			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_RESET);
-			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
-			SPI_SendData8(SPI2, txSize[i]);
-			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
-			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
-			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
-		}
+//		for (int i = 0; i < sizeTemp * 2; i++){
+//			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_RESET);
+//			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
+//			SPI_SendData8(SPI2, txSize[i]);
+//			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
+//			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+//			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
+//		}
+//
+//		memset(dataArray, 0, sizeof(dataArray));
 
-		memset(dataArray, 0, sizeof(dataArray));
-
-
-		//		readTempteratureC();
-		//		printGyroXYZ();
-		//		printAccelXYZ();
+		printf("AG = %x | M = %x \n", readAG(0x0F));
+//		printf("AG = %x | M = %x \n", readAG(0x0F), readM(0x0F));
+//				readTempteratureC();
+//				printGyroXYZ();
+//				printAccelXYZ();
 		//		printMagnetXYZ();
 
 

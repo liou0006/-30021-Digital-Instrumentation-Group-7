@@ -9,7 +9,7 @@
 #include "flash.h"
 
 #include "lsm9ds1.h"
-#include "spiMaster.h"
+#include "spiSlave.h"
 
 #define SPISLAVE_BUFFER_SIZE 10
 
@@ -18,7 +18,7 @@
 int main(void) {
 	uart_init( 115200 ); // Initialize USB serial at 9600 baud
 
-	initMasterSPI();
+	initSlaveSPI();
 	initAG();
 	initMag();
 

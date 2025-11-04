@@ -6,8 +6,6 @@
 #include <stdio.h>
 
 
-
-
 void init_SPI_CS();
 uint8_t spi2_transfer(uint8_t data);
 
