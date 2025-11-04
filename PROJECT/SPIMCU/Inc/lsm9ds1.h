@@ -5,11 +5,14 @@
 #include "stm32f30x_conf.h"
 #include <stdio.h>
 
+
+
+
 void init_SPI_CS();
 uint8_t spi2_transfer(uint8_t data);
 
-int16_t readOutputAG(uint8_t lowReg);
-int16_t readOutputM(uint8_t lowReg);
+uint16_t readOutputAG(uint8_t lowReg);
+uint16_t readOutputM(uint8_t lowReg);
 
 uint8_t readAG(uint8_t reg);
 void writeAG(uint8_t reg, uint8_t data);
