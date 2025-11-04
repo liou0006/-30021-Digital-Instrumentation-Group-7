@@ -20,8 +20,9 @@ const uint8_t font3x5[][3] = {
 /***********************************************************
  * Functions
  ********************Y***************************************/
-void lcd_clear_buffer(uint8_t *buffer) {
-	memset(buffer, 0x00, LCD_BUFF_SIZE);
+void lcd_clear_buffer(uint8_t *buffer, uint8_t buff_type) {
+	if (buff_type == 0) memset(buffer, 0x00, LCD_BUFF_SIZE);
+	else if (buff_type == 1) memset(buffer, 0x00, LCD_ROWS * VIRTUAL_WIDTH_SIZE);
 }
 
 /*
@@ -50,30 +51,11 @@ void lcd_draw_vertical_line(uint8_t *buffer, uint8_t x, uint8_t y_start, uint8_t
 }
 
 /*
- * Draws a horizontal line at y which goes from x_start to x_end
+ * Draws a horizontal line at y which goes from x_start to x_end.
+ * Specify the buffer width and the function works for both the
+ * LCD buffer and the virtual buffer.
  */
-void lcd_draw_horizontal_line(uint8_t *buffer, uint8_t x_start, uint8_t x_end, uint8_t y) {
-	// Check bounds
-	if (y < 0 || y >= LCD_HEIGHT) return;
-	if (x_start > x_end) {
-		uint8_t temp = x_start;
-		x_start = x_end;
-		x_end = temp;
-	}
-	if (x_start >= LCD_LINE_SIZE) return;
-
-//	if (x_start >= LCD_BUFF_SIZE) return;
-
-	uint8_t row = y / LCD_SLICE_SIZE;	// Find row
-	uint8_t bit = y % LCD_SLICE_SIZE;	// Find bit
-
-	for (uint8_t x = x_start; x <= x_end; x++) {
-		buffer[row * LCD_LINE_SIZE + x] |= (1 << bit);
-//		buffer[row * LCD_BUFF_SIZE + x] |= (1 << bit);
-	}
-}
-
-void lcd_draw_horizontal_line_v2(uint8_t *buffer, uint16_t buf_width, uint16_t x_start, uint16_t x_end, uint16_t y) {
+void lcd_draw_horizontal_line(uint8_t *buffer, uint16_t buf_width, uint16_t x_start, uint16_t x_end, uint16_t y) {
 	// Check bounds
 	if (y >= LCD_HEIGHT) return;
 	if (x_start > x_end) {
@@ -111,6 +93,23 @@ void lcd_draw_char3x5(uint8_t *buffer, uint8_t x, uint8_t y, char c) {
 	}
 }
 
+/*
+ * Copies the visible window of the virtual buffer to the
+ * physical LCD buffer based on the given scroll offset.
+ */
+void update_lcdBuffer(uint16_t scroll_offset) {
+	for (uint8_t row = 0; row < LCD_ROWS; row++) {
+		uint16_t v_offset = row * VIRTUAL_WIDTH_SIZE;	// Start of virtual row
+		uint16_t l_offset = row * LCD_LINE_SIZE;		// Start of LCD row
+		for (uint8_t col = 0; col < LCD_LINE_SIZE; col++) {
+			lcdBuffer[l_offset + col] = virtualBuffer[v_offset + scroll_offset + col];
+		}
+	}
+}
+
+
+
+
 
 
 void lcd_draw_fft(uint8_t *buffer) {
@@ -133,7 +132,7 @@ void lcd_draw_fft_window(uint8_t *buffer) {
 void lcd_draw_axis(uint8_t *buffer) {
 	// Insert check bounds code
 
-	lcd_draw_horizontal_line(buffer, 9, LCD_LINE_SIZE-1, 24);
+//	lcd_draw_horizontal_line(buffer, 9, LCD_LINE_SIZE-1, 24);
 	lcd_draw_vertical_line(buffer, 9, 0, 24);
 }
 
