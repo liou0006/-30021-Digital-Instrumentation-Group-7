@@ -27,7 +27,15 @@ int main(void) {
 
 	while(1) {
 
-		readTempteratureC();
+//		printf("AG = %x M = %x \n",readAG(0x0F),readM(0x0F));
+
+		printf("AG = %x \n",readM(0x0F));
+//
+//		for ( int i = 0 ; i<10000; i++);
+//
+//		printf("M = %x \n ", readM(0x0F));
+
+//		readTempteratureC();
 		//		printGyroXYZ();
 		//		printAccelXYZ();
 		//		printMagnetXYZ();
