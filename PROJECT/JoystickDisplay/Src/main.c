@@ -9,27 +9,31 @@
 #include "adc.h"
 #include "fft.h"
 
+// Initialize LCD and virtual buffer
+uint8_t lcdBuffer[LCD_BUFF_SIZE];
+uint8_t virtualBuffer[VIRTUAL_WIDTH_SIZE * LCD_ROWS];
+
 int main(void) {
 	uart_init( 9600 );	// Initialize USB serial at 9600 baud
 
-//	// ================== Initialize ===================
-//	initJoystick();		// Enabling GPIO pins for joystick
-//	initLed();			// Enabling GPIO pins for LED
-//	initTimer();
-//	init_spi_lcd();		// Initialize SPI for LCD
-//	ADC_setup_PA();		// Enabling GPIO pins for ADC
-//
-//	// Clear LCD buffer and virtual buffer
-////	lcd_clear_buffer(lcdBuffer, 0);
-////	lcd_clear_buffer(virtualBuffer, 1);
+	// ================== Initialize ===================
+	initJoystick();		// Enabling GPIO pins for joystick
+	initLed();			// Enabling GPIO pins for LED
+	initTimer();
+	init_spi_lcd();		// Initialize SPI for LCD
+	ADC_setup_PA();		// Enabling GPIO pins for ADC
 
-	compute_fft();
+	// Clear LCD buffer and virtual buffer
+	lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
+	lcd_clear_buffer(virtualBuffer, LCD_ROWS * VIRTUAL_WIDTH_SIZE);
+
+	compute_fft(virtualBuffer, VIRTUAL_WIDTH_SIZE);
 
 	while(1) {
 		// Copy visible window to physical LCD buffer
-//		update_lcdBuffer();
+		update_lcdBuffer();
 
 		// Push LCD buffer
-//		lcd_push_buffer(lcdBuffer);
+		lcd_push_buffer(lcdBuffer);
 	}
 }

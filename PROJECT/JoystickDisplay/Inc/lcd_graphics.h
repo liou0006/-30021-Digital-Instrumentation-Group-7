@@ -23,10 +23,16 @@
 extern uint8_t lcdBuffer[LCD_BUFF_SIZE];
 extern uint8_t virtualBuffer[VIRTUAL_WIDTH_SIZE * LCD_ROWS];
 
+//typedef struct {
+//	uint16_t N;				// Number of data samples
+//	const uint16_t *data;	// Constant pointer to sample data
+//	uint16_t
+//};
+
 /***********************************************************
  * Functions
  ***********************************************************/
-void lcd_clear_buffer(uint8_t *buffer, uint8_t buff_type);
+void lcd_clear_buffer(uint8_t *buffer, uint16_t buff_size);
 void lcd_draw_pixel(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t y);
 void lcd_draw_vertical_line(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t y_start, uint16_t y_end);
 void lcd_draw_horizontal_line(uint8_t *buffer, uint16_t buff_width, uint16_t x_start, uint16_t x_end, uint16_t y);

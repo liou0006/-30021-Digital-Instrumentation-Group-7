@@ -6,7 +6,8 @@
 #include <stdint.h>
 #include <math.h>
 #include <complex.h>
+#include "lcd_graphics.h"
 
-void compute_fft();
+void compute_fft(uint8_t *buffer, uint16_t buff_width);
 
 #endif /* FFT_H_ */

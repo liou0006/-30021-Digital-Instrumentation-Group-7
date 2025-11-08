@@ -22,9 +22,8 @@ const uint16_t max_scroll = VIRTUAL_WIDTH_SIZE - LCD_LINE_SIZE;
 /***********************************************************
  * Functions
  ********************Y***************************************/
-void lcd_clear_buffer(uint8_t *buffer, uint8_t buff_type) {
-	if (buff_type == 0) memset(buffer, 0x00, LCD_BUFF_SIZE);
-	else if (buff_type == 1) memset(buffer, 0x00, LCD_ROWS * VIRTUAL_WIDTH_SIZE);
+void lcd_clear_buffer(uint8_t *buffer, uint16_t buff_size) {
+	memset(buffer, 0x00, buff_size);
 }
 
 /*
