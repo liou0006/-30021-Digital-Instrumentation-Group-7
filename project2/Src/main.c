@@ -1,22 +1,22 @@
 #include "stm32f30x.h"
 #include "ultrasonic_sensor.h"
 #include <stdint.h>
+#include "openlog_sd.h"
 
-
-
- int main(void) {
+int main(void) {
     SystemInit();
     SystemCoreClockUpdate();          // ensures APB1 freq is correct for BRR
-    ultrasonic_init();                // sets up PA8/PA9 + TIM2, EXTI
+    init_uart(115200);
+    delay(1000); // 1s delay between logs
+    int count = 0;
+    char buffer[32];
 
-    while (1) {
-        uint32_t cm;
-        if (ultrasonic_measure_cm(60, &cm)) {
-            // prints "Distance: NN cm" inside the function
-        }
-        for (volatile uint32_t d=0; d<800000; ++d) __NOP();
+    while (count < 250) {
+        sprintf(buffer, "%d\r\n", count);
+        openlog_writeline(buffer);
+
+        count++;
+        delay(2); // 2ms delay between logs
     }
+    while (1); // halt after done
 }
-
-
-

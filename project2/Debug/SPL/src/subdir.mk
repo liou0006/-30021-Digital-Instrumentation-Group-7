@@ -79,7 +79,7 @@ C_DEPS += \
 
 # Each subdirectory must supply rules for building sources it contributes
 SPL/src/%.o SPL/src/%.su SPL/src/%.cyclo: ../SPL/src/%.c SPL/src/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DSTM32 -DSTM32F302R8Tx -DSTM32F3 -DNUCLEO_F302R8 -DDEBUG -DUSE_STDPERIPH_DRIVER=1 -c -I"/Users/markmalloy/STM32CubeIDE/workspace_1.19.0/repository/project2/SPL/inc" -I"/Users/markmalloy/STM32CubeIDE/workspace_1.19.0/repository/project2/Inc" -I"/Users/markmalloy/STM32CubeIDE/workspace_1.19.0/repository/project2/cmsis" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DSTM32 -DSTM32F302R8Tx -DSTM32F3 -DNUCLEO_F302R8 -DDEBUG -DUSE_STDPERIPH_DRIVER=1 -c -I"C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc" -I"C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/Inc" -I"C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/cmsis" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 
 clean: clean-SPL-2f-src
 
