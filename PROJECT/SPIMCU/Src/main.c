@@ -18,7 +18,7 @@
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
-//	initMasterSPI();
+	//	initMasterSPI();
 
 	init_SPI_CS();
 	initAG();
@@ -36,39 +36,43 @@ int main(void) {
 
 		};
 
+		int16_t gyroX = readOutputAG(0x18);
+		int16_t gyroY = readOutputAG(0x1A);
+		int16_t gyroZ = readOutputAG(0x1C);
+
+		dataArray[0] = gyroX;
+		dataArray[1] = gyroY;
+		dataArray[2] = gyroZ;
+
+		printf("0 = %d, 1 = %d, 2 = %d \n", dataArray[0],dataArray[1],dataArray[2]);
+
+		for (int i = 0; i < sizeTemp; i++){
+			txSize[i * 2] 		= (uint8_t)(dataArray[i] >> 8);
+			txSize[i * 2 + 1 ] 	= (uint8_t)(dataArray[i] & 0xFF);
+		}
 
 
-//		printf("%d\n",dataArray[0]);
-
-
-//for (int i = 0; i < 10000; i++);
-
-
-//				for (int i = 0; i < sizeTemp; i++){
-//					txSize[i * 2] 		= (uint8_t)(dataArray[i] >> 8);
-//					txSize[i * 2 + 1 ] 	= (uint8_t)(dataArray[i] & 0xFF);
-//				}
 
 		// sending data to SPI
 		//		write to other MCUs SPI
 
 
-//		for (int i = 0; i < sizeTemp * 2; i++){
-//			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_RESET);
-//			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
-//			SPI_SendData8(SPI2, txSize[i]);
-//			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
-//			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
-//			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
-//		}
-//
-//		memset(dataArray, 0, sizeof(dataArray));
+		//		for (int i = 0; i < sizeTemp * 2; i++){
+		//			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_RESET);
+		//			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
+		//			SPI_SendData8(SPI2, txSize[i]);
+		//			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
+		//			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+		//			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
+		//		}
+		//
+		//		memset(dataArray, 0, sizeof(dataArray));
 
-		printf("AG = %x | M = %x \n", readAG(0x0F));
-//		printf("AG = %x | M = %x \n", readAG(0x0F), readM(0x0F));
-//				readTempteratureC();
-//				printGyroXYZ();
-//				printAccelXYZ();
+		//		printf("AG = %x | M = %x \n", readAG(0x0F),readM(0x0F));
+		//		printf("AG = %x | M = %x \n", readAG(0x0F), readM(0x0F));
+		//				readTempteratureC();
+		//				printGyroXYZ();
+		//				printAccelXYZ();
 		//		printMagnetXYZ();
 
 
