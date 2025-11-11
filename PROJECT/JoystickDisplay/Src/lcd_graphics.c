@@ -26,6 +26,12 @@ void lcd_clear_buffer(uint8_t *buffer, uint16_t buff_size) {
 	memset(buffer, 0x00, buff_size);
 }
 
+uint16_t graph_y_to_lcd_y(uint16_t graph_y) {
+	return LCD_HEIGHT - 1 - GRAPH_MARGIN_BOTTOM - graph_y;
+}
+
+
+
 /*
  * The function turns on a single pixel at coordinates (x, y)
  * in the frame buffer for the entire LCD display.
@@ -58,6 +64,12 @@ void lcd_draw_vertical_line(uint8_t *buffer, uint16_t buff_width, uint16_t x, ui
 
 		buffer[base + x] |= (1 << bit);
 	}
+}
+
+void lcd_draw_fft_mag(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t mag) {
+//	uint16_t x_min = 5, x_max = buff_width - 1, y_length_max = 26;
+//
+//	if (x >= buff_width) return;
 }
 
 /*
