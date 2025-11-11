@@ -31,6 +31,12 @@ int main(void) {
 
 
 	while(1) {
+		while(readAG(0x0F) != 0x68 || readM(0x0F) != 0x3d){
+			printf("Waiting to find WHO AM I REGISTER values\n");
+
+		};
+
+
 
 //		printf("%d\n",dataArray[0]);
 
