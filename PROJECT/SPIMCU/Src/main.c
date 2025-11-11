@@ -25,9 +25,9 @@ int main(void) {
 	initMag();
 
 	//	int16_t txSize[SPISLAVE_BUFFER_SIZE];
-	int sizeTemp = 3;
-	uint8_t txSize[sizeTemp*2];
-	uint16_t dataArray[sizeTemp];
+	int sizeOfDataArray = 3, sizeOfTxArray = sizeOfDataArray * 2;
+	uint16_t dataArray[sizeOfDataArray];
+	uint8_t txSize[sizeOfTxArray];
 
 
 	while(1) {
@@ -44,27 +44,35 @@ int main(void) {
 		dataArray[1] = gyroY;
 		dataArray[2] = gyroZ;
 
+		//		int16_t accelX = readOutputAG(0x28);
+		//		int16_t accelY = readOutputAG(0x2A);
+		//		int16_t accelZ = readOutputAG(0x2C);
+		//
+		//		int16_t tempVal = readOutputAG(0x15);
+		//		float tempC = 25.0f + (tempVal /16.0f);
+		//
+		//		int16_t magnetX = readOutputM(0x28);
+		//		int16_t magnetY = readOutputM(0x2A);
+		//		int16_t magnetZ = readOutputM(0x2C);
+
+
 		printf("0 = %d, 1 = %d, 2 = %d \n", dataArray[0],dataArray[1],dataArray[2]);
 
-		for (int i = 0; i < sizeTemp; i++){
+		for (int i = 0; i < sizeOfDataArray; i++){
 			txSize[i * 2] 		= (uint8_t)(dataArray[i] >> 8);
 			txSize[i * 2 + 1 ] 	= (uint8_t)(dataArray[i] & 0xFF);
 		}
 
+		// sending data via SPI to oter MCU
 
-
-		// sending data to SPI
-		//		write to other MCUs SPI
-
-
-		//		for (int i = 0; i < sizeTemp * 2; i++){
-		//			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_RESET);
-		//			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
-		//			SPI_SendData8(SPI2, txSize[i]);
-		//			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
-		//			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
-		//			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
-		//		}
+			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_RESET);
+		for (int i = 0; i < sizeOfTxArray; i++){
+			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
+			SPI_SendData8(SPI2, txSize[i]);
+			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
+			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+		}
+			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
 		//
 		//		memset(dataArray, 0, sizeof(dataArray));
 

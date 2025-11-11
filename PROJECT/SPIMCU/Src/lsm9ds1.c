@@ -116,7 +116,7 @@ uint16_t readOutputAG(uint8_t lowReg){
 void printGyroXYZ(){
 	int16_t gyroX = readOutputAG(0x18);
 	int16_t gyroY = readOutputAG(0x1A);
-	int16_t gyroZ = readOutput(0x1C);
+	int16_t gyroZ = readOutputAG(0x1C);
 
 	printf("GyroX= %d | GyroY= %d | GyroZ= %d\n",gyroX,gyroY,gyroZ);
 }
@@ -179,9 +179,9 @@ uint16_t readOutputM(uint8_t lowReg){
 
 
 void printMagnetXYZ(){
-	int16_t magnetX = readOutput(0x28);
-	int16_t magnetY = readOutput(0x2A);
-	int16_t magnetZ = readOutput(0x2C);
+	int16_t magnetX = readOutputM(0x28);
+	int16_t magnetY = readOutputM(0x2A);
+	int16_t magnetZ = readOutputM(0x2C);
 
 	printf("magnetX= %d | magnetY= %d | magnetZ= %d\n",magnetX,magnetY,magnetZ);
 }

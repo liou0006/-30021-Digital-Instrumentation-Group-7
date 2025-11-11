@@ -15,14 +15,14 @@ void initSlaveSPI(void)
 	RCC->APB1ENR |= 0x8000;						// Enable Clock for SPI3 (i think)
 
 	// Connect pins to SPI2
-	GPIOB->AFR[10 >> 0x03] &= ~(0x0000000F << ((10 & 0x00000007) * 4)); // Clear alternate function for PB10
-	GPIOB->AFR[10 >> 0x03] |=  (0x00000005 << ((10 & 0x00000007) * 4)); // Set alternate 5 function for PB10 - SCLK
+	GPIOB->AFR[10 >> 0x03] &= ~(0x0000000F << ((10 & 0x00000007) * 4)); // Clear alternate function for PC10
+	GPIOB->AFR[10 >> 0x03] |=  (0x00000005 << ((10 & 0x00000007) * 4)); // Set alternate 5 function for PC10 - SCLK
 
-	GPIOB->AFR[11 >> 0x03] &= ~(0x0000000F << ((11 & 0x00000007) * 4)); // Clear alternate function for PB10
-	GPIOB->AFR[11 >> 0x03] |=  (0x00000005 << ((11 & 0x00000007) * 4)); // Set alternate 5 function for PB10 - SCLK
+	GPIOB->AFR[11 >> 0x03] &= ~(0x0000000F << ((11 & 0x00000007) * 4)); // Clear alternate function for PC11
+	GPIOB->AFR[11 >> 0x03] |=  (0x00000005 << ((11 & 0x00000007) * 4)); // Set alternate 5 function for PC11 - MISO
 
-	GPIOB->AFR[12 >> 0x03] &= ~(0x0000000F << ((12 & 0x00000007) * 4)); // Clear alternate function for PB12
-	GPIOB->AFR[12 >> 0x03] |=  (0x00000005 << ((12 & 0x00000007) * 4)); // Set alternate 5 function for PB12 - MOSI
+	GPIOB->AFR[12 >> 0x03] &= ~(0x0000000F << ((12 & 0x00000007) * 4)); // Clear alternate function for PC12
+	GPIOB->AFR[12 >> 0x03] |=  (0x00000005 << ((12 & 0x00000007) * 4)); // Set alternate 5 function for PC12 - MOSI
 
 	// Configure pins PB10 and PB12 for 10 MHz alternate function
 	GPIOB->OSPEEDR &= ~(0x00000003 << (10 * 2) | 0x00000003 << (11 * 2) | 0x00000003 << (12 * 2));    // Clear speed register
@@ -31,8 +31,8 @@ void initSlaveSPI(void)
 	GPIOB->OTYPER  |=  (0x0000     << (10)     | 0x0000 	<< (11) 	| 0x0000     << (12));        // Set output type register (0x00 - Push pull, 0x01 - Open drain)
 	GPIOB->MODER   &= ~(0x00000003 << (10 * 2) | 0x00000003 << (11 * 2) | 0x00000003 << (12 * 2));    // Clear mode register
 	GPIOB->MODER   |=  (0x00000002 << (10 * 2) | 0x00000002 << (11 * 2) | 0x00000002 << (12 * 2));    // Set mode register (0x00 - Input, 0x01 - Output, 0x02 - Alternate Function, 0x03 - Analog in/out)
-	GPIOB->PUPDR   &= ~(0x00000003 << (10 * 2) | 0x00000003 << (10 * 2) | 0x00000003 << (12 * 2));    // Clear push/pull register
-	GPIOB->PUPDR   |=  (0x00000000 << (10 * 2) | 0x00000000 << (10 * 2) | 0x00000000 << (12 * 2));    // Set push/pull register (0x00 - No pull, 0x01 - Pull-up, 0x02 - Pull-down)
+	GPIOB->PUPDR   &= ~(0x00000003 << (10 * 2) | 0x00000003 << (11 * 2) | 0x00000003 << (12 * 2));    // Clear push/pull register
+	GPIOB->PUPDR   |=  (0x00000000 << (10 * 2) | 0x00000000 << (11 * 2) | 0x00000000 << (12 * 2));    // Set push/pull register (0x00 - No pull, 0x01 - Pull-up, 0x02 - Pull-down)
 
 	// Configure SPI2
 	SPI2->CR1 &= 0x3040; // Clear CR1 Register
