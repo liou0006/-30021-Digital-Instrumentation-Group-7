@@ -36,9 +36,6 @@ Src/main.o: ../Src/main.c \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/lcd.h \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/interrupt.h \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/led.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/timer.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/joystick.h \
- C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/window.h \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/window.h \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/flash.h \
  C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/lsm9ds1.h \
@@ -80,9 +77,6 @@ C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/lcd.h:
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/interrupt.h:
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/led.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/timer.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/joystick.h:
-C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/window.h:
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/window.h:
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/flash.h:
 C:/Users/liou-/OneDrive\ -\ Danmarks\ Tekniske\ Universitet/Elektrotekniologi\ -\ Master/1.\ semester/30021\ Digital\ Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/Inc/lsm9ds1.h:

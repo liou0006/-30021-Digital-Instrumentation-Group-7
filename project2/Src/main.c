@@ -4,7 +4,7 @@
 #include "led.h"
 #include "lcd.h"
 #include "interrupt.h"
-#include "timer.h"
+//#include "timer.h"
 #include "window.h"
 #include "flash.h"
 #include "lsm9ds1.h"
@@ -16,7 +16,7 @@ int main(void) {
 	//	initJoystick();
 	//	initLed();
 	//	iniEXTIA4();
-	initTimer();
+//	initTimer();
 	//	lcd_init_and_print();
 
 	init_SPI_CS();
@@ -27,9 +27,15 @@ int main(void) {
 
 	while(1) {
 
-//		printf("AG = %x M = %x \n",readAG(0x0F),readM(0x0F));
+		while(readAG(0x0F) != 0x68 || readM(0x0F) != 0x3d){
+			printf("Waiting to find WHO AM I REGISTER values\n");
 
-		printf("AG = %x \n",readM(0x0F));
+		};
+		printf("%x\n",readAG(0x0F));
+//		printf("AG = %x M = %x \n",readAG(0x0F),readM(0x0F));
+//		printf("AG = %x \n",readAG(0x0F));
+////
+//		printf("M = %x \n",readM(0x0F));
 //
 //		for ( int i = 0 ; i<10000; i++);
 //
