@@ -1,2 +1,2 @@
-../Src/led.c:5:6:initLed	16	static
-../Src/led.c:42:6:setLed	16	static
+led.c:12:6:initLed	16	static
+led.c:48:6:setLed	16	static

@@ -29,21 +29,17 @@ int main(void) {
 	lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
 	lcd_clear_buffer(virtualBuffer, LCD_ROWS * VIRTUAL_WIDTH_SIZE);
 
-	// Define graph area (i.e. position in virtual buffer)
-	uint16_t graph_x_start = GRAPH_X_OFFSET;
-	uint16_t graph_x_end = VIRTUAL_WIDTH_SIZE - 1;
-	uint16_t graph_y_bottom = LCD_HEIGHT - 1 - GRAPH_MARGIN_BOTTOM;
-	uint16_t graph_y_top = GRAPH_MARGIN_TOP;
-
-	// Draw axis
-	lcd_draw_vertical_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, graph_x_start, 0, graph_y_bottom);
-	lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, graph_x_start, graph_x_end, graph_y_bottom);
+	draw_graph_axis();
 
 	compute_fft(virtualBuffer, VIRTUAL_WIDTH_SIZE);
 
 	while(1) {
 		// Copy visible window to physical LCD buffer
 		update_lcdBuffer();
+
+		// Draw y-axis (magnitude)
+//		lcd_draw_vertical_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, GRAPH_X_OFFSET, 0, LCD_HEIGHT - 1 - GRAPH_MARGIN_BOTTOM);
+//		lcd_draw_vertical_line(lcdBuffer, LCD_LINE_SIZE, graph_x_start, 0, graph_y_bottom);
 
 		// Push LCD buffer
 		lcd_push_buffer(lcdBuffer);

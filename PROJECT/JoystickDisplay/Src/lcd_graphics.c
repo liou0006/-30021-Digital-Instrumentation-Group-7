@@ -19,6 +19,12 @@ const uint8_t font3x5[][3] = {
 
 const uint16_t max_scroll = VIRTUAL_WIDTH_SIZE - LCD_LINE_SIZE;
 
+// Define graph area (i.e. position in virtual buffer)
+const uint16_t graph_x_start = GRAPH_X_OFFSET;
+const uint16_t graph_x_end = VIRTUAL_WIDTH_SIZE - 2 - GRAPH_X_OFFSET;
+const uint16_t graph_y_bottom = LCD_HEIGHT - 1 - GRAPH_MARGIN_BOTTOM;
+const uint16_t graph_y_top = GRAPH_MARGIN_TOP;
+
 /***********************************************************
  * Functions
  ********************Y***************************************/
@@ -28,6 +34,11 @@ void lcd_clear_buffer(uint8_t *buffer, uint16_t buff_size) {
 
 uint16_t graph_y_to_lcd_y(uint16_t graph_y) {
 	return LCD_HEIGHT - 1 - GRAPH_MARGIN_BOTTOM - graph_y;
+}
+
+void draw_graph_axis() {
+	lcd_draw_vertical_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, graph_x_start, graph_y_top, graph_y_bottom);
+	lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, graph_x_start, graph_x_end, graph_y_bottom);
 }
 
 

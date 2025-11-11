@@ -1,8 +1,8 @@
-C:/Users/liou-/OneDrive - Danmarks Tekniske Universitet/Elektrotekniologi - Master/1. semester/30021 Digital Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cm4.h:1071:22:NVIC_EnableIRQ	16	static
-C:/Users/liou-/OneDrive - Danmarks Tekniske Universitet/Elektrotekniologi - Master/1. semester/30021 Digital Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cm4.h:1085:22:NVIC_DisableIRQ	16	static
-C:/Users/liou-/OneDrive - Danmarks Tekniske Universitet/Elektrotekniologi - Master/1. semester/30021 Digital Instrumentation/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cm4.h:1156:22:NVIC_SetPriority	16	static
-../Src/timer.c:5:6:initTimer	16	static
-../Src/timer.c:47:6:TIM2_IRQHandler	8	static
-../Src/timer.c:73:6:stopWatch	24	static
-../Src/timer.c:101:6:printTime	16	static
-../Src/timer.c:106:6:stopWatchFunction	8	static
+core_cm4.h:1071:22:NVIC_EnableIRQ	16	static
+core_cm4.h:1085:22:NVIC_DisableIRQ	16	static
+core_cm4.h:1156:22:NVIC_SetPriority	16	static
+timer.c:12:6:initTimer	16	static
+timer.c:54:6:TIM2_IRQHandler	8	static
+timer.c:80:6:stopWatch	24	static
+timer.c:108:6:printTime	16	static
+timer.c:113:6:stopWatchFunction	8	static
