@@ -18,9 +18,9 @@
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
-	//	initMasterSPI();
 
-	init_SPI_CS();
+//	init_SPI_CS();
+	initMasterSPI();
 	initAG();
 	initMag();
 
@@ -31,10 +31,12 @@ int main(void) {
 
 
 	while(1) {
-		while(readAG(0x0F) != 0x68 || readM(0x0F) != 0x3d){
-			printf("Waiting to find WHO AM I REGISTER values\n");
-
-		};
+		//		while(readAG(0x0F) != 0x68 || readM(0x0F) != 0x3d){
+		////			printf("Waiting to find WHO AM I REGISTER values\n");
+		//
+		//			printf("AG = %x , M = %x \n", readAG(0x0F),readM(0x0F));
+		//
+		//		};
 
 		int16_t gyroX = readOutputAG(0x18);
 		int16_t gyroY = readOutputAG(0x1A);
@@ -65,25 +67,18 @@ int main(void) {
 
 		// sending data via SPI to oter MCU
 
-			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_RESET);
+		GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_RESET);
+			for(uint32_t i =0; i < 500000;i++);
+//		printf("PB3 is low \n");
 		for (int i = 0; i < sizeOfTxArray; i++){
 			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
 			SPI_SendData8(SPI2, txSize[i]);
 			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
-			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+			(void)SPI_ReceiveData8(SPI2);
 		}
-			GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
-		//
-		//		memset(dataArray, 0, sizeof(dataArray));
-
-		//		printf("AG = %x | M = %x \n", readAG(0x0F),readM(0x0F));
-		//		printf("AG = %x | M = %x \n", readAG(0x0F), readM(0x0F));
-		//				readTempteratureC();
-		//				printGyroXYZ();
-		//				printAccelXYZ();
-		//		printMagnetXYZ();
-
-
+		while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+		GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
+			for(uint32_t i =0; i < 500000;i++);
 
 
 	}
