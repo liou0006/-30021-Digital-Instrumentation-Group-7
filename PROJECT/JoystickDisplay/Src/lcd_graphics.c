@@ -21,7 +21,7 @@ const uint16_t max_scroll = VIRTUAL_WIDTH_SIZE - LCD_LINE_SIZE;
 
 // Define graph area (i.e. position in virtual buffer)
 const uint16_t graph_x_start = GRAPH_X_OFFSET;
-const uint16_t graph_x_end = VIRTUAL_WIDTH_SIZE - 2 - GRAPH_X_OFFSET;
+const uint16_t graph_x_end = VIRTUAL_WIDTH_SIZE - 2 - GRAPH_MARGIN_RIGHT;
 const uint16_t graph_y_bottom = LCD_HEIGHT - 1 - GRAPH_MARGIN_BOTTOM;
 const uint16_t graph_y_top = GRAPH_MARGIN_TOP;
 
@@ -41,6 +41,14 @@ void draw_graph_axis() {
 	lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, graph_x_start, graph_x_end, graph_y_bottom);
 }
 
+void draw_axis_number(uint16_t num) {
+	char low = num & 0xFF;
+	char high = num >> 8;
+
+//	lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '1');
+//	lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '0');
+//	lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
+}
 
 
 /*

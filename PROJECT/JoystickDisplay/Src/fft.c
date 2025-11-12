@@ -18,8 +18,8 @@ void compute_fft(uint8_t *buffer, uint16_t buff_width) {
 	for (int n = 0; n < N; n++) {
 //		x[n] = cos(2 * M_PI * 2 * n / N) + 0.5 * sin(2 * M_PI * 4 * n / N);
 //		x[n] = 0.8 + 0.7 * sin(2 * M_PI * 50 * n / N) + sin(2 * M_PI * 120 * n / N);
-//		x[n] = cos(2 * M_PI * 50 * n / Fs);
-		x[n] = 3*cos(2*M_PI*2*n/Fs) + 2*cos(2*M_PI*4*n/Fs) + sin(2*M_PI*6*n/Fs);
+		x[n] = cos(2 * M_PI * 50 * n / Fs);
+//		x[n] = 3*cos(2*M_PI*2*n/Fs) + 2*cos(2*M_PI*4*n/Fs) + sin(2*M_PI*6*n/Fs);
 	}
 
 	// Compute DFT
@@ -42,7 +42,7 @@ void compute_fft(uint8_t *buffer, uint16_t buff_width) {
 //		double freq = (double)k * Fs / N;	// Frequency corresponding to bin k
 
 		// Horizontal scaling
-		uint16_t x_scaled = (uint16_t)((float)k * (buff_width - 1 - 2*GRAPH_X_OFFSET) / (N/2));
+		uint16_t x_scaled = (uint16_t)((float)k * (buff_width - 1 - GRAPH_X_OFFSET - GRAPH_MARGIN_RIGHT) / (N/2));
 		uint16_t x_pos = GRAPH_X_OFFSET + x_scaled;
 
 		// Vertical scaling
@@ -61,7 +61,7 @@ void compute_fft(uint8_t *buffer, uint16_t buff_width) {
 	for (int i = 0; i <= num_ticks; i++) {
 		double freq = i * f_max / num_ticks;
 		int k = (int)((freq * N) / Fs);
-		uint16_t x_tick = GRAPH_X_OFFSET + (uint16_t)((float)k * (buff_width - 1 - 2*GRAPH_X_OFFSET) / (N/2));
+		uint16_t x_tick = GRAPH_X_OFFSET + (uint16_t)((float)k * (buff_width - 1 - GRAPH_X_OFFSET - GRAPH_MARGIN_RIGHT) / (N/2));
 
 		// Tick mark
 		lcd_draw_vertical_line(buffer, buff_width, x_tick, graph_y_to_lcd_y(0) + 1, graph_y_to_lcd_y(0));
