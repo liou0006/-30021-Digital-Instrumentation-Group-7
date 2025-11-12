@@ -10,13 +10,32 @@
 typedef enum {
 	MENU_MAIN,
 	MENU_FFT,
-	MENU_HISTOGRAM
-} MenuState;
+	MENU_FFT_ACCEL,
+	MENU_FFT_GYRO,
+	MENU_FFT_MAGNET,
+	MENU_HIST,
+	MENU_HIST_ACCEL,
+	MENU_HIST_GYRO,
+	MENU_HIST_MAGNET,
+	MENU_PLOT
+} menu_state_t;
+
+typedef enum {
+	SENSOR_ACCEL,
+	SENSOR_GYRO,
+	SENSOR_MAGNET
+} sensor_t;
+
+typedef enum {
+	AXIS_X,
+	AXIS_Y,
+	AXIS_Z
+} axis_t;
 
 void menu_init(void);
 void menu_update(void);
 void menu_set_joystick_state(uint8_t state);
-MenuState menu_get_current_state(void);
+menu_state_t menu_get_current_state(void);
 
 void draw_menu_main(void);
 void draw_menu_fft(void);
