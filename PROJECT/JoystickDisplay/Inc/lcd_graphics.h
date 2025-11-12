@@ -21,6 +21,7 @@
 #define GRAPH_HEIGHT 23		// pixels
 #define GRAPH_WIDTH 25		// pixels
 #define GRAPH_X_OFFSET 8
+#define GRAPH_MARGIN_RIGHT 5
 #define GRAPH_MARGIN_TOP 2
 #define GRAPH_MARGIN_BOTTOM 6
 
@@ -37,6 +38,7 @@ void lcd_clear_buffer(uint8_t *buffer, uint16_t buff_size);
 uint16_t graph_y_to_lcd_y(uint16_t graph_y);
 void draw_graph_axis();
 //void lcd_init_graph(graph_area_t *graph);
+void draw_axis_number(uint16_t num);
 
 void lcd_draw_pixel(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t y);
 void lcd_draw_fft_mag(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t mag);
