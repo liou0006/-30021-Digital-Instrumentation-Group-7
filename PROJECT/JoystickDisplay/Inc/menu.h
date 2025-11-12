@@ -38,7 +38,7 @@ void menu_set_joystick_state(uint8_t state);
 menu_state_t menu_get_current_state(void);
 
 void draw_menu_main(void);
-void draw_menu_fft(void);
-void draw_menu_histogram(void);
+void draw_menu_fft(uint8_t sel);
+void draw_menu_histogram(uint8_t sel);
 
 #endif /* MENU_H_ */
