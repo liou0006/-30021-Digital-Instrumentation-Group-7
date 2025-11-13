@@ -108,6 +108,10 @@ void menu_update() {
 			currentMenu = MENU_AXIS;
 			wait = 1;
 		}
+		lcd_clear_buffer(virtualBuffer, LCD_ROWS * VIRTUAL_WIDTH_SIZE);
+		draw_graph_axis();
+		// Copy visible window to physical LCD buffer
+		update_lcdBuffer();
 		break;
 	}
 }
