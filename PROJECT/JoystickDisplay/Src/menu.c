@@ -2,7 +2,14 @@
 
 static menu_state_t currentMenu = MENU_MAIN;
 static uint8_t sel = 0;			// Selected line
-static uint8_t joystick = 0;	// Joystick joystick (default is none)
+static uint8_t joystick = 0;	// Joystick state (default is none)
+
+// Remember cursor position for each menu
+static uint8_t sel_main = 0;
+static uint8_t sel_sensor = 0;
+static uint8_t sel_axis = 0;
+
+// Remember menu info
 static sensor_t currentSensor;
 static axis_t currentAxis;
 static uint8_t FFTmode = 0;		// 1 = FFT, 0 = Histogram
@@ -29,9 +36,15 @@ void menu_update() {
 
 	switch (currentMenu) {
 	case MENU_MAIN:
+		sel_main = 0;
+		sel_sensor = 0;
+		sel_axis = 0;
+
 		if (joystick == UP && sel > 0) sel--;
 		else if (joystick == DOWN && sel < 1) sel++;
 		else if (joystick == CENTER) {
+			sel_main = sel;		// Save main menu cursor
+
 			if (sel == 0) {
 				currentMenu = MENU_FFT;
 				FFTmode = 1;
@@ -39,7 +52,8 @@ void menu_update() {
 				currentMenu = MENU_HIST;
 				FFTmode = 0;
 			}
-			sel = 0;
+
+			sel = sel_sensor;	// Restore previous cursor in sensor menu
 			wait = 1;
 		}
 		lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
@@ -50,9 +64,11 @@ void menu_update() {
 
 	case MENU_FFT:
 	case MENU_HIST:
+		sel_axis = 0;
+
 		if (joystick == LEFT) {
 			currentMenu = MENU_MAIN;
-			sel = 0;
+			sel = sel_main;		// Restore main menu cursor
 			wait = 1;
 		} else if (joystick == UP && sel > 0) {
 			sel--;
@@ -61,13 +77,17 @@ void menu_update() {
 			sel++;
 			wait = 1;
 		} else if (joystick == CENTER) {
+			sel_sensor = sel;	// Save sensor selection cursor
+
 			if (sel == 0) currentSensor = SENSOR_ACCEL;
 			else if (sel == 1) currentSensor = SENSOR_GYRO;
 			else currentSensor = SENSOR_MAGNET;
+
 			currentMenu = MENU_AXIS;
-			sel = 0;
+			sel = sel_axis;		// Restore previous axis cursor
 			wait = 1;
 		}
+
 		lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
 		lcd_write_string((uint8_t*)(FFTmode ? "FFT: Select Sensor" : "Hist.: Select Sensor"), lcdBuffer, 0, 0);
 		lcd_write_string((uint8_t *)(sel == 0 ? ">Accelerometer" : " Accelerometer"), lcdBuffer, 0, 1);
@@ -78,7 +98,7 @@ void menu_update() {
 	case MENU_AXIS:
 		if (joystick == LEFT) {
 			currentMenu = (FFTmode ? MENU_FFT : MENU_HIST);
-			sel = 0;
+			sel = sel_sensor;	// Restore sensor cursor
 			wait = 1;
 		} else if (joystick == UP && sel > 0) {
 			sel--;
@@ -87,13 +107,16 @@ void menu_update() {
 			sel++;
 			wait = 1;
 		} else if (joystick == CENTER) {
+			sel_axis = sel;	// Save axis cursor
+
 			if (sel == 0) currentAxis = AXIS_X;
 			else if (sel == 1) currentAxis = AXIS_Y;
 			else currentAxis = AXIS_Z;
+
 			currentMenu = MENU_PLOT;
-			sel = 0;
 			wait = 1;
 		}
+
 		lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
 		lcd_write_string((uint8_t*)(FFTmode ? "FFT: Select Axis" : "Hist.: Select Axis"), lcdBuffer, 0, 0);
 		lcd_write_string((uint8_t*)(sel == 0 ? ">X" : " X"), lcdBuffer, 0, 1);
@@ -103,15 +126,16 @@ void menu_update() {
 
 	case MENU_PLOT:
 		lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
-		lcd_write_string((uint8_t*)"MENU_PLOT", lcdBuffer, 0, 0);
+
 		if (joystick == LEFT) {
 			currentMenu = MENU_AXIS;
+			sel = sel_axis;		// Restore axis cursor
 			wait = 1;
 		}
+
 		lcd_clear_buffer(virtualBuffer, LCD_ROWS * VIRTUAL_WIDTH_SIZE);
 		draw_graph_axis();
-		// Copy visible window to physical LCD buffer
-		update_lcdBuffer();
+		update_lcdBuffer();		// Copy visible window to physical LCD buffer
 		break;
 	}
 }
