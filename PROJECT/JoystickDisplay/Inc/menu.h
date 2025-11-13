@@ -10,13 +10,7 @@
 typedef enum {
 	MENU_MAIN,
 	MENU_FFT,
-//	MENU_FFT_ACCEL,
-//	MENU_FFT_GYRO,
-//	MENU_FFT_MAGNET,
 	MENU_HIST,
-//	MENU_HIST_ACCEL,
-//	MENU_HIST_GYRO,
-//	MENU_HIST_MAGNET,
 	MENU_PLOT,
 	MENU_SENSOR,
 	MENU_AXIS
@@ -34,8 +28,7 @@ typedef enum {
 	AXIS_Z
 } axis_t;
 
-void menu_init(void);
-menu_state_t menu_get_current_state(void);
-void menu_update(uint8_t state);
+void menu_init();
+void menu_update();
 
 #endif /* MENU_H_ */

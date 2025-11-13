@@ -11,20 +11,16 @@ static uint8_t FFTmode = 0;		// 1 = FFT, 0 = Histogram
 //void displayFFT(sensor_t sensor, axis_t axis);
 //void displayHistogram(sensor_t sensor, axis_t axis);
 
-void menu_init(void) {
+void menu_init() {
 	lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
 	lcd_write_string((uint8_t *)"Main Menu:", lcdBuffer, 0, 0);
 	lcd_write_string((uint8_t*)" FFT", lcdBuffer, 0, 1);
 	lcd_write_string((uint8_t*)" Histogram", lcdBuffer, 0, 2);
 }
 
-menu_state_t menu_get_current_joystick(void) {
-	return currentMenu;
-}
-
-void menu_update(uint8_t state) {
+void menu_update() {
 	static uint8_t wait = 0;
-	joystick = state;
+	joystick = readJoystickState();
 
 	if (wait) {
 		if (joystick == 0) wait = 0;

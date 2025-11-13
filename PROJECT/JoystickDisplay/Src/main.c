@@ -26,8 +26,7 @@ int main(void) {
 	menu_init();
 
 	while(1) {
-		uint8_t state = readJoystickState();
-		menu_update(state);
+		menu_update();
 
 		// Push LCD buffer
 		lcd_push_buffer(lcdBuffer);
