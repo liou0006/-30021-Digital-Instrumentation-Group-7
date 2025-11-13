@@ -34,25 +34,16 @@ void initJoystick() {
 }
 
 
-int8_t readJoystickState() {
-	// Output of state depending on joystick state
-	// up: 1    down: 2    left: 4    right: 8    center: 16
-
+uint8_t readJoystickState() {
 	// Initialize joystick state variable
-	int8_t state = 0;
+	uint8_t state = 0;
 
-	// Read joystick pins
-	int8_t up = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4);		// PA4
-	int8_t down = GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0);		// PB0
-	int8_t center = GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_5);	// PB5
-	int8_t right = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_0);	// PC0
-	int8_t left = GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_1);		// PC1
-
-	if (up == 1) state = up;					// 1,  0x1
-	else if (down == 1) state = down << 1;		// 2,  0x2
-	else if (left == 1) state = left << 2;		// 4,  0x4
-	else if (right == 1) state = right << 3;	// 8,  0x8
-	else if (center == 1) state = center << 4;	// 16, 0x10
+	// Read joystick pins and assign corresponding state
+	if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4)) state = UP;			// PA4, 0x1
+	else if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0)) state = DOWN;	// PB0, 0x2
+	else if (GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_1)) state = LEFT;	// PC1, 0x4
+	else if (GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_0)) state = RIGHT;	// PC0, 0x8
+	else if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_5)) state = CENTER;	// PC1, 0x10
 
 	return state;
 }

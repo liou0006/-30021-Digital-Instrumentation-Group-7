@@ -12,7 +12,7 @@
 #define CENTER	(0x10)
 
 void initJoystick();
-int8_t readJoystickState();
+uint8_t readJoystickState();
 void handleJoystick();
 
 #endif /* JOYSTICK_H_ */
