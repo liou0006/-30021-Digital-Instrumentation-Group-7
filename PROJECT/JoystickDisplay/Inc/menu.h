@@ -12,7 +12,6 @@ typedef enum {
 	MENU_FFT,
 	MENU_HIST,
 	MENU_PLOT,
-	MENU_SENSOR,
 	MENU_AXIS
 } menu_state_t;
 

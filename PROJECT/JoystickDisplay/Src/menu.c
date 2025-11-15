@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "histogram.h"	// Included here to avoid circular dependency
 
 static menu_state_t currentMenu = MENU_MAIN;
 static uint8_t sel = 0;			// Selected line
@@ -135,6 +136,11 @@ void menu_update() {
 
 		lcd_clear_buffer(virtualBuffer, LCD_ROWS * VIRTUAL_WIDTH_SIZE);
 		draw_graph_axis();
+
+		if (FFTmode) {
+//			calculate_and_print_histogram(LSM9DS1_RawData_t *data_)
+		}
+
 		update_lcdBuffer();		// Copy visible window to physical LCD buffer
 		break;
 	}
