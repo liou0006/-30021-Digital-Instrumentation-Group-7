@@ -2,7 +2,7 @@
 #include "stdint.h"
 #include "limits.h"
 
-void calculate_and_print_histogram(LSM9DS1_RawData_t *data_array, int num_samples, sensor_t sensor, axis_t axis, int num_bins) {
+void calculate_and_print_histogram(lsm9ds1_raw_data_t *data_array, int num_samples, sensor_t sensor, axis_t axis, int num_bins) {
 	int16_t min_val = INT16_MAX;
 	int16_t max_val = INT16_MIN;
 
@@ -59,7 +59,7 @@ void calculate_and_print_histogram(LSM9DS1_RawData_t *data_array, int num_sample
 	}
 }
 
-int16_t get_data_val(LSM9DS1_RawData_t *data_array, int i, sensor_t sensor, axis_t axis) {
+int16_t get_data_val(lsm9ds1_raw_data_t *data_array, int i, sensor_t sensor, axis_t axis) {
 	int16_t val;
 
 	switch (axis) {

@@ -1,6 +1,3 @@
-#include "stm32f30x_conf.h" // STM32 config
-#include "30010_io.h" 		// Input/output library for this course
-
 #include "joystick.h"
 
 void initJoystick() {
@@ -48,46 +45,45 @@ uint8_t readJoystickState() {
 	return state;
 }
 
-// Tilføj start/stop states fra 6-1_v2
-
-void handleJoystick() {
-	static int8_t current_state = 0;
-	int8_t next_state = readJoystickState();
-
-//	printf("next state = %d\n", next_state);
-
-	if (next_state != current_state) {
-		switch(next_state) {
-		default:
-			setLed('d');
-			break;
-
-		case 0x1:
-			setLed('r');
-			printf("UP (red)\n");
-			break;
-
-		case 0x2:
-			setLed('g');
-			printf("DOWN (green)\n");
-			break;
-
-		case 0x4:
-			setLed('b');
-			printf("LEFT (blue)\n");
-			break;
-
-		case 0x8:
-			setLed('c');
-			printf("RIGHT (cyan)\n");
-			break;
-
-		case 0x10:
-			setLed('m');
-			printf("CENTER (magenta)\n");
-			break;
-		}
-
-		current_state = next_state;
-	}
-}
+// Not used so commented out for now
+//void handleJoystick() {
+//	static int8_t current_state = 0;
+//	int8_t next_state = readJoystickState();
+//
+////	printf("next state = %d\n", next_state);
+//
+//	if (next_state != current_state) {
+//		switch(next_state) {
+//		default:
+//			setLed('d');
+//			break;
+//
+//		case 0x1:
+//			setLed('r');
+//			printf("UP (red)\n");
+//			break;
+//
+//		case 0x2:
+//			setLed('g');
+//			printf("DOWN (green)\n");
+//			break;
+//
+//		case 0x4:
+//			setLed('b');
+//			printf("LEFT (blue)\n");
+//			break;
+//
+//		case 0x8:
+//			setLed('c');
+//			printf("RIGHT (cyan)\n");
+//			break;
+//
+//		case 0x10:
+//			setLed('m');
+//			printf("CENTER (magenta)\n");
+//			break;
+//		}
+//
+//		current_state = next_state;
+//	}
+//}

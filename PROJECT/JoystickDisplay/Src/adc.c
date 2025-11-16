@@ -1,10 +1,3 @@
-/*
- * ADC.c
- *
- *  Created on: Sep 16, 2025
- *      Authors: fcadi, elb (modifications and comments)
- */
-
 #include "ADC.h"
 
 // ============= Set up ADC for PA0 and PA1 ============

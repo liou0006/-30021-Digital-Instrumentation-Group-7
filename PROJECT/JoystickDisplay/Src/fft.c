@@ -1,142 +1,110 @@
 #include "fft.h"
 
-void compute_fft_mags(uint16_t *x) {
-	//
+// Functions are part of the API layer and are purely FFT maths
+
+#define N 256			// FFT size
+#define LOG2_N 8		// log2(256) = 8
+#define HALF_N (N/2)	// 128, Nyquist limit
+
+// Pre-computed twiddle factors
+static float cos_table[HALF_N];
+static float sin_table[HALF_N];
+
+static int init = 0;
+
+static void fft_init() {
+	if (init) return;
+	for (int k = 0; k < HALF_N; k++) {
+		float angle = -2.0f * M_PI * k / N;
+		cos_table[k] = cosf(angle);
+		sin_table[k] = sinf(angle);
+	}
+	init = 1;
 }
 
-void compute_fft(uint8_t *buffer, uint16_t buff_width) {
-	int N = 64;				// Number of samples (has to be power of 2)
-	double Fs = 80.0;		// Sampling frequency
-//	double f = 50.0;		// Signal frequency
-
-	double x[N];
-	double complex c[N];
-	uint16_t mags[N/2];		// Only store first half of FFT
-	uint16_t max_mag = 1.0;	// Set to 1 to avoid division with 0
-
-	// Define x[n]	(generating test signal)
-	for (int n = 0; n < N; n++) {
-//		x[n] = cos(2 * M_PI * 2 * n / N) + 0.5 * sin(2 * M_PI * 4 * n / N);
-//		x[n] = 0.8 + 0.7 * sin(2 * M_PI * 50 * n / N) + sin(2 * M_PI * 120 * n / N);
-		x[n] = cos(2 * M_PI * 50 * n / Fs);
-//		x[n] = 3*cos(2*M_PI*2*n/Fs) + 2*cos(2*M_PI*4*n/Fs) + sin(2*M_PI*6*n/Fs);
+// Bit reversal
+static unsigned bit_reverse(unsigned x, unsigned bits) {
+	unsigned r = 0;
+	for (unsigned i = 0; i < bits; i++) {
+		r = (r << 1) | (x & 1);
+		x >>= 1;
 	}
+	return r;
+}
 
-	// Compute DFT
-	for (int k = 0; k < N; k++) {
-		c[k] = 0.0;
-		for (int n = 0; n < N; n++) {
-			double angle = -2 * M_PI * n * k / N;
-			c[k] += x[n] * (cos(angle) + I * sin(angle));
+// In-place radix-2 FFT (taken from ChatGPT)
+void fft256(complex_t *x) {
+	fft_init();
+
+	// Bit-reverse reorder
+	for (unsigned i = 0; i < N; i++) {
+		unsigned j = bit_reverse(i, LOG2_N);
+		if (j > i) {
+			complex_t temp = x[i];
+			x[i] = x[j];
+			x[j] = temp;
 		}
 	}
 
-	// Compute magnitude and update max magnitude
-	for (int k = 0; k < N/2; k++) {
-		mags[k] = sqrt((creal(c[k]) * creal(c[k])) + (cimag(c[k]) * cimag(c[k])));
-		if (mags[k] > max_mag) max_mag = mags[k];
-	}
+	// FFT stages
+	for (unsigned step = 1; step < N; step <<= 1) {
+		unsigned jump = step << 1;
+		unsigned twiddle_strike = HALF_N / step;
 
-	// Scale x and y to fit graph axes
-	for (int k = 0; k < N/2; k++) {
-//		double freq = (double)k * Fs / N;	// Frequency corresponding to bin k
+		for (unsigned group = 0; group < step; group++) {
+			float c = cos_table[group * twiddle_strike];
+			float s = sin_table[group * twiddle_strike];
 
-		// Horizontal scaling
-		uint16_t x_scaled = (uint16_t)((float)k * (buff_width - 1 - GRAPH_X_OFFSET - GRAPH_MARGIN_RIGHT) / (N/2));
-		uint16_t x_pos = GRAPH_X_OFFSET + x_scaled;
+			for (unsigned pair = group; pair < N; pair += jump) {
+				unsigned match = pair + step;
 
-		// Vertical scaling
-		uint16_t mag_scaled = (uint16_t)((float)mags[k] * GRAPH_HEIGHT / max_mag);
-		uint16_t y_start = graph_y_to_lcd_y(0);
-		uint16_t y_end = graph_y_to_lcd_y(mag_scaled);
+				float tr = c * x[match].real - s * x[match].imag;
+				float ti = s * x[match].real + c * x[match].imag;
 
-		// Draw vertical line
-		lcd_draw_vertical_line(buffer, buff_width, x_pos, y_start, y_end);
-	}
+				float ur = x[pair].real;
+				float ui = x[pair].imag;
 
-	// X-axis ticks and labels
-	const int num_ticks = 5;
-	const double f_max = Fs / 2.0;	// Nyquist frequency
+				x[pair].real = ur + tr;
+				x[pair].imag = ui + ti;
 
-	for (int i = 0; i <= num_ticks; i++) {
-		double freq = i * f_max / num_ticks;
-		int k = (int)((freq * N) / Fs);
-		uint16_t x_tick = GRAPH_X_OFFSET + (uint16_t)((float)k * (buff_width - 1 - GRAPH_X_OFFSET - GRAPH_MARGIN_RIGHT) / (N/2));
-
-		// Tick mark
-		lcd_draw_vertical_line(buffer, buff_width, x_tick, graph_y_to_lcd_y(0) + 1, graph_y_to_lcd_y(0));
-
-		// Tick label
-		if (i == 0) {
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 1, graph_y_to_lcd_y(0) + 2, '0');
-		} else if (i == 1) {
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '1');
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '0');
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
-		} else if (i == 2) {
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '2');
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '0');
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
-		} else if (i == 3) {
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '3');
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '0');
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
-		} else if (i == 4) {
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '4');
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '0');
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
-		} else if (i == 5) {
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '5');
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '0');
-			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
+				x[match].real = ur - tr;
+				x[match].imag = ui - ti;
+			}
 		}
+	}
+}
+
+// Magnitudes (first 128 bins only)
+void fft256_magnitude(complex_t *x, float *mag_out) {
+	for (int k = 0; k < HALF_N; k++) {
+		float real = x[k].real;
+		float imag = x[k].imag;
+		mag_out[k] = sqrtf((real * real) + (imag * imag));
+	}
+}
 
 
-//		if (i == 0) {
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 1, graph_y_to_lcd_y(0) + 2, '0');
-//		} else if (i == 1) {
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 3, graph_y_to_lcd_y(0) + 2, '5');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 3 + 4, graph_y_to_lcd_y(0) + 2, '0');
-//		} else if (i == 2) {
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '1');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '0');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
-//		} else if (i == 3) {
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '1');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '5');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
-//		} else if (i == 4) {
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '2');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '0');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
-//		} else if (i == 5) {
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '2');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '5');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
-//		} else if (i == 6) {
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '3');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '0');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
-//		} else if (i == 7) {
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '3');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '5');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
-//		} else if (i == 8) {
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '4');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '0');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
-//		} else if (i == 9) {
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '4');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '5');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
-//		} else if (i == 10) {
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '5');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '0');
-//			lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
+
+
+
+//void compute_fft(const float *x, float complex *out, int N) {
+//	// Compute Discrete Fourier Transform (DFT)
+//	for (int k = 0; k < N; k++) {
+//		out[k] = 0.0;
+//		for (int n = 0; n < N; n++) {
+//			double angle = -2 * M_PI * n * k / N;
+//			out[k] += x[n] * (cos(angle) + I * sin(angle));
 //		}
-	}
-}
-
-
-
+//	}
+//}
+//
+//void compute_fft_magnitude(const float complex *fft_data,
+//		float *mag, int N) {
+//	// Compute magnitude of DFT data
+//	for (int k = 0; k < N/2; k++) {
+//		float re = crealf(fft_data[k]);
+//		float im = cimagf(fft_data[k]);
+//		mag[k] = sqrtf((re * re) + (im * im));
+//	}
+//}
 
