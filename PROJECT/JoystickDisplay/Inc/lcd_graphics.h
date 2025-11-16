@@ -7,7 +7,6 @@
 #include "stm32f30x_conf.h"
 #include <stdint.h>
 #include "lcd.h"
-#include "adc.h"
 
 /***********************************************************
  * Defines

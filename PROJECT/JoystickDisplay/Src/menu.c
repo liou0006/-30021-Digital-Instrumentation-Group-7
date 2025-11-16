@@ -1,6 +1,11 @@
 #include "menu.h"
-#include "histogram.h"	// Included here to avoid circular dependency
 
+#include "joystick.h"
+#include "lcd.h"
+#include "lcd_graphics.h"
+#include "sensors.h"
+
+// Current menu
 static menu_state_t currentMenu = MENU_MAIN;
 static uint8_t sel = 0;			// Selected line
 static uint8_t joystick = 0;	// Joystick state (default is none)
@@ -14,10 +19,6 @@ static uint8_t sel_axis = 0;
 static sensor_t currentSensor;
 static axis_t currentAxis;
 static uint8_t FFTmode = 0;		// 1 = FFT, 0 = Histogram
-
-// Unimplemented functions
-//void displayFFT(sensor_t sensor, axis_t axis);
-//void displayHistogram(sensor_t sensor, axis_t axis);
 
 void menu_init() {
 	lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
@@ -138,10 +139,13 @@ void menu_update() {
 		draw_graph_axis();
 
 		if (FFTmode) {
-//			calculate_and_print_histogram(LSM9DS1_RawData_t *data_)
+			plot_fft(currentSensor, currentAxis);
+		} else {
+			plot_histogram(currentSensor, currentAxis);
 		}
 
 		update_lcdBuffer();		// Copy visible window to physical LCD buffer
 		break;
 	}
 }
+
