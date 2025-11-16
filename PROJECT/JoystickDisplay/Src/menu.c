@@ -3,7 +3,6 @@
 #include "joystick.h"
 #include "lcd.h"
 #include "lcd_graphics.h"
-#include "sensors.h"
 
 // Current menu
 static menu_state_t currentMenu = MENU_MAIN;

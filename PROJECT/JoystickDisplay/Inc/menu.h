@@ -15,18 +15,6 @@ typedef enum {
 	MENU_AXIS
 } menu_state_t;
 
-//typedef enum {
-//	SENSOR_ACCEL,
-//	SENSOR_GYRO,
-//	SENSOR_MAGNET
-//} sensor_t;
-//
-//typedef enum {
-//	AXIS_X,
-//	AXIS_Y,
-//	AXIS_Z
-//} axis_t;
-
 void menu_init();
 void menu_update();
 

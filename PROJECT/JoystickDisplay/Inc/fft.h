@@ -16,8 +16,4 @@ typedef struct {
 void fft256(complex_t *x);
 void fft256_magnitude(complex_t *x, float *mag_out);
 
-//void compute_fft(const float *x, float complex *out, int N);
-//void compute_fft_magnitude(const float complex *fft_data,
-//		float *mag, int N);
-
 #endif /* FFT_H_ */

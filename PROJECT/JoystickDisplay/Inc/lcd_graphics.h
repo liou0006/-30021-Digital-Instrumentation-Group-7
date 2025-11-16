@@ -15,7 +15,7 @@
 #define LCD_SLICE_SIZE 8
 #define LCD_ROWS 4
 #define VIRTUAL_WIDTH_SIZE 256
-#define NUM_SAMPLES 32
+//#define NUM_SAMPLES 32
 // Graph window
 #define GRAPH_HEIGHT 23		// pixels
 #define GRAPH_WIDTH 25		// pixels

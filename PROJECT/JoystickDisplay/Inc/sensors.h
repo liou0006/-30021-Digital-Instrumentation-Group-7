@@ -4,6 +4,8 @@
 #include "stm32f30x_conf.h" // STM32 config
 #include "30010_io.h" 		// Input/output library for this course
 
+#include <stdint.h>
+
 typedef enum {
 	SENSOR_ACCEL,
 	SENSOR_GYRO,
@@ -15,5 +17,16 @@ typedef enum {
 	AXIS_Y,
 	AXIS_Z
 } axis_t;
+
+// Data struct for raw LSM9DS1 readings
+typedef struct {
+	int16_t ax, ay, az;
+	int16_t gx, gy, gz;
+	int16_t mx, my, mz;
+} lsm9ds1_raw_data_t;
+
+void sensors_read_samples(lsm9ds1_raw_data_t *data, int n_samples);
+int16_t get_data_val(lsm9ds1_raw_data_t *data, int i, sensor_t sensor,
+		axis_t axis);
 
 #endif /* SENSORS_H_ */

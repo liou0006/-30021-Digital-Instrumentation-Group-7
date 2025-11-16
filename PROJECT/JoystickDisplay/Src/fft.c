@@ -82,29 +82,3 @@ void fft256_magnitude(complex_t *x, float *mag_out) {
 		mag_out[k] = sqrtf((real * real) + (imag * imag));
 	}
 }
-
-
-
-
-
-//void compute_fft(const float *x, float complex *out, int N) {
-//	// Compute Discrete Fourier Transform (DFT)
-//	for (int k = 0; k < N; k++) {
-//		out[k] = 0.0;
-//		for (int n = 0; n < N; n++) {
-//			double angle = -2 * M_PI * n * k / N;
-//			out[k] += x[n] * (cos(angle) + I * sin(angle));
-//		}
-//	}
-//}
-//
-//void compute_fft_magnitude(const float complex *fft_data,
-//		float *mag, int N) {
-//	// Compute magnitude of DFT data
-//	for (int k = 0; k < N/2; k++) {
-//		float re = crealf(fft_data[k]);
-//		float im = cimagf(fft_data[k]);
-//		mag[k] = sqrtf((re * re) + (im * im));
-//	}
-//}
-

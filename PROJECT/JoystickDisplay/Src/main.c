@@ -28,7 +28,6 @@ int main(void) {
 
 	while(1) {
 		menu_update();
-
 		lcd_push_buffer(lcdBuffer);
 	}
 }
