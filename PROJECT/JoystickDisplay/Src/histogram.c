@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <limits.h>
+#include <string.h>
 
 void compute_histogram(lsm9ds1_raw_data_t *data, int num_samples,
 		sensor_t sensor, axis_t axis, int num_bins,

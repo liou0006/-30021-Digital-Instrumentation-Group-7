@@ -1,10 +1,5 @@
 #include "stm32f30x_conf.h" // STM32 config
 #include "30010_io.h" 		// Input/output library for this course
-//#include "led.h"
-//#include "interrupts.h"
-//#include "lcd_graphics.h"
-//#include "fft.h"
-//#include "histogram.h"
 
 // Includes with functions called from main
 #include "joystick.h"
