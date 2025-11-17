@@ -17,6 +17,7 @@
 volatile uint8_t g_rxBuffer[DATA_BUFFER_SIZE];
 // This flag is set to 1 by an interrupt when data is ready
 volatile int g_data_ready = 0;
+volatile int8_t CSflag = 0;
 // === End Configuration ===
 
 
@@ -115,10 +116,9 @@ void EXTI15_10_IRQHandler(void) {
 	// Check if the interrupt was on line 12
 	if(EXTI_GetITStatus(EXTI_Line12) != RESET) {
 
-
-
+		CSflag = 1;
 		// DEBUG: Print from inside the interrupt
-		printf("--- GOT CS INTERRUPT (EXTI12) ---\n");
+//		printf("--- GOT CS INTERRUPT (EXTI12) ---\n");
 
 		// This is the trigger: The master wants to talk.
 		// We must re-configure and enable the DMA for the *next* 6 bytes.
@@ -150,7 +150,7 @@ void DMA1_Channel2_IRQHandler(void) {
 	if (DMA_GetITStatus(DMA1_IT_TC2)) { // CHANGED from TC4
 
 		// DEBUG: Print from inside the interrupt
-		printf("--- DMA TRANSFER COMPLETE ---\n");
+//		printf("--- DMA TRANSFER COMPLETE ---\n");
 
 
 		// 1. Disable the DMA channel
@@ -168,10 +168,7 @@ int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
 	initSlaveSPI();
-	// Initialize the DMA to work with SPI2_RX
 	init_DMA();
-
-	// Initialize the EXTI for the CS pin
 	init_CS_Interrupt();
 
 	// These are probably not needed on the slave, but I'll leave them.
@@ -185,6 +182,12 @@ int main(void) {
 	printf("Started \n");
 
 	while(1) {
+
+		if(CSflag == 1){
+			printf("CS interrupt activated\n");
+			CSflag = 0;
+		}
+
 
 		// Check if the DMA interrupt has set the "data ready" flag
 		if (g_data_ready == 1) {

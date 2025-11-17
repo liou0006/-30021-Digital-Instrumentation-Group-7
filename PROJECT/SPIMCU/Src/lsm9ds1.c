@@ -36,7 +36,7 @@ void init_SPI_CS(void)
 	SPI2->CR1 |= 0x0002; // Configure clock polarity (0x0000 - Low, 0x0002 - High)
 	SPI2->CR1 |= 0x0001; // Configure clock phase (0x0000 - 1 Edge, 0x0001 - 2 Edge)
 	SPI2->CR1 |= 0x0200; // Configure chip select (0x0000 - Hardware based, 0x0200 - Software based)
-	SPI2->CR1 |= 0x0018; // Set Baud Rate Prescaler (0x0000 - 2, 0x0008 - 4, 0x0018 - 8, 0x0020 - 16, 0x0028 - 32, 0x0028 - 64, 0x0030 - 128, 0x0038 - 128)
+	SPI2->CR1 |= 0x0020; // Set Baud Rate Prescaler (0x0000 - 2, 0x0008 - 4, 0x0018 - 8, 0x0020 - 16, 0x0028 - 32, 0x0028 - 64, 0x0030 - 128, 0x0038 - 128)
 	SPI2->CR1 |= 0x0000; // Set Bit Order (0x0000 - MSB First, 0x0080 - LSB First)
 	SPI2->CR2 &= ~0x0F00; // Clear CR2 Register
 	SPI2->CR2 |= 0x0700; // Set Number of Bits (0x0300 - 4, 0x0400 - 5, 0x0500 - 6, ...);
@@ -69,14 +69,14 @@ void init_SPI_CS(void)
 uint8_t spi2_transfer(uint8_t data) {
 	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
 	SPI_SendData8(SPI2, data);
-	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
 	return SPI_ReceiveData8(SPI2);
 }
 
-//uint8_t readAG(uint8_t reg) {
+//int8_t readAG(int8_t reg) {
 //	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
 //	spi2_transfer(0x80 | reg);           // send address
-//	uint8_t val = spi2_transfer(0x00);    // send dummy & read value
+//	int8_t val = spi2_transfer(0x00);    // send dummy & read value
 //	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
 //	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
 //	return val;
@@ -95,7 +95,7 @@ uint8_t readAG(uint8_t reg) {
 }
 
 
-void writeAG(uint8_t reg, uint8_t data) {
+void writeAG(int8_t reg, int8_t data) {
 	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
 	spi2_transfer(0x7F & reg); // makes sure bit 7 is 0
 	spi2_transfer(data);
@@ -104,9 +104,9 @@ void writeAG(uint8_t reg, uint8_t data) {
 }
 
 
-uint16_t readOutputAG(uint8_t lowReg){
-	uint8_t lower = readAG(lowReg);
-	uint8_t higher = readAG(lowReg+1);
+uint16_t readOutputAG(int8_t lowReg){
+	int8_t lower = readAG(lowReg);
+	int8_t higher = readAG(lowReg+1);
 
 	uint16_t Gvalue = ((higher << 8) | lower);
 
@@ -137,7 +137,7 @@ void readTempteratureC(){
 	printf("Temperature in C = %f\n", tempC);
 }
 
-//uint8_t readM(uint8_t reg) {
+//int8_t readM(int8_t reg) {
 //	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_RESET);
 //	spi2_transfer(0x80 | reg);           // send address
 //	int8_t val = spi2_transfer(0x00);    // send dummy & read value
@@ -159,7 +159,7 @@ uint8_t readM(uint8_t reg) {
 }
 
 
-void writeM(uint8_t reg, uint8_t data) {
+void writeM(int8_t reg, int8_t data) {
 	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_RESET);
 	spi2_transfer(0x7F & reg); // makes sure bit 7 is 0
 	spi2_transfer(data);
@@ -167,9 +167,9 @@ void writeM(uint8_t reg, uint8_t data) {
 	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
 }
 
-uint16_t readOutputM(uint8_t lowReg){
-	uint8_t lower = readM(lowReg);
-	uint8_t higher = readM(lowReg+1);
+uint16_t readOutputM(int8_t lowReg){
+	int8_t lower = readM(lowReg);
+	int8_t higher = readM(lowReg+1);
 
 	uint16_t Gvalue = ((higher << 8) | lower);
 
