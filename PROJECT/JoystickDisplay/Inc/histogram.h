@@ -15,7 +15,7 @@ typedef struct {
 	float bin_width;
 	int num_bins;
 	int *bin_counts;
-	int max_bin;
+	int max_bin_height;
 } histogram_result_t;
 
 void compute_histogram(lsm9ds1_raw_data_t *data, int num_samples,

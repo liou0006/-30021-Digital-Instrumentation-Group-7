@@ -140,6 +140,58 @@ void lcd_draw_char3x5(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t
 	}
 }
 
+void lcd_convert_int_to_char3x5_y_axis(uint8_t *buffer, uint16_t buff_width, int val, uint16_t x, uint16_t y) {
+	char str[12];		// Enough for 32-bit int
+	int idx = 0;
+
+	if (val == 0) {
+		lcd_draw_char3x5(buffer, buff_width, x + 4, y + 1, '0');
+		return;
+	}
+
+	// Extract digits in reverse order
+	while (val > 0) {
+		int digit = val % 10;
+		str[idx++] = '0' + digit;	// Convert to ASCII
+		val /= 10;
+	}
+
+	if (idx < 2) {
+		lcd_draw_char3x5(buffer, buff_width, x + 4, y, str[idx - 1]);
+		return;
+	}
+
+	// Digits are reversed, so drawing from left to right
+	for (int i = idx - 1; i >= 0; i--) {
+		lcd_draw_char3x5(buffer, buff_width, x, y, str[i]);
+		x += 4;		// Move right by width of char + 1 px
+	}
+}
+
+void lcd_convert_int_to_char3x5_x_axis(uint8_t *buffer, uint16_t buff_width, int val, uint16_t x, uint16_t y) {
+	char str[12];		// Enough for 32-bit int
+	int idx = 0;
+
+	if (val == 0) {
+		lcd_draw_char3x5(buffer, buff_width, x, y, '0');
+		return;
+	}
+
+	// Extract digits in reverse order
+	while (val > 0) {
+		int digit = val % 10;
+		str[idx++] = '0' + digit;	// Convert to ASCII
+		val /= 10;
+	}
+
+	// Digits are reversed, so drawing from left to right
+	for (int i = idx - 1; i >= 0; i--) {
+		lcd_draw_char3x5(buffer, buff_width, x, y, str[i]);
+		x += 4;		// Move right by width of char + 1 px
+	}
+}
+
+
 /*
  * Copies the visible window of the virtual buffer to the
  * physical LCD buffer based on the calculated scroll

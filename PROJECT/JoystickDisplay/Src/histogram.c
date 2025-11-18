@@ -32,13 +32,13 @@ void compute_histogram(lsm9ds1_raw_data_t *data, int num_samples,
 	}
 
 	// Find maximum bin count for y-scaling
-	result->max_bin = 0;
+	result->max_bin_height = 0;
 	for (int i = 0; i < result->num_bins; i++) {
-		if (result->bin_counts[i] > result->max_bin) {
-			result->max_bin = result->bin_counts[i];
+		if (result->bin_counts[i] > result->max_bin_height) {
+			result->max_bin_height = result->bin_counts[i];
 		}
 	}
-	if (result->max_bin == 0) result->max_bin = 1;	// Prevent division with 0
+	if (result->max_bin_height == 0) result->max_bin_height = 1;	// Prevent division with 0
 }
 
 
