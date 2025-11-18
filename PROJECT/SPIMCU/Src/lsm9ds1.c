@@ -83,12 +83,9 @@ uint8_t spi2_transfer(uint8_t data) {
 //}
 
 uint8_t readAG(uint8_t reg) {
-	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
-	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
+    GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_RESET);
 	spi2_transfer(0x80 | reg);           // send address
-	spi2_transfer(0x00);
-	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) == RESET) { }
-	uint8_t val = SPI_ReceiveData8(SPI2);    // send dummy & read value
+	uint8_t val = spi2_transfer(0x00);   // send dummy & read value
 	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
 	GPIO_WriteBit(GPIOB, GPIO_Pin_5, Bit_SET);
 	return val;
@@ -137,22 +134,10 @@ void readTempteratureC(){
 	printf("Temperature in C = %f\n", tempC);
 }
 
-//int8_t readM(int8_t reg) {
-//	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_RESET);
-//	spi2_transfer(0x80 | reg);           // send address
-//	int8_t val = spi2_transfer(0x00);    // send dummy & read value
-//	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
-//	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
-//	return val;
-//}
-
 uint8_t readM(uint8_t reg) {
-	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET) { }
 	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_RESET);
 	spi2_transfer(0x80 | reg);           // send address
-	spi2_transfer(0x00);
-	while(SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) == RESET) { }
-	uint8_t val = SPI_ReceiveData8(SPI2);    // send dummy & read value
+	uint8_t val = spi2_transfer(0x00);   // send dummy & read value
 	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
 	GPIO_WriteBit(GPIOB, GPIO_Pin_4, Bit_SET);
 	return val;

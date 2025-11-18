@@ -3,7 +3,6 @@
 #include "joystick.h"
 #include "led.h"
 #include "lcd.h"
-
 #include "lsm9ds1.h"
 #include "spiSlave.h"
 
@@ -15,7 +14,6 @@ volatile uint8_t g_rxBuffer[DATA_BUFFER_SIZE];
 volatile int g_data_ready = 0;
 volatile int8_t CSflag = 0;
 // === End Configuration ===
-
 
 /**
  * @brief  Initializes the GPIO pin for the "Chip Select" interrupt.
@@ -73,10 +71,10 @@ void init_DMA(void) {
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
 
 	// 2. De-initialize DMA channel 2 for a clean setup
-	DMA_DeInit(DMA1_Channel2); // CHANGED from Channel 4
+	DMA_DeInit(DMA1_Channel2); //
 
 	// 3. Configure DMA1 Channel 2 (SPI3_RX)
-	DMA_InitStruct.DMA_PeripheralBaseAddr = (uint32_t)(&(SPI3->DR)); // CHANGED from SPI2
+	DMA_InitStruct.DMA_PeripheralBaseAddr = (uint32_t)(&(SPI3->DR)); //
 	DMA_InitStruct.DMA_MemoryBaseAddr = (uint32_t)g_rxBuffer; // To our buffer
 	DMA_InitStruct.DMA_DIR = DMA_DIR_PeripheralSRC; // Data from peripheral
 	DMA_InitStruct.DMA_BufferSize = DATA_BUFFER_SIZE; // 6 bytes
@@ -87,27 +85,22 @@ void init_DMA(void) {
 	DMA_InitStruct.DMA_Mode = DMA_Mode_Normal; // Not circular
 	DMA_InitStruct.DMA_Priority = DMA_Priority_High;
 	DMA_InitStruct.DMA_M2M = DMA_M2M_Disable;
-	DMA_Init(DMA1_Channel2, &DMA_InitStruct); // CHANGED from Channel 4
+	DMA_Init(DMA1_Channel2, &DMA_InitStruct); //
 
 	// 4. Enable DMA Transfer Complete Interrupt
-	DMA_ITConfig(DMA1_Channel2, DMA_IT_TC, ENABLE); // CHANGED from Channel 4
+	DMA_ITConfig(DMA1_Channel2, DMA_IT_TC, ENABLE); //
 
 	// 5. Enable the DMA interrupt in the NVIC
-	NVIC_InitStruct.NVIC_IRQChannel = DMA1_Channel2_IRQn; // CHANGED from Channel 4
+	NVIC_InitStruct.NVIC_IRQChannel = DMA1_Channel2_IRQn;
 	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x0;
 	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x0;
 	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStruct);
 
 	// 6. Link SPI3's RXNE event to the DMA
-	SPI_I2S_DMACmd(SPI3, SPI_I2S_DMAReq_Rx, ENABLE); // CHANGED from SPI2
+	SPI_I2S_DMACmd(SPI3, SPI_I2S_DMAReq_Rx, ENABLE);
 }
 
-// === INTERRUPT HANDLERS ===
-
-/**
- * @brief  This interrupt fires when the CS pin (PB12) goes LOW.
- */
 void EXTI15_10_IRQHandler(void) {
 	// Check if the interrupt was on line 12
 	if(EXTI_GetITStatus(EXTI_Line12) != RESET) {
@@ -115,30 +108,22 @@ void EXTI15_10_IRQHandler(void) {
 		CSflag = 1;
 
 		// This is the trigger: The master wants to talk.
-		// We must re-configure and enable the DMA for the *next* 6 bytes.
 
-		// 1. Disable DMA channel to re-configure it
-		DMA_Cmd(DMA1_Channel2, DISABLE); // CHANGED from Channel 4
+		// Disable DMA channel to re-configure it
+		DMA_Cmd(DMA1_Channel2, DISABLE);
 
-		// 2. Set the number of bytes to receive
-		DMA_SetCurrDataCounter(DMA1_Channel2, DATA_BUFFER_SIZE); // CHANGED from Channel 4
+		// Set the number of bytes to receive
+		DMA_SetCurrDataCounter(DMA1_Channel2, DATA_BUFFER_SIZE);
 
-		// 3. Set the memory address by writing directly to the register
-		DMA1_Channel2->CMAR = (uint32_t)g_rxBuffer; // CHANGED from Channel 4
+		// Set the memory address by writing directly to the register
+		DMA1_Channel2->CMAR = (uint32_t)g_rxBuffer;
 
-		// 4. Enable DMA. It will now wait for SPI3_RXNE events.
-		DMA_Cmd(DMA1_Channel2, ENABLE); // CHANGED from Channel 4
-
-		// 5. Clear the EXTI pending bit
+		// Enable DMA
+		DMA_Cmd(DMA1_Channel2, ENABLE);
 		EXTI_ClearITPendingBit(EXTI_Line12);
 	}
 }
 
-/**
- * @brief  This interrupt fires when DMA1_Channel2 has finished
- * transferring all 6 bytes.
- */
-// **** RENAMED THE FUNCTION ****
 void DMA1_Channel2_IRQHandler(void) {
 	// Check if the "Transfer Complete" flag is set
 	if (DMA_GetITStatus(DMA1_IT_TC2)) { // CHANGED from TC4
@@ -157,12 +142,12 @@ void DMA1_Channel2_IRQHandler(void) {
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
+	init_CS_Interrupt();
 	initSlaveSPI();
 	init_DMA();
-	init_CS_Interrupt();
 
 	// These are probably not needed on the slave, but I'll leave them.
-	// initAG();
+//	initAG();
 	// initMag();
 
 	int sizeofRxArray = 6, sizeOfDataArray = sizeofRxArray / 2;
@@ -214,6 +199,8 @@ int main(void) {
 		// E.g., read local sensors, update an LCD, etc.
 
 	}
+
+
 
 }
 
