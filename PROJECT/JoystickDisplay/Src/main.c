@@ -3,10 +3,6 @@
 #include "joystick.h"
 #include "led.h"
 #include "lcd.h"
-#include "interrupt.h"
-#include "timer.h"
-#include "window.h"
-#include "flash.h"
 
 #include "lsm9ds1.h"
 #include "spiSlave.h"
@@ -57,8 +53,8 @@ void init_CS_Interrupt(void) {
 
 	// 5. Configure the Interrupt in the NVIC (Nested Vector Interrupt Controller)
 	NVIC_InitStruct.NVIC_IRQChannel = EXTI15_10_IRQn; // IRQ for lines 10-15
-	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x01;
-	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x01;
+	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x1;
+	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x1;
 	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStruct);
 }
@@ -98,8 +94,8 @@ void init_DMA(void) {
 
 	// 5. Enable the DMA interrupt in the NVIC
 	NVIC_InitStruct.NVIC_IRQChannel = DMA1_Channel2_IRQn; // CHANGED from Channel 4
-	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x01;
-	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x01;
+	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 0x0;
+	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 0x0;
 	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStruct);
 
@@ -117,8 +113,6 @@ void EXTI15_10_IRQHandler(void) {
 	if(EXTI_GetITStatus(EXTI_Line12) != RESET) {
 
 		CSflag = 1;
-		// DEBUG: Print from inside the interrupt
-//		printf("--- GOT CS INTERRUPT (EXTI12) ---\n");
 
 		// This is the trigger: The master wants to talk.
 		// We must re-configure and enable the DMA for the *next* 6 bytes.
@@ -148,10 +142,6 @@ void EXTI15_10_IRQHandler(void) {
 void DMA1_Channel2_IRQHandler(void) {
 	// Check if the "Transfer Complete" flag is set
 	if (DMA_GetITStatus(DMA1_IT_TC2)) { // CHANGED from TC4
-
-		// DEBUG: Print from inside the interrupt
-//		printf("--- DMA TRANSFER COMPLETE ---\n");
-
 
 		// 1. Disable the DMA channel
 		DMA_Cmd(DMA1_Channel2, DISABLE); // CHANGED from Channel 4
@@ -189,6 +179,7 @@ int main(void) {
 		}
 
 
+
 		// Check if the DMA interrupt has set the "data ready" flag
 		if (g_data_ready == 1) {
 
@@ -224,32 +215,5 @@ int main(void) {
 
 	}
 
-
-
-
-
-
-	/* my own code
-
-	int sizeofRxArray = 6, sizeOfDataArray = sizeofRxArray / 2;
-	uint8_t rxSize[sizeofRxArray];
-	uint16_t dataArray[sizeOfDataArray];
-
-
-	while(1) {
-
-//		Receive data from Master MCU
-
-
-
-				for (int i = 0; i < sizeofRxArray; i++){
-					rxSize[i] 		= (uint8_t)(dataArray[i] >> 8);
-
-				}
-
-	}
-	 */
-
 }
-
 
