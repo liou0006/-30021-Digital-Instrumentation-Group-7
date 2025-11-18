@@ -43,9 +43,14 @@ void draw_graph_axis() {
 	lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, graph_x_start, graph_x_end, graph_y_bottom);
 }
 
+//void draw_hist_bar(uint16_t x_start, uint16_t bar_width, y_start, y_end) {
+//	//
+//}
+
+
 void draw_axis_number(uint16_t num) {
-	char low = num & 0xFF;
-	char high = num >> 8;
+//	char low = num & 0xFF;
+//	char high = num >> 8;
 
 //	lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '1');
 //	lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '0');
