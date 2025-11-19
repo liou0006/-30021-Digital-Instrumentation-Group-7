@@ -15,6 +15,119 @@ volatile int g_data_ready = 0;
 volatile int8_t CSflag = 0;
 // === End Configuration ===
 
+int main(void) {
+	uart_init( 9600 ); // Initialize USB serial at 9600 baud
+
+	initSlaveSPI();
+	//	init_DMA();
+	//	init_CS_Interrupt();
+	//
+	//	// These are probably not needed on the slave, but I'll leave them.
+	////	initAG();
+	//	// initMag();
+	//
+	//	int sizeofRxArray = 6, sizeOfDataArray = sizeofRxArray / 2;
+	//	// We use g_rxBuffer (global) for DMA
+	//	int16_t dataArray[sizeOfDataArray]; // Local array for processed data
+	//
+
+	iniPB12();
+
+	printf("Slave Polling Started.\n");
+
+	uint8_t rxBufferSize = 20;
+	uint8_t rxBuffer[rxBufferSize];
+	int16_t dataArray[rxBufferSize/2];
+
+	while(1) {
+		// 1. Wait for CS to go LOW (Start of transaction)
+		// This effectively replaces your EXTI interrupt
+		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_SET);
+
+		while(SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == SET) {
+			SPI_ReceiveData8(SPI3);
+		}
+
+		// 2. Receive the loop of bytes
+		for (int i = 0; i < rxBufferSize; i++) {
+
+			while (SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == RESET);
+			rxBuffer[i] = SPI_ReceiveData8(SPI3);
+		}
+
+		// 3. Wait for CS to go HIGH (End of transaction)
+		// This prevents the loop from restarting too early
+		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_RESET);
+
+
+		for (int i = 0; i < rxBufferSize / 2; i++) {
+
+			uint8_t highByte = rxBuffer[i * 2];
+			uint8_t lowByte  = rxBuffer[i * 2 + 1];
+
+			dataArray[i] = (int16_t)((highByte << 8) | lowByte);
+//			printf("ReceiCve: %d %d %d\n",dataArray[0], dataArray[1], dataArray[2]);
+		}
+
+		printf("Rx: ");
+		for (int i = 0; i < rxBufferSize / 2; i++) {
+			printf("%d	", dataArray[i]);
+		}
+		printf("\n");
+		/*
+	while(1) {
+
+
+
+		if(CSflag == 1){
+			printf("CS interrupt activated\n");
+			CSflag = 0;
+		}
+
+
+
+		// Check if the DMA interrupt has set the "data ready" flag
+		if (g_data_ready == 1) {
+
+			// --- 1. Process the received data ---
+			// Re-combine the 8-bit bytes from g_rxBuffer into
+			// 16-bit integers in dataArray.
+
+			// Disable interrupts while copying, just to be safe
+			__disable_irq();
+
+			for (int i = 0; i < sizeOfDataArray; i++) {
+				// (High Byte * 256) + Low Byte
+				// Or, more efficiently: (High Byte << 8) | Low Byte
+				uint8_t highByte = g_rxBuffer[i * 2];
+				uint8_t lowByte  = g_rxBuffer[i * 2 + 1];
+
+				dataArray[i] = (int16_t)((highByte << 8) | lowByte);
+			}
+
+			// Clear the flag and re-enable interrupts
+			g_data_ready = 0;
+			__enable_irq();
+
+			// --- 2. Use the data ---
+			// Now you have the 16-bit gyro values
+			printf("Received Gyro data: X=%d, Y=%d, Z=%d\n",
+					dataArray[0], dataArray[1], dataArray[2]);
+		}
+
+		// The CPU is free to do other things here while waiting
+		// for the next DMA transfer.
+		// E.g., read local sensors, update an LCD, etc.
+
+	}
+
+		 */
+
+	}
+}
+
+
+
 /**
  * @brief  Initializes the GPIO pin for the "Chip Select" interrupt.
  * This pin is connected to the Master's CS/NSS pin.
@@ -138,125 +251,3 @@ void DMA1_Channel2_IRQHandler(void) {
 		DMA_ClearITPendingBit(DMA1_IT_GL2); // CHANGED from GL4
 	}
 }
-
-void iniPB12(){
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
-	GPIO_InitTypeDef gpio_cs;
-	gpio_cs.GPIO_Pin = GPIO_Pin_12;
-	gpio_cs.GPIO_Mode = GPIO_Mode_IN;
-	gpio_cs.GPIO_PuPd = GPIO_PuPd_UP;
-	GPIO_Init(GPIOB, &gpio_cs);
-}
-
-int main(void) {
-	uart_init( 9600 ); // Initialize USB serial at 9600 baud
-
-	initSlaveSPI();
-	//	init_DMA();
-	//	init_CS_Interrupt();
-	//
-	//	// These are probably not needed on the slave, but I'll leave them.
-	////	initAG();
-	//	// initMag();
-	//
-	//	int sizeofRxArray = 6, sizeOfDataArray = sizeofRxArray / 2;
-	//	// We use g_rxBuffer (global) for DMA
-	//	int16_t dataArray[sizeOfDataArray]; // Local array for processed data
-	//
-
-	iniPB12();
-
-	printf("Slave Polling Started.\n");
-
-	uint8_t rxBuffer[6];
-	int16_t dataArray[3];
-
-	while(1) {
-		// 1. Wait for CS to go LOW (Start of transaction)
-		// This effectively replaces your EXTI interrupt
-		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_SET);
-
-		while(SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == SET) {
-			uint8_t junk = SPI_ReceiveData8(SPI3);
-		}
-
-		// 2. Receive the loop of bytes
-		for (int i = 0; i < 6; i++) {
-			// Wait until data arrives (RXNE = 1)
-			while (SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == RESET);
-
-			// Read the data
-			rxBuffer[i] = SPI_ReceiveData8(SPI3);
-
-			// (Optional) Load return data for the NEXT byte clock
-			// while (SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_TXE) == RESET);
-			// SPI_SendData8(SPI3, some_data[i]);
-		}
-
-		// 3. Wait for CS to go HIGH (End of transaction)
-		// This prevents the loop from restarting too early
-		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_RESET);
-
-
-		for (int i = 0; i < 6; i++) {
-			// (High Byte * 256) + Low Byte
-			// Or, more efficiently: (High Byte << 8) | Low Byte
-			uint8_t highByte = rxBuffer[i * 2];
-			uint8_t lowByte  = rxBuffer[i * 2 + 1];
-
-			dataArray[i] = ((highByte << 8) | lowByte);
-			printf("Receive: %d %d %d\n",dataArray[0], dataArray[1], dataArray[2]);
-		}
-		// 4. Print what we got
-		/*
-	while(1) {
-
-
-
-		if(CSflag == 1){
-			printf("CS interrupt activated\n");
-			CSflag = 0;
-		}
-
-
-
-		// Check if the DMA interrupt has set the "data ready" flag
-		if (g_data_ready == 1) {
-
-			// --- 1. Process the received data ---
-			// Re-combine the 8-bit bytes from g_rxBuffer into
-			// 16-bit integers in dataArray.
-
-			// Disable interrupts while copying, just to be safe
-			__disable_irq();
-
-			for (int i = 0; i < sizeOfDataArray; i++) {
-				// (High Byte * 256) + Low Byte
-				// Or, more efficiently: (High Byte << 8) | Low Byte
-				uint8_t highByte = g_rxBuffer[i * 2];
-				uint8_t lowByte  = g_rxBuffer[i * 2 + 1];
-
-				dataArray[i] = (int16_t)((highByte << 8) | lowByte);
-			}
-
-			// Clear the flag and re-enable interrupts
-			g_data_ready = 0;
-			__enable_irq();
-
-			// --- 2. Use the data ---
-			// Now you have the 16-bit gyro values
-			printf("Received Gyro data: X=%d, Y=%d, Z=%d\n",
-					dataArray[0], dataArray[1], dataArray[2]);
-		}
-
-		// The CPU is free to do other things here while waiting
-		// for the next DMA transfer.
-		// E.g., read local sensors, update an LCD, etc.
-
-	}
-
-		 */
-
-	}
-}
-

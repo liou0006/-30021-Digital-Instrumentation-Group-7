@@ -11,4 +11,4 @@
 ../Src/lsm9ds1.c:142:6:printAccelXYZ	1
 ../Src/lsm9ds1.c:150:6:printMagnetXYZ	1
 ../Src/lsm9ds1.c:160:6:initAG	1
-../Src/lsm9ds1.c:168:6:initMag	1
+../Src/lsm9ds1.c:168:6:initMag	2

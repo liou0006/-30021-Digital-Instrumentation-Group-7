@@ -159,17 +159,19 @@ void printMagnetXYZ(){
 
 void initAG(){
 	//enable Gyroscope
-	writeAG(0x10,0b01100000);
+	writeAG(0x10,0b11011011);
 
 	//enable Accelerometer
-	writeAG(0x1F,0b01111000);
-	writeAG(0x20,0b01000000);
+	writeAG(0x1F,0b00111000);
+	writeAG(0x20,0b11000000);
 }
 void initMag(){
+	writeM(0x21,0b01001100);
 
+	for(int i = 1 ; i<50000;i++);
 	//enable Magnetometer
-	writeM(0x20,0b00010000);
-	writeM(0x21,0b00000000);
-	writeM(0x22,0b10000000);
-	writeM(0x23,0b00000000);
+	writeM(0x20,0b11111100);
+	writeM(0x21,0b01000000);
+	writeM(0x22,0b00000000);
+	writeM(0x23,0b00001000);
 }

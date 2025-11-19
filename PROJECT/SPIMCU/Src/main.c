@@ -4,48 +4,63 @@
 #include "lsm9ds1.h"
 #include "spiMaster.h"
 
-// master main
+#define DATASIZE 10
 
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
-
-	//	init_SPI_CS();
 	initMasterSPI();
 	initAG();
 	initMag();
 
-	//	int16_t txSize[SPISLAVE_BUFFER_SIZE];
-	int sizeOfDataArray = 3, sizeOfTxArray = sizeOfDataArray * 2;
+	int sizeOfDataArray = DATASIZE, sizeOfTxArray = sizeOfDataArray * 2;
 	int16_t dataArray[sizeOfDataArray];
 	uint8_t txSize[sizeOfTxArray];
 
 
-	printf("Master started toggling\n");
+	while(readAG(0x0F) != 0x68 || readM(0x0F) != 0x3d){
+		printf("AG = %x , M = %x \n", readAG(0x0F),readM(0x0F));
 
-	dataArray[0] = 0x0FF0;
-	dataArray[1] = 0xF0F0;
-	dataArray[2] = 0xF00F;
-
-		while(readAG(0x0F) != 0x68 || readM(0x0F) != 0x3d){
-			//			printf("Waiting to find WHO AM I REGISTER values\n");
-
-			printf("AG = %x , M = %x \n", readAG(0x0F),readM(0x0F));
-
-		};
+	};
 
 	while(1) {
 
+		int16_t gX = readOutputAG(0x18);
+		int16_t gY = readOutputAG(0x1A);
+		int16_t gZ = readOutputAG(0x1C);
+		int16_t aX = readOutputAG(0x28);
+		int16_t aY = readOutputAG(0x2A);
+		int16_t aZ = readOutputAG(0x2C);
+		int16_t tempVal = readOutputAG(0x15);
+		int16_t mX = readOutputM(0x28);
+		int16_t mY = readOutputM(0x2A);
+		int16_t mZ = readOutputM(0x2C);
+		float tempC = 25.0f + (tempVal /16.0f);
 
-		int16_t gyroX = readOutputAG(0x18);
-		int16_t gyroY = readOutputAG(0x1A);
-		int16_t gyroZ = readOutputAG(0x1C);
+		dataArray[0] = gX;
+		dataArray[1] = gY;
+		dataArray[2] = gZ;
+		dataArray[3] = aX;
+		dataArray[4] = aY;
+		dataArray[5] = aZ;
+		dataArray[6] = mX;
+		dataArray[7] = mY;
+		dataArray[8] = mZ;
+		dataArray[9] = tempC;
 
-		dataArray[0] = gyroX;
-		dataArray[1] = gyroY;
-		dataArray[2] = gyroZ;
 
-		printf("%d  	%d  	%d\n",dataArray[0],dataArray[1],dataArray[2]);
+        printf("|%7d|%7d|%7d|%7d|%7d|%7d|%6d|%6d|%6d|%5d |\n",
+                dataArray[0],
+                dataArray[1],
+                dataArray[2],
+                dataArray[3],
+                dataArray[4],
+                dataArray[5],
+                dataArray[6],
+                dataArray[7],
+                dataArray[8],
+                dataArray[9]);
+
 
 		for (int i = 0; i < sizeOfDataArray; i++){
 			txSize[i * 2] 		= (uint8_t)(dataArray[i] >> 8);
@@ -62,47 +77,6 @@ int main(void) {
 		}
 		while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
 		GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
-
-
-
-		/*
-
-
-		//		int16_t accelX = readOutputAG(0x28);
-		//		int16_t accelY = readOutputAG(0x2A);
-		//		int16_t accelZ = readOutputAG(0x2C);
-		//
-		//		int16_t tempVal = readOutputAG(0x15);
-		//		float tempC = 25.0f + (tempVal /16.0f);
-		//
-		//		int16_t magnetX = readOutputM(0x28);
-		//		int16_t magnetY = readOutputM(0x2A);
-		//		int16_t magnetZ = readOutputM(0x2C);
-
-
-		printf("[0] = %d	 [1] = %d	 [2] = %d \n", dataArray[0],dataArray[1],dataArray[2]);
-
-		for (int i = 0; i < sizeOfDataArray; i++){
-			txSize[i * 2] 		= (uint8_t)(dataArray[i] >> 8);
-			txSize[i * 2 + 1 ] 	= (uint8_t)(dataArray[i] & 0xFF);
-		}
-
-		// sending data via SPI to oter MCU
-
-		GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_RESET);
-		//			for(uint32_t i =0; i < 500000;i++);
-		printf("PB3 is low \n");
-		for (int i = 0; i < sizeOfTxArray; i++){
-			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
-			SPI_SendData8(SPI2, txSize[i]);
-			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
-			(void)SPI_ReceiveData8(SPI2);
-		}
-		while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
-		GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
-		for(uint32_t i =0; i < 500000;i++);
-
-		 */
 
 	}
 }

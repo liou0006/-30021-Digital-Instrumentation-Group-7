@@ -98,4 +98,11 @@ uint8_t readMSPI3(uint8_t reg){
 	return val;
 }
 
-
+void iniPB12(){
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
+	GPIO_InitTypeDef gpio_cs;
+	gpio_cs.GPIO_Pin = GPIO_Pin_12;
+	gpio_cs.GPIO_Mode = GPIO_Mode_IN;
+	gpio_cs.GPIO_PuPd = GPIO_PuPd_UP;
+	GPIO_Init(GPIOB, &gpio_cs);
+}
