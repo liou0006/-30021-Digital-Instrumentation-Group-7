@@ -40,23 +40,19 @@ int main(void) {
 	int16_t dataArray[rxBufferSize/2];
 
 	while(1) {
-		// 1. Wait for CS to go LOW (Start of transaction)
-		// This effectively replaces your EXTI interrupt
+
 		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_SET);
 
 		while(SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == SET) {
 			SPI_ReceiveData8(SPI3);
 		}
 
-		// 2. Receive the loop of bytes
 		for (int i = 0; i < rxBufferSize; i++) {
 
 			while (SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == RESET);
 			rxBuffer[i] = SPI_ReceiveData8(SPI3);
 		}
 
-		// 3. Wait for CS to go HIGH (End of transaction)
-		// This prevents the loop from restarting too early
 		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_RESET);
 
 
@@ -74,18 +70,8 @@ int main(void) {
 			printf("%d	", dataArray[i]);
 		}
 		printf("\n");
+
 		/*
-	while(1) {
-
-
-
-		if(CSflag == 1){
-			printf("CS interrupt activated\n");
-			CSflag = 0;
-		}
-
-
-
 		// Check if the DMA interrupt has set the "data ready" flag
 		if (g_data_ready == 1) {
 
@@ -114,11 +100,6 @@ int main(void) {
 			printf("Received Gyro data: X=%d, Y=%d, Z=%d\n",
 					dataArray[0], dataArray[1], dataArray[2]);
 		}
-
-		// The CPU is free to do other things here while waiting
-		// for the next DMA transfer.
-		// E.g., read local sensors, update an LCD, etc.
-
 	}
 
 		 */
