@@ -139,24 +139,79 @@ void DMA1_Channel2_IRQHandler(void) {
 	}
 }
 
+void iniPB12(){
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
+	GPIO_InitTypeDef gpio_cs;
+	gpio_cs.GPIO_Pin = GPIO_Pin_12;
+	gpio_cs.GPIO_Mode = GPIO_Mode_IN;
+	gpio_cs.GPIO_PuPd = GPIO_PuPd_UP;
+	GPIO_Init(GPIOB, &gpio_cs);
+}
+
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
-	init_CS_Interrupt();
 	initSlaveSPI();
-	init_DMA();
+	//	init_DMA();
+	//	init_CS_Interrupt();
+	//
+	//	// These are probably not needed on the slave, but I'll leave them.
+	////	initAG();
+	//	// initMag();
+	//
+	//	int sizeofRxArray = 6, sizeOfDataArray = sizeofRxArray / 2;
+	//	// We use g_rxBuffer (global) for DMA
+	//	int16_t dataArray[sizeOfDataArray]; // Local array for processed data
+	//
 
-	// These are probably not needed on the slave, but I'll leave them.
-//	initAG();
-	// initMag();
+	iniPB12();
 
-	int sizeofRxArray = 6, sizeOfDataArray = sizeofRxArray / 2;
-	// We use g_rxBuffer (global) for DMA
-	int16_t dataArray[sizeOfDataArray]; // Local array for processed data
+	printf("Slave Polling Started.\n");
 
-	printf("Started \n");
+	uint8_t rxBuffer[6];
+	int16_t dataArray[3];
 
 	while(1) {
+		// 1. Wait for CS to go LOW (Start of transaction)
+		// This effectively replaces your EXTI interrupt
+		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_SET);
+
+		while(SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == SET) {
+			uint8_t junk = SPI_ReceiveData8(SPI3);
+		}
+
+		// 2. Receive the loop of bytes
+		for (int i = 0; i < 6; i++) {
+			// Wait until data arrives (RXNE = 1)
+			while (SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == RESET);
+
+			// Read the data
+			rxBuffer[i] = SPI_ReceiveData8(SPI3);
+
+			// (Optional) Load return data for the NEXT byte clock
+			// while (SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_TXE) == RESET);
+			// SPI_SendData8(SPI3, some_data[i]);
+		}
+
+		// 3. Wait for CS to go HIGH (End of transaction)
+		// This prevents the loop from restarting too early
+		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_RESET);
+
+
+		for (int i = 0; i < 6; i++) {
+			// (High Byte * 256) + Low Byte
+			// Or, more efficiently: (High Byte << 8) | Low Byte
+			uint8_t highByte = rxBuffer[i * 2];
+			uint8_t lowByte  = rxBuffer[i * 2 + 1];
+
+			dataArray[i] = ((highByte << 8) | lowByte);
+			printf("Receive: %d %d %d\n",dataArray[0], dataArray[1], dataArray[2]);
+		}
+		// 4. Print what we got
+		/*
+	while(1) {
+
+
 
 		if(CSflag == 1){
 			printf("CS interrupt activated\n");
@@ -200,7 +255,8 @@ int main(void) {
 
 	}
 
+		 */
 
-
+	}
 }
 

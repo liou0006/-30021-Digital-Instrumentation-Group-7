@@ -1,8 +1,6 @@
 #include "stm32f30x_conf.h" // STM32 config
 #include "30010_io.h" 		// Input/output library for this course
 #include "joystick.h"
-#include "led.h"
-#include "timer.h"
 #include "lsm9ds1.h"
 #include "spiMaster.h"
 
@@ -20,42 +18,25 @@ int main(void) {
 	//	int16_t txSize[SPISLAVE_BUFFER_SIZE];
 	int sizeOfDataArray = 3, sizeOfTxArray = sizeOfDataArray * 2;
 	int16_t dataArray[sizeOfDataArray];
-	int8_t txSize[sizeOfTxArray];
+	uint8_t txSize[sizeOfTxArray];
 
 
 	printf("Master started toggling\n");
 
-		dataArray[0] = 123;
-		dataArray[1] = 345;
-		dataArray[2] = 567;
+	dataArray[0] = 0x0FF0;
+	dataArray[1] = 0xF0F0;
+	dataArray[2] = 0xF00F;
 
-		for (int i = 0; i < sizeOfDataArray; i++){
-			txSize[i * 2] 		= (uint8_t)(dataArray[i] >> 8);
-			txSize[i * 2 + 1 ] 	= (uint8_t)(dataArray[i] & 0xFF);
-		}
+		while(readAG(0x0F) != 0x68 || readM(0x0F) != 0x3d){
+			//			printf("Waiting to find WHO AM I REGISTER values\n");
+
+			printf("AG = %x , M = %x \n", readAG(0x0F),readM(0x0F));
+
+		};
+
 	while(1) {
 
-		GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_RESET);
-		printf("PB3 low\n");
-		for (int i = 0; i < sizeOfTxArray; i++){
-			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
-			SPI_SendData8(SPI2, txSize[i]);
-			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
-			(void)SPI_ReceiveData8(SPI2);
-		}
-//		while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
-		GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
-//		for(uint32_t i =0; i < 500000;i++);
 
-		//				while(readAG(0x0F) != 0x68 || readM(0x0F) != 0x3d){
-		//		//			printf("Waiting to find WHO AM I REGISTER values\n");
-		//
-		//					printf("AG = %x , M = %x \n", readAG(0x0F),readM(0x0F));
-		//
-		//				};
-
-
-		/*
 		int16_t gyroX = readOutputAG(0x18);
 		int16_t gyroY = readOutputAG(0x1A);
 		int16_t gyroZ = readOutputAG(0x1C);
@@ -63,6 +44,28 @@ int main(void) {
 		dataArray[0] = gyroX;
 		dataArray[1] = gyroY;
 		dataArray[2] = gyroZ;
+
+		printf("%d  	%d  	%d\n",dataArray[0],dataArray[1],dataArray[2]);
+
+		for (int i = 0; i < sizeOfDataArray; i++){
+			txSize[i * 2] 		= (uint8_t)(dataArray[i] >> 8);
+			txSize[i * 2 + 1 ] 	= (uint8_t)(dataArray[i] & 0xFF);
+		}
+
+		GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_RESET);
+		for(uint32_t i =0; i < 5000;i++);
+		for (int i = 0; i < sizeOfTxArray; i++){
+			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) != SET);
+			SPI_SendData8(SPI2, txSize[i]);
+			while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) != SET);
+			(void)SPI_ReceiveData8(SPI2);
+		}
+		while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_BSY) == SET);
+		GPIO_WriteBit(GPIOB, GPIO_Pin_3, Bit_SET);
+
+
+
+		/*
 
 
 		//		int16_t accelX = readOutputAG(0x28);
