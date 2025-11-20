@@ -19,6 +19,7 @@ void reset_datalogger(void);
 void openlog_writechar(char c);
 void openlog_writestring(char *s);
 void openlog_writeline(char *s);
+void openlog_writebytes(const uint8_t *data, uint32_t len);
 
 void reset(void);
 void commandmode(void);

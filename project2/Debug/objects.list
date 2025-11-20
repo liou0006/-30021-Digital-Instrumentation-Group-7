@@ -24,6 +24,7 @@
 "./Src/Openlog_TestModule.o"
 "./Src/adc.o"
 "./Src/flash.o"
+"./Src/imu_stub.o"
 "./Src/interrupt.o"
 "./Src/joystick.o"
 "./Src/lcd.o"

@@ -80,6 +80,13 @@ void openlog_writeline(char *s) {
 	openlog_writestring("\r\n");
 }
 
+void openlog_writebytes(const uint8_t *data, uint32_t len)
+{
+    for (uint32_t i = 0; i < len; i++) {
+        openlog_writechar((char)data[i]);
+    }
+}
+
 
 /*******************/
 // Openlog commands

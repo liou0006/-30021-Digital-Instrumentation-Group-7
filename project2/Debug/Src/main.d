@@ -30,7 +30,8 @@ Src/main.o: ../Src/main.c \
  C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc/stm32f30x_misc.h \
  C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/Inc/ultrasonic_sensor.h \
  C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/Inc/openlog_sd.h \
- C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x.h
+ C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x.h \
+ C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/Inc/imu_stub.h
 C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x.h:
 C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cm4.h:
 C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/cmsis/core_cmInstr.h:
@@ -63,3 +64,4 @@ C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/SPL/
 C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/Inc/ultrasonic_sensor.h:
 C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/Inc/openlog_sd.h:
 C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/Inc/stm32f30x.h:
+C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/Inc/imu_stub.h:

@@ -9,6 +9,7 @@ C_SRCS += \
 ../Src/Openlog_TestModule.c \
 ../Src/adc.c \
 ../Src/flash.c \
+../Src/imu_stub.c \
 ../Src/interrupt.c \
 ../Src/joystick.c \
 ../Src/lcd.c \
@@ -28,6 +29,7 @@ OBJS += \
 ./Src/Openlog_TestModule.o \
 ./Src/adc.o \
 ./Src/flash.o \
+./Src/imu_stub.o \
 ./Src/interrupt.o \
 ./Src/joystick.o \
 ./Src/lcd.o \
@@ -47,6 +49,7 @@ C_DEPS += \
 ./Src/Openlog_TestModule.d \
 ./Src/adc.d \
 ./Src/flash.d \
+./Src/imu_stub.d \
 ./Src/interrupt.d \
 ./Src/joystick.d \
 ./Src/lcd.d \
@@ -69,7 +72,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/30010_io.cyclo ./Src/30010_io.d ./Src/30010_io.o ./Src/30010_io.su ./Src/Openlog_TestModule.cyclo ./Src/Openlog_TestModule.d ./Src/Openlog_TestModule.o ./Src/Openlog_TestModule.su ./Src/adc.cyclo ./Src/adc.d ./Src/adc.o ./Src/adc.su ./Src/flash.cyclo ./Src/flash.d ./Src/flash.o ./Src/flash.su ./Src/interrupt.cyclo ./Src/interrupt.d ./Src/interrupt.o ./Src/interrupt.su ./Src/joystick.cyclo ./Src/joystick.d ./Src/joystick.o ./Src/joystick.su ./Src/lcd.cyclo ./Src/lcd.d ./Src/lcd.o ./Src/lcd.su ./Src/led.cyclo ./Src/led.d ./Src/led.o ./Src/led.su ./Src/lsm9ds1.cyclo ./Src/lsm9ds1.d ./Src/lsm9ds1.o ./Src/lsm9ds1.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/openlog_sd.cyclo ./Src/openlog_sd.d ./Src/openlog_sd.o ./Src/openlog_sd.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/system_stm32f30x.cyclo ./Src/system_stm32f30x.d ./Src/system_stm32f30x.o ./Src/system_stm32f30x.su ./Src/timer.cyclo ./Src/timer.d ./Src/timer.o ./Src/timer.su ./Src/uart_sd_card.cyclo ./Src/uart_sd_card.d ./Src/uart_sd_card.o ./Src/uart_sd_card.su ./Src/ultrasonic_sensor.cyclo ./Src/ultrasonic_sensor.d ./Src/ultrasonic_sensor.o ./Src/ultrasonic_sensor.su ./Src/window.cyclo ./Src/window.d ./Src/window.o ./Src/window.su
+	-$(RM) ./Src/30010_io.cyclo ./Src/30010_io.d ./Src/30010_io.o ./Src/30010_io.su ./Src/Openlog_TestModule.cyclo ./Src/Openlog_TestModule.d ./Src/Openlog_TestModule.o ./Src/Openlog_TestModule.su ./Src/adc.cyclo ./Src/adc.d ./Src/adc.o ./Src/adc.su ./Src/flash.cyclo ./Src/flash.d ./Src/flash.o ./Src/flash.su ./Src/imu_stub.cyclo ./Src/imu_stub.d ./Src/imu_stub.o ./Src/imu_stub.su ./Src/interrupt.cyclo ./Src/interrupt.d ./Src/interrupt.o ./Src/interrupt.su ./Src/joystick.cyclo ./Src/joystick.d ./Src/joystick.o ./Src/joystick.su ./Src/lcd.cyclo ./Src/lcd.d ./Src/lcd.o ./Src/lcd.su ./Src/led.cyclo ./Src/led.d ./Src/led.o ./Src/led.su ./Src/lsm9ds1.cyclo ./Src/lsm9ds1.d ./Src/lsm9ds1.o ./Src/lsm9ds1.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/openlog_sd.cyclo ./Src/openlog_sd.d ./Src/openlog_sd.o ./Src/openlog_sd.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/system_stm32f30x.cyclo ./Src/system_stm32f30x.d ./Src/system_stm32f30x.o ./Src/system_stm32f30x.su ./Src/timer.cyclo ./Src/timer.d ./Src/timer.o ./Src/timer.su ./Src/uart_sd_card.cyclo ./Src/uart_sd_card.d ./Src/uart_sd_card.o ./Src/uart_sd_card.su ./Src/ultrasonic_sensor.cyclo ./Src/ultrasonic_sensor.d ./Src/ultrasonic_sensor.o ./Src/ultrasonic_sensor.su ./Src/window.cyclo ./Src/window.d ./Src/window.o ./Src/window.su
 
 .PHONY: clean-Src
 
