@@ -108,7 +108,7 @@ int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
 	initJoystick();
-	initLED();
+	initLed();
 
 	int8_t prev_state = readJoystick();
 	int8_t current_state;
@@ -117,22 +117,22 @@ int main(void) {
 		current_state = readJoystick();
 		if (prev_state != current_state) {
 			if (current_state == 1) {
-				setLED('r');
+				setLed('r');
 				printf("UP (red)\n");
 			} else if (current_state == 2) {
-				setLED('g');
+				setLed('g');
 				printf("DOWN (green)\n");
 			} else if (current_state == 4) {
-				setLED('b');
+				setLed('b');
 				printf("LEFT (blue)\n");
 			} else if (current_state == 8) {
-				setLED('c');
+				setLed('c');
 				printf("RIGHT (cyan)\n");
 			} else if (current_state == 16) {
-				setLED('m');
+				setLed('m');
 				printf("CENTER (magenta)\n");
 			} else {
-				setLED('d');
+				setLed('d');
 			}
 			prev_state = current_state;
 		}
