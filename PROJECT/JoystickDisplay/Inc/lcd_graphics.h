@@ -34,6 +34,8 @@ extern uint8_t virtualBuffer[VIRTUAL_WIDTH_SIZE * LCD_ROWS];
 void lcd_clear_buffer(uint8_t *buffer, uint16_t buff_size);
 uint16_t graph_y_to_lcd_y(uint16_t graph_y);
 void draw_graph_axis();
+void draw_new_axis(uint16_t x_offset);
+//void draw_graph_axis(uint16_t x_offset, uint16_t y_offset);
 //void lcd_init_graph(graph_area_t *graph);
 void draw_axis_number(uint16_t num);
 
@@ -42,7 +44,7 @@ void lcd_draw_fft_mag(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t
 void lcd_draw_vertical_line(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t y_start, uint16_t y_end);
 void lcd_draw_horizontal_line(uint8_t *buffer, uint16_t buff_width, uint16_t x_start, uint16_t x_end, uint16_t y);
 void lcd_draw_char3x5(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t y, char c);
-void lcd_convert_int_to_char3x5_y_axis(uint8_t *buffer, uint16_t buff_width, int val, uint16_t x, uint16_t y);
+void lcd_convert_int_to_char3x5_y_axis(uint8_t *buffer, uint16_t buff_width, int max_num_digits, int val, uint16_t x, uint16_t y);
 void lcd_convert_int_to_char3x5_x_axis(uint8_t *buffer, uint16_t buff_width, int val, uint16_t x, uint16_t y);
 void update_lcdBuffer();
 

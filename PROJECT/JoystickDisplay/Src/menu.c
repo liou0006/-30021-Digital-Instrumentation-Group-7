@@ -135,7 +135,7 @@ void menu_update() {
 		}
 
 		lcd_clear_buffer(virtualBuffer, LCD_ROWS * VIRTUAL_WIDTH_SIZE);
-		draw_graph_axis();
+//		draw_new_axis();
 
 		if (FFTmode) {
 			plot_fft(currentSensor, currentAxis);

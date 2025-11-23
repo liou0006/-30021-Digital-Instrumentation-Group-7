@@ -43,6 +43,11 @@ void draw_graph_axis() {
 	lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, graph_x_start, graph_x_end, graph_y_bottom);
 }
 
+void draw_new_axis(uint16_t x_offset) {
+	lcd_draw_vertical_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, graph_x_start + x_offset, graph_y_top, graph_y_bottom);
+	lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, graph_x_start + x_offset, graph_x_end, graph_y_bottom);
+}
+
 //void draw_hist_bar(uint16_t x_start, uint16_t bar_width, y_start, y_end) {
 //	//
 //}
@@ -127,6 +132,17 @@ void lcd_draw_horizontal_line(uint8_t *buffer, uint16_t buff_width, uint16_t x_s
  * indicates the top left corner of the number.
  */
 void lcd_draw_char3x5(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t y, char c) {
+	if (c == '-') {
+		for (uint16_t col = 0; col < 3; col++) {
+			uint16_t bits = 0x04;
+			for (uint16_t row = 0; row < 5; row++) {
+				if (bits & (1 << row)) {
+					lcd_draw_pixel(buffer, buff_width, x + col, y + row);
+				}
+			}
+		}
+	}
+
 	if (c < '0' || c > '9') return;
 
 	uint16_t index = c - '0';
@@ -140,7 +156,8 @@ void lcd_draw_char3x5(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t
 	}
 }
 
-void lcd_convert_int_to_char3x5_y_axis(uint8_t *buffer, uint16_t buff_width, int val, uint16_t x, uint16_t y) {
+void lcd_convert_int_to_char3x5_y_axis(uint8_t *buffer, uint16_t buff_width,
+		int max_num_digits, int val, uint16_t x, uint16_t y) {
 	char str[12];		// Enough for 32-bit int
 	int idx = 0;
 
@@ -156,26 +173,48 @@ void lcd_convert_int_to_char3x5_y_axis(uint8_t *buffer, uint16_t buff_width, int
 		val /= 10;
 	}
 
-	if (idx < 2) {
-		lcd_draw_char3x5(buffer, buff_width, x + 4, y, str[idx - 1]);
-		return;
-	}
-
 	// Digits are reversed, so drawing from left to right
-	for (int i = idx - 1; i >= 0; i--) {
-		lcd_draw_char3x5(buffer, buff_width, x, y, str[i]);
-		x += 4;		// Move right by width of char + 1 px
+	if (max_num_digits == 2) {
+		if (idx < 2) {
+			lcd_draw_char3x5(buffer, buff_width, x + 4, y, str[idx - 1]);
+			return;
+		}
+		for (int i = idx - 1; i >= 0; i--) {
+			lcd_draw_char3x5(buffer, buff_width, x, y, str[i]);
+			x += 4;		// Move right by width of char + 1 px
+		}
+	} else if (max_num_digits == 3) {
+		if (idx < 2) {
+			lcd_draw_char3x5(buffer, buff_width, x + 8, y, str[idx - 1]);
+			return;
+		} else if (idx < 3) {
+			x += 4;
+			for (int i = idx - 1; i >= 0; i--) {
+				lcd_draw_char3x5(buffer, buff_width, x, y, str[i]);
+				x += 4;		// Move right by width of char + 1 px
+			}
+			return;
+		}
+		for (int i = idx - 1; i >= 0; i--) {
+			lcd_draw_char3x5(buffer, buff_width, x, y, str[i]);
+			x += 4;		// Move right by width of char + 1 px
+		}
 	}
 }
 
 void lcd_convert_int_to_char3x5_x_axis(uint8_t *buffer, uint16_t buff_width, int val, uint16_t x, uint16_t y) {
 	char str[12];		// Enough for 32-bit int
 	int idx = 0;
+	int isNegative = (val < 0);
 
+	// Handle the special case for 0
 	if (val == 0) {
-		lcd_draw_char3x5(buffer, buff_width, x, y, '0');
+		lcd_draw_char3x5(buffer, buff_width, x-3, y, '0');
 		return;
 	}
+
+	// Find absolute value
+	if (isNegative) val = -val;
 
 	// Extract digits in reverse order
 	while (val > 0) {
@@ -184,9 +223,20 @@ void lcd_convert_int_to_char3x5_x_axis(uint8_t *buffer, uint16_t buff_width, int
 		val /= 10;
 	}
 
+	// Draw negative sign
+	if (isNegative) str[idx++] = '-';
+
+	// Center value around middle pixel
+	uint16_t digit_offset = 0;
+	if (idx == 5) digit_offset = 9;
+	else if (idx == 4) digit_offset = 7;
+	else if (idx == 3) digit_offset = 5;
+	else if (idx == 2) digit_offset = 3;
+	else if (idx == 1) digit_offset = 1;
+
 	// Digits are reversed, so drawing from left to right
 	for (int i = idx - 1; i >= 0; i--) {
-		lcd_draw_char3x5(buffer, buff_width, x, y, str[i]);
+		lcd_draw_char3x5(buffer, buff_width, x - digit_offset, y, str[i]);
 		x += 4;		// Move right by width of char + 1 px
 	}
 }

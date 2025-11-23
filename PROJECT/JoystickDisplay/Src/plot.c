@@ -23,13 +23,32 @@ void plot_histogram(sensor_t sensor, axis_t axis) {
 	lsm9ds1_raw_data_t samples[NUM_SAMPLES];
 	sensors_read_samples(samples, NUM_SAMPLES);
 
+	int num_bins = 10;
+
 	// Compute histogram
 	histogram_result_t hist;
-	compute_histogram(samples, NUM_SAMPLES, sensor, axis, 16, &hist);
+	compute_histogram(samples, NUM_SAMPLES, sensor, axis, num_bins, &hist);
+
+	uint16_t hist_graph_width = GRAPH_WIDTH;
+	uint16_t hist_x_offset = GRAPH_X_OFFSET;
+
+	int num_digits;
+	if (hist.max_bin_height <= 0) {
+		num_digits = 1; // Treat 0 or negative as 1 digit for '0' label
+	} else {
+		num_digits = (int)floor(log10(hist.max_bin_height)) + 1;
+	}
+
+	uint16_t y_axis_offset = 0;
+	if (num_digits == 3) {
+		hist_graph_width -= 4;
+		hist_x_offset += 4;
+		y_axis_offset = 4;
+	}
 
 	// ----- Draw histogram bars on LCD -----
 	// Graph plotting dimensions
-	uint16_t usable_width = GRAPH_WIDTH;
+	uint16_t usable_width = hist_graph_width;
 	uint16_t usable_height = GRAPH_HEIGHT;
 
 	// Compute per bin width in pixels
@@ -38,7 +57,7 @@ void plot_histogram(sensor_t sensor, axis_t axis) {
 
 	for (uint16_t b = 0; b < hist.num_bins; b++) {
 		// Compute x-coordinates
-		uint16_t x_start = GRAPH_X_OFFSET + b * bar_width;
+		uint16_t x_start = hist_x_offset + b * bar_width;
 		uint16_t x_end = x_start + bar_width;
 
 		// Compute scaled bar height
@@ -57,7 +76,7 @@ void plot_histogram(sensor_t sensor, axis_t axis) {
 	}
 
 	// Draw axes
-	draw_graph_axis();
+	draw_new_axis(y_axis_offset);
 
 	// Draw y-axis ticks and labels
 	for (int t = 0; t <= NUM_Y_TICKS; t++) {
@@ -66,22 +85,24 @@ void plot_histogram(sensor_t sensor, axis_t axis) {
 		uint16_t tick_y = graph_y_to_lcd_y(tick_height);
 
 		// Draw tick mark
-		lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, GRAPH_X_OFFSET - 1, GRAPH_X_OFFSET, tick_y);
+		lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, hist_x_offset - 1, hist_x_offset, tick_y);
 
-		// Draw tick label
-		int tick_val = (int)(hist.max_bin_height * height_frac);
-		lcd_convert_int_to_char3x5_y_axis(virtualBuffer, VIRTUAL_WIDTH_SIZE, tick_val, 0, tick_y - 2);
+		if (tick_height != 0) {
+			// Draw tick label
+			int tick_val = (int)(hist.max_bin_height * height_frac);
+			lcd_convert_int_to_char3x5_y_axis(virtualBuffer, VIRTUAL_WIDTH_SIZE, num_digits, tick_val, 0, tick_y - 2);
+		}
 	}
 
 	// Draw x-axis ticks and labels
 	for (int b = 0; b <= hist.num_bins; b++) {
-		uint16_t x = GRAPH_X_OFFSET + b * bar_width;
+		uint16_t x = hist_x_offset + b * bar_width;
 
 		// Actual measurement value
 		float val = hist.min_val + (b * hist.bin_width);
 
 		// Draw tick label
-		lcd_convert_int_to_char3x5_x_axis(virtualBuffer, VIRTUAL_WIDTH_SIZE, (int)val, x-3, 27);
+		lcd_convert_int_to_char3x5_x_axis(virtualBuffer, VIRTUAL_WIDTH_SIZE, (int)val, x, 27);
 	}
 
 	free(hist.bin_counts);
