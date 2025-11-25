@@ -29,7 +29,7 @@ const uint16_t graph_y_top = GRAPH_MARGIN_TOP;
 
 /***********************************************************
  * Functions
- ********************Y***************************************/
+ ***********************************************************/
 void lcd_clear_buffer(uint8_t *buffer, uint16_t buff_size) {
 	memset(buffer, 0x00, buff_size);
 }
@@ -47,21 +47,6 @@ void draw_new_axis(uint16_t x_offset) {
 	lcd_draw_vertical_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, graph_x_start + x_offset, graph_y_top, graph_y_bottom);
 	lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, graph_x_start + x_offset, graph_x_end, graph_y_bottom);
 }
-
-//void draw_hist_bar(uint16_t x_start, uint16_t bar_width, y_start, y_end) {
-//	//
-//}
-
-
-void draw_axis_number(uint16_t num) {
-//	char low = num & 0xFF;
-//	char high = num >> 8;
-
-//	lcd_draw_char3x5(buffer, buff_width, x_tick - 5, graph_y_to_lcd_y(0) + 2, '1');
-//	lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 4, graph_y_to_lcd_y(0) + 2, '0');
-//	lcd_draw_char3x5(buffer, buff_width, x_tick - 5 + 8, graph_y_to_lcd_y(0) + 2, '0');
-}
-
 
 /*
  * The function turns on a single pixel at coordinates (x, y)
@@ -265,41 +250,3 @@ void update_lcdBuffer() {
 	}
 }
 
-// Will only update virtualBuffer
-//void lcd_draw_fft(uint16_t mag)
-
-
-
-
-//
-//
-//void lcd_draw_fft(uint8_t *buffer) {
-//	// Needs more inputs
-//
-//	// Inputs: buffer, x, y_start, y_end, magnitude_scale??
-//}
-//
-//
-//
-//void lcd_draw_fft_window(uint8_t *buffer) {
-//	//
-//}
-//
-//void lcd_draw_axis(uint8_t *buffer) {
-//	// Insert check bounds code
-//
-////	lcd_draw_horizontal_line(buffer, 9, LCD_LINE_SIZE-1, 24);
-////	lcd_draw_vertical_line(buffer, 9, 0, 24);
-//}
-//
-//void lcd_draw_histogram(uint8_t *buffer) {
-//	// Not implemented yet
-//}
-//
-//
-//void lcd_draw_bar(uint8_t *buffer, uint8_t x, uint8_t height, uint8_t max_height) {
-//	if (height > max_height) height = max_height;
-//	uint8_t y_end = 31;		// bottom of the screen
-//	uint8_t y_start = y_end - height + 1;
-////	lcd_draw_vertical_line(buffer, x, y_start, y_end);
-//}

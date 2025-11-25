@@ -44,7 +44,7 @@ void menu_update() {
 		if (joystick == UP && sel > 0) {
 			sel--;
 			wait = 1;
-		} else if (joystick == DOWN && sel < 1) {
+		} else if (joystick == DOWN && sel < 2) {
 			sel++;
 			wait = 1;
 		} else if (joystick == CENTER) {
