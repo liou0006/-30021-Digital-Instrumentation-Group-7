@@ -12,10 +12,9 @@
 #define NUM_Y_TICKS 4
 
 void plot_fft(sensor_t sensor, axis_t axis) {
-	lsm9ds1_raw_data_t samples[NUM_SAMPLES];
-	sensors_read_samples(samples, NUM_SAMPLES);
-
-	// Compute FFT using samples
+	lcd_write_string("FFT plot", virtualBuffer, 0, 0);
+//	lsm9ds1_raw_data_t samples[FFT_NUM_SAMPLES];
+//	sensors_read_samples(samples, FFT_NUM_SAMPLES);
 }
 
 void plot_histogram(sensor_t sensor, axis_t axis) {
