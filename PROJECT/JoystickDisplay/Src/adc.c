@@ -1,10 +1,3 @@
-/*
- * ADC.c
- *
- *  Created on: Sep 16, 2025
- *      Author: fcadi
- */
-
 #include "ADC.h"
 
 void ADC_setup_PA(void) {
