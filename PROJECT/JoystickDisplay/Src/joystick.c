@@ -37,7 +37,7 @@ uint8_t readJoystickState() {
 	else if (GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_0)) state = RIGHT;	// PC0, 0x8
 	else if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_5)) state = CENTER;	// PC1, 0x10
 
-	return bit;
+	return state;
 }
 
 // Not used so commented out for now
