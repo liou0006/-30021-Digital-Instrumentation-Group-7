@@ -24,9 +24,9 @@ uint8_t rxBufferSize = 20;
 uint8_t rxBuffer[20]; // should be rxBufferSize
 int16_t dataArray[20/2];
 uint16_t sampleIndex = 0;
-uint16_t maxData = 50; // ændre det til 256
-lsm9ds1_raw_data_t lsmdata[50]; // should be maxData
-
+uint16_t maxData = 200; // ændre det til 256
+lsm9ds1_raw_data_t lsmdata[200]; // should be maxData
+uint8_t packet[20]; // should be IMU_PACKET_SIZE
 
 
 void menu_init() {
@@ -126,6 +126,12 @@ void menu_update() {
 				lsmdata[sampleIndex].mz = dataArray[8];
 				lsmdata[sampleIndex].T = dataArray[9];
 				sampleIndex++;
+
+				sensors_pack_raw(&lsmdata[sampleIndex], packet);
+
+				// Write to SD
+//				openlog_writebytes(packet, IMU_PACKET_SIZE);
+				openlog_writebytes(packet, 20);
 
 			}
 			else if (sampleIndex == maxData){

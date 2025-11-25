@@ -9,6 +9,8 @@
 
 #include "lsm9ds1.h"
 #include "spiSlave.h"
+#include "openlog_sd.h"
+#include "imu_stub.h"
 
 typedef enum {
 	MENU_MAIN,

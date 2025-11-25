@@ -45,6 +45,8 @@ void plot_histogram(lsm9ds1_raw_data_t* samples,sensor_t sensor, axis_t axis) {
 		y_axis_offset = 4;
 	}
 
+	printf("%d ", hist.max_bin_height);
+
 	// ----- Draw histogram bars on LCD -----
 	// Graph plotting dimensions
 	uint16_t usable_width = hist_graph_width;
