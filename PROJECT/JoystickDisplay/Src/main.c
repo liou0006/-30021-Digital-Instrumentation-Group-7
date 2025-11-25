@@ -31,10 +31,12 @@ int main(void) {
 	uint8_t rxBufferSize = 20;
 	uint8_t rxBuffer[rxBufferSize];
 	int16_t dataArray[rxBufferSize/2];
-	uint8_t samples = 265;
-	lsm9ds1_raw_data_t lsmdata;
+	uint8_t samples = 265; // ændre det til 256
+	lsm9ds1_raw_data_t lsmdata[samples];
   
 	while(1) {
+
+
 		menu_update();
 		lcd_push_buffer(lcdBuffer);
 
@@ -58,8 +60,6 @@ int main(void) {
 
 
 		// update code
-
-
 		for (int i = 0; i < rxBufferSize / 2; i++) {
 
 			uint8_t highByte = rxBuffer[i * 2];
@@ -69,19 +69,18 @@ int main(void) {
 		}
 
 
-
-
 		for (int i = 0; i < samples; i++){
 
-		lsmdata.gx = dataArray[0];
-		lsmdata.gy = dataArray[1];
-		lsmdata.gz = dataArray[2];
-		lsmdata.ax = dataArray[3];
-		lsmdata.ay = dataArray[4];
-		lsmdata.az = dataArray[5];
-		lsmdata.mx = dataArray[6];
-		lsmdata.my = dataArray[7];
-		lsmdata.mz = dataArray[8];
+		lsmdata[i].gx = dataArray[0];
+		lsmdata[i].gy = dataArray[1];
+		lsmdata[i].gz = dataArray[2];
+		lsmdata[i].ax = dataArray[3];
+		lsmdata[i].ay = dataArray[4];
+		lsmdata[i].az = dataArray[5];
+		lsmdata[i].mx = dataArray[6];
+		lsmdata[i].my = dataArray[7];
+		lsmdata[i].mz = dataArray[8];
+		lsmdata[i].T = dataArray[9];
 
 
 		}
