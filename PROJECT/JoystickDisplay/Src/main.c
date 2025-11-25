@@ -25,20 +25,19 @@ int main(void) {
 	menu_init();		// Initialize main menu
 	initSlaveSPI();
 	iniPB12();
-  
-  printf("Slave Polling Started.\n");
 
 	uint8_t rxBufferSize = 20;
 	uint8_t rxBuffer[rxBufferSize];
 	int16_t dataArray[rxBufferSize/2];
-	uint8_t samples = 265; // ændre det til 256
-	lsm9ds1_raw_data_t lsmdata[samples];
-  
+	uint8_t sampleIndex = 0;
+	uint16_t maxData = 50; // ændre det til 256
+	lsm9ds1_raw_data_t lsmdata[maxData];
+	uint8_t collect = 1;
+
 	while(1) {
 
 
-		menu_update();
-		lcd_push_buffer(lcdBuffer);
+//		menu_update();
 
 
 		// checks if CS pin is low
@@ -69,30 +68,39 @@ int main(void) {
 		}
 
 
-		for (int i = 0; i < samples; i++){
 
-		lsmdata[i].gx = dataArray[0];
-		lsmdata[i].gy = dataArray[1];
-		lsmdata[i].gz = dataArray[2];
-		lsmdata[i].ax = dataArray[3];
-		lsmdata[i].ay = dataArray[4];
-		lsmdata[i].az = dataArray[5];
-		lsmdata[i].mx = dataArray[6];
-		lsmdata[i].my = dataArray[7];
-		lsmdata[i].mz = dataArray[8];
-		lsmdata[i].T = dataArray[9];
-
-
+		if (sampleIndex != maxData){
+			printf("Collected %d\n",sampleIndex);
+			lsmdata[sampleIndex].gx = dataArray[0];
+			lsmdata[sampleIndex].gy = dataArray[1];
+			lsmdata[sampleIndex].gz = dataArray[2];
+			lsmdata[sampleIndex].ax = dataArray[3];
+			lsmdata[sampleIndex].ay = dataArray[4];
+			lsmdata[sampleIndex].az = dataArray[5];
+			lsmdata[sampleIndex].mx = dataArray[6];
+			lsmdata[sampleIndex].my = dataArray[7];
+			lsmdata[sampleIndex].mz = dataArray[8];
+			lsmdata[sampleIndex].T = dataArray[9];
+			sampleIndex++;
+		}
+		else if (sampleIndex == maxData){
+			printf("Data sent\n");
+			plot_histogram(lsmdata,SENSOR_ACCEL, AXIS_X);
+			lcd_push_buffer(lcdBuffer);
+			sampleIndex = maxData; // should be 0
+			collect = 0;
+		}
+		else {
+			printf("Error");
 		}
 
 
-		// stop while
-
-		printf("Rx: ");
-		for (int i = 0; i < rxBufferSize / 2; i++) {
-			printf("%d	", dataArray[i]);
-		}
-		printf("\n");
+		//		print on PuTTY
+		//		printf("Rx: ");
+		//		for (int i = 0; i < rxBufferSize / 2; i++) {
+		//			printf("%d	", dataArray[i]);
+		//		}
+		//		printf("\n");
 
 	}
 }
