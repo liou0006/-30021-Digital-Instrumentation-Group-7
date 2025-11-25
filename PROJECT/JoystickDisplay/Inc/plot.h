@@ -8,6 +8,7 @@
 #include "sensors.h"
 
 void plot_fft(sensor_t sensor, axis_t axis);
-void plot_histogram(sensor_t sensor, axis_t axis);
+//void plot_histogram(sensor_t sensor, axis_t axis);
+void plot_histogram(lsm9ds1_raw_data_t* samples,sensor_t sensor, axis_t axis);
 
 #endif /* PLOT_H_ */

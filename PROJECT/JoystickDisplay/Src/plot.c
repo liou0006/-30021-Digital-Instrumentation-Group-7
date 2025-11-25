@@ -17,9 +17,9 @@ void plot_fft(sensor_t sensor, axis_t axis) {
 //	sensors_read_samples(samples, FFT_NUM_SAMPLES);
 }
 
-void plot_histogram(sensor_t sensor, axis_t axis) {
+void plot_histogram(lsm9ds1_raw_data_t* samples,sensor_t sensor, axis_t axis) {
 	// Get data
-	lsm9ds1_raw_data_t samples[NUM_SAMPLES];
+//	lsm9ds1_raw_data_t samples[NUM_SAMPLES]; // changes
 	sensors_read_samples(samples, NUM_SAMPLES);
 
 	int num_bins = 10;
