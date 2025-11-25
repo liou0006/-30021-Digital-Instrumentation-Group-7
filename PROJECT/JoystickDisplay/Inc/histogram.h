@@ -16,6 +16,8 @@ typedef struct {
 	int num_bins;
 	int *bin_counts;
 	int max_bin_height;
+	int underflow_count;	// Samples < min_val
+	int overflow_count;		// Samples >= (max_val + num_bins * bin_width)
 } histogram_result_t;
 
 void compute_histogram(lsm9ds1_raw_data_t *data, int num_samples,

@@ -228,7 +228,8 @@ void lcd_convert_int_to_char3x5_x_axis(uint8_t *buffer, uint16_t buff_width, int
 
 	// Center value around middle pixel
 	uint16_t digit_offset = 0;
-	if (idx == 5) digit_offset = 9;
+	if (idx == 6) digit_offset = 11;
+	else if (idx == 5) digit_offset = 9;
 	else if (idx == 4) digit_offset = 7;
 	else if (idx == 3) digit_offset = 5;
 	else if (idx == 2) digit_offset = 3;
