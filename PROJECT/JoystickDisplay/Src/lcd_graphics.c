@@ -41,24 +41,24 @@ void lcd_draw_pixel(uint8_t *buffer, uint8_t x, uint8_t y) {
 /*
  * Draws a vertical line at x which goes from y_start to y_end
  */
-void lcd_draw_vertical_line(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t y_start, uint16_t y_end) {
-//	// Check bounds
-//	if (x >= buff_width) x = buff_width - 1;	// Clamp to right edge
-//	if (y_start > y_end) {
-//		uint16_t temp = y_start;
-//		y_start = y_end;
-//		y_end = temp;
-//	}
-//	if (y_end >= LCD_HEIGHT) return;
-//
-//	for (uint16_t y = y_start; y <= y_end; y++) {
-//		uint16_t row = y / LCD_SLICE_SIZE;	// Find row
-//		uint16_t bit  = y % LCD_SLICE_SIZE;	// Find bit
-//		uint16_t base = row * buff_width;
-//
-//		buffer[base + x] |= (1 << bit);
-//	}
-}
+//void lcd_draw_vertical_line(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t y_start, uint16_t y_end) {
+////	// Check bounds
+////	if (x >= buff_width) x = buff_width - 1;	// Clamp to right edge
+////	if (y_start > y_end) {
+////		uint16_t temp = y_start;
+////		y_start = y_end;
+////		y_end = temp;
+////	}
+////	if (y_end >= LCD_HEIGHT) return;
+////
+////	for (uint16_t y = y_start; y <= y_end; y++) {
+////		uint16_t row = y / LCD_SLICE_SIZE;	// Find row
+////		uint16_t bit  = y % LCD_SLICE_SIZE;	// Find bit
+////		uint16_t base = row * buff_width;
+////
+////		buffer[base + x] |= (1 << bit);
+////	}
+//}
 
 /*
  * Draws a horizontal line at y which goes from x_start to x_end.
