@@ -7,8 +7,12 @@
 #include <stdint.h>
 #include "plot.h"
 
+#include "lsm9ds1.h"
+#include "spiSlave.h"
+
 typedef enum {
 	MENU_MAIN,
+	MENU_COLLECT,
 	MENU_FFT,
 	MENU_HIST,
 	MENU_PLOT,
