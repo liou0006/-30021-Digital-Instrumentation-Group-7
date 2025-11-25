@@ -6,7 +6,7 @@
 #include "lcd.h"
 #include "sensors.h"
 
-#define NUM_SAMPLES 256
+#define NUM_SAMPLES 10 // not using this. usin sizeof in compute_historgram rn
 #define GRAPH_HEIGHT (LCD_HEIGHT - GRAPH_MARGIN_TOP - GRAPH_MARGIN_BOTTOM)
 #define GRAPH_WIDTH (VIRTUAL_WIDTH_SIZE - GRAPH_X_OFFSET - GRAPH_MARGIN_RIGHT)
 #define NUM_Y_TICKS 4
@@ -17,16 +17,16 @@ void plot_fft(sensor_t sensor, axis_t axis) {
 //	sensors_read_samples(samples, FFT_NUM_SAMPLES);
 }
 
-void plot_histogram(sensor_t sensor, axis_t axis) {
+void plot_histogram(lsm9ds1_raw_data_t* samples,sensor_t sensor, axis_t axis) {
 	// Get data
-	lsm9ds1_raw_data_t samples[NUM_SAMPLES];
-	sensors_read_samples(samples, NUM_SAMPLES);
+//	lsm9ds1_raw_data_t samples[NUM_SAMPLES]; // changes
+//	sensors_read_samples(samples, NUM_SAMPLES);
 
 	int num_bins = 10;
 
 	// Compute histogram
 	histogram_result_t hist;
-	compute_histogram(samples, NUM_SAMPLES, sensor, axis, num_bins, &hist);
+	compute_histogram(samples, sizeof(samples), sensor, axis, num_bins, &hist);
 
 	uint16_t hist_graph_width = GRAPH_WIDTH;
 	uint16_t hist_x_offset = GRAPH_X_OFFSET;
