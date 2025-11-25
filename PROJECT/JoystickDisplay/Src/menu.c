@@ -19,6 +19,16 @@ static sensor_t currentSensor;
 static axis_t currentAxis;
 static uint8_t FFTmode = 0;		// 1 = FFT, 0 = Histogram
 
+
+uint8_t rxBufferSize = 20;
+uint8_t rxBuffer[20]; // should be rxBufferSize
+int16_t dataArray[20/2];
+uint8_t sampleIndex = 0;
+uint16_t maxData = 50; // ændre det til 256
+lsm9ds1_raw_data_t lsmdata[50]; // should be maxData
+
+
+
 void menu_init() {
 	lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
 	lcd_write_string((uint8_t *)"Main Menu:", lcdBuffer, 0, 0);
@@ -44,7 +54,7 @@ void menu_update() {
 		if (joystick == UP && sel > 0) {
 			sel--;
 			wait = 1;
-		} else if (joystick == DOWN && sel < 1) {
+		} else if (joystick == DOWN && sel < 2) {
 			sel++;
 			wait = 1;
 		} else if (joystick == CENTER) {
@@ -76,6 +86,63 @@ void menu_update() {
 
 		// other stuff here
 
+			// checks if CS pin is low
+			while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_SET);
+
+			//throws away bad signal
+			while(SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == SET) {
+				SPI_ReceiveData8(SPI3);
+			}
+
+			for (int i = 0; i < rxBufferSize; i++) {
+				while (SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == RESET);
+				rxBuffer[i] = SPI_ReceiveData8(SPI3);
+			}
+
+			//checks if CS pin is high
+			while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_RESET);
+
+
+
+			// update code
+			for (int i = 0; i < rxBufferSize / 2; i++) {
+
+				uint8_t highByte = rxBuffer[i * 2];
+				uint8_t lowByte  = rxBuffer[i * 2 + 1];
+
+				dataArray[i] = (int16_t)((highByte << 8) | lowByte);
+			}
+
+			if (sampleIndex != maxData){
+				printf("Collected %d\n",sampleIndex);
+				lsmdata[sampleIndex].gx = dataArray[0];
+				lsmdata[sampleIndex].gy = dataArray[1];
+				lsmdata[sampleIndex].gz = dataArray[2];
+				lsmdata[sampleIndex].ax = dataArray[3];
+				lsmdata[sampleIndex].ay = dataArray[4];
+				lsmdata[sampleIndex].az = dataArray[5];
+				lsmdata[sampleIndex].mx = dataArray[6];
+				lsmdata[sampleIndex].my = dataArray[7];
+				lsmdata[sampleIndex].mz = dataArray[8];
+				lsmdata[sampleIndex].T = dataArray[9];
+				sampleIndex++;
+			}
+			else if (sampleIndex == maxData){
+				printf("Data sent\n");
+				currentMenu = MENU_MAIN;
+				sampleIndex = 0; // should be 0
+			}
+			else {
+				printf("Error");
+			}
+
+
+			//		print on PuTTY
+			//		printf("Rx: ");
+			//		for (int i = 0; i < rxBufferSize / 2; i++) {
+			//			printf("%d	", dataArray[i]);
+			//		}
+			//		printf("\n");
 		break;
 
 	case MENU_FFT:
@@ -155,7 +222,7 @@ void menu_update() {
 		if (FFTmode) {
 //			plot_fft(currentSensor, currentAxis);
 		} else {
-//			plot_histogram(currentSensor, currentAxis);
+			plot_histogram(lsmdata,currentSensor, currentAxis);
 		}
 
 		update_lcdBuffer();		// Copy visible window to physical LCD buffer
