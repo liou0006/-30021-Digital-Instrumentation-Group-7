@@ -21,12 +21,8 @@ static inline void put_le16(uint8_t *buf, int16_t v)
 void imu_stub_next_packet(uint8_t out[IMU_PACKET_SIZE])
 {
     static int16_t t = 0;   // simple time / step counter
-
-    // advance "time"
-    t++;
-    if (t > 1000) {
-        t = -1000;          // wrap so it oscillates between -1000 and 1000
-    }
+    static int16_t temp = 18;
+    t = 2;
 
     // --- Fake sensor values ---
 
@@ -58,4 +54,6 @@ void imu_stub_next_packet(uint8_t out[IMU_PACKET_SIZE])
     put_le16(&out[12], mx);
     put_le16(&out[14], my);
     put_le16(&out[16], mz);
+    put_le16(&out[18],temp);
+
 }

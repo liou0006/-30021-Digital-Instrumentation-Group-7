@@ -6,7 +6,6 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Src/30010_io.c \
-../Src/Openlog_TestModule.c \
 ../Src/adc.c \
 ../Src/flash.c \
 ../Src/imu_stub.c \
@@ -21,12 +20,11 @@ C_SRCS += \
 ../Src/system_stm32f30x.c \
 ../Src/timer.c \
 ../Src/uart_sd_card.c \
-../Src/ultrasonic_sensor.c \
+../Src/ultrasonic.c \
 ../Src/window.c 
 
 OBJS += \
 ./Src/30010_io.o \
-./Src/Openlog_TestModule.o \
 ./Src/adc.o \
 ./Src/flash.o \
 ./Src/imu_stub.o \
@@ -41,12 +39,11 @@ OBJS += \
 ./Src/system_stm32f30x.o \
 ./Src/timer.o \
 ./Src/uart_sd_card.o \
-./Src/ultrasonic_sensor.o \
+./Src/ultrasonic.o \
 ./Src/window.o 
 
 C_DEPS += \
 ./Src/30010_io.d \
-./Src/Openlog_TestModule.d \
 ./Src/adc.d \
 ./Src/flash.d \
 ./Src/imu_stub.d \
@@ -61,18 +58,18 @@ C_DEPS += \
 ./Src/system_stm32f30x.d \
 ./Src/timer.d \
 ./Src/uart_sd_card.d \
-./Src/ultrasonic_sensor.d \
+./Src/ultrasonic.d \
 ./Src/window.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
 Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DSTM32 -DSTM32F302R8Tx -DSTM32F3 -DNUCLEO_F302R8 -DDEBUG -DUSE_STDPERIPH_DRIVER=1 -c -I"C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/SPL/inc" -I"C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/Inc" -I"C:/Users/Mark/CLionProjects/-30021-Digital-Instrumentation-Group-7/project2/cmsis" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DSTM32 -DSTM32F302R8Tx -DSTM32F3 -DNUCLEO_F302R8 -DDEBUG -DUSE_STDPERIPH_DRIVER=1 -c -I"/Users/markmalloy/STM32CubeIDE/workspace_1.19.0/repository/project2/SPL/inc" -I"/Users/markmalloy/STM32CubeIDE/workspace_1.19.0/repository/project2/Inc" -I"/Users/markmalloy/STM32CubeIDE/workspace_1.19.0/repository/project2/cmsis" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/30010_io.cyclo ./Src/30010_io.d ./Src/30010_io.o ./Src/30010_io.su ./Src/Openlog_TestModule.cyclo ./Src/Openlog_TestModule.d ./Src/Openlog_TestModule.o ./Src/Openlog_TestModule.su ./Src/adc.cyclo ./Src/adc.d ./Src/adc.o ./Src/adc.su ./Src/flash.cyclo ./Src/flash.d ./Src/flash.o ./Src/flash.su ./Src/imu_stub.cyclo ./Src/imu_stub.d ./Src/imu_stub.o ./Src/imu_stub.su ./Src/interrupt.cyclo ./Src/interrupt.d ./Src/interrupt.o ./Src/interrupt.su ./Src/joystick.cyclo ./Src/joystick.d ./Src/joystick.o ./Src/joystick.su ./Src/lcd.cyclo ./Src/lcd.d ./Src/lcd.o ./Src/lcd.su ./Src/led.cyclo ./Src/led.d ./Src/led.o ./Src/led.su ./Src/lsm9ds1.cyclo ./Src/lsm9ds1.d ./Src/lsm9ds1.o ./Src/lsm9ds1.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/openlog_sd.cyclo ./Src/openlog_sd.d ./Src/openlog_sd.o ./Src/openlog_sd.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/system_stm32f30x.cyclo ./Src/system_stm32f30x.d ./Src/system_stm32f30x.o ./Src/system_stm32f30x.su ./Src/timer.cyclo ./Src/timer.d ./Src/timer.o ./Src/timer.su ./Src/uart_sd_card.cyclo ./Src/uart_sd_card.d ./Src/uart_sd_card.o ./Src/uart_sd_card.su ./Src/ultrasonic_sensor.cyclo ./Src/ultrasonic_sensor.d ./Src/ultrasonic_sensor.o ./Src/ultrasonic_sensor.su ./Src/window.cyclo ./Src/window.d ./Src/window.o ./Src/window.su
+	-$(RM) ./Src/30010_io.cyclo ./Src/30010_io.d ./Src/30010_io.o ./Src/30010_io.su ./Src/adc.cyclo ./Src/adc.d ./Src/adc.o ./Src/adc.su ./Src/flash.cyclo ./Src/flash.d ./Src/flash.o ./Src/flash.su ./Src/imu_stub.cyclo ./Src/imu_stub.d ./Src/imu_stub.o ./Src/imu_stub.su ./Src/interrupt.cyclo ./Src/interrupt.d ./Src/interrupt.o ./Src/interrupt.su ./Src/joystick.cyclo ./Src/joystick.d ./Src/joystick.o ./Src/joystick.su ./Src/lcd.cyclo ./Src/lcd.d ./Src/lcd.o ./Src/lcd.su ./Src/led.cyclo ./Src/led.d ./Src/led.o ./Src/led.su ./Src/lsm9ds1.cyclo ./Src/lsm9ds1.d ./Src/lsm9ds1.o ./Src/lsm9ds1.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/openlog_sd.cyclo ./Src/openlog_sd.d ./Src/openlog_sd.o ./Src/openlog_sd.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/system_stm32f30x.cyclo ./Src/system_stm32f30x.d ./Src/system_stm32f30x.o ./Src/system_stm32f30x.su ./Src/timer.cyclo ./Src/timer.d ./Src/timer.o ./Src/timer.su ./Src/uart_sd_card.cyclo ./Src/uart_sd_card.d ./Src/uart_sd_card.o ./Src/uart_sd_card.su ./Src/ultrasonic.cyclo ./Src/ultrasonic.d ./Src/ultrasonic.o ./Src/ultrasonic.su ./Src/window.cyclo ./Src/window.d ./Src/window.o ./Src/window.su
 
 .PHONY: clean-Src
 

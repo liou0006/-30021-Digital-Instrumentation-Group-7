@@ -13,16 +13,15 @@ int main(void) {
     int count = 0;
     uint8_t packet[IMU_PACKET_SIZE];
 
-    while (count < 250) {
+    while (count < 1000) {
         // Get next IMU telemetry packet (18 bytes of raw binary)
         imu_stub_next_packet(packet);
 
         // Write it directly to SD via OpenLog
         openlog_writebytes(packet, IMU_PACKET_SIZE);
-
         count++;
-        delay(5);   // a few ms between samples
+        delay(1);   // a few ms between samples
     }
-
+    reset();
     while (1); // halt after done
 }
