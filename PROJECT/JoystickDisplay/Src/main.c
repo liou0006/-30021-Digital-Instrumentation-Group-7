@@ -10,6 +10,11 @@
 #include "lsm9ds1.h"
 #include "spiSlave.h"
 #include "sensors.h"
+#include "stm32f30x.h"
+#include <stdint.h>
+#include "openlog_sd.h"
+#include "imu_stub.h"
+
 
 // Define buffers (allocate memory)
 uint8_t lcdBuffer[LCD_BUFF_SIZE];
@@ -17,14 +22,19 @@ uint8_t virtualBuffer[VIRTUAL_WIDTH_SIZE * LCD_ROWS];
 
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
+	init_uart(115200); // Initialize UART3 for writing to SD
 
-	// Initialize
+	// Initialize Origin
 	initJoystick();		// Enabling GPIO pins for joystick
 	init_spi_lcd();		// Initialize SPI for LCD
 	ADC_setup_PA();		// Enabling GPIO pins for ADC
 	menu_init();		// Initialize main menu
 	initSlaveSPI();
 	iniPB12();
+	// Initialize SD
+	SystemInit();
+	SystemCoreClockUpdate();
+	delay(1000);
 
 	uint8_t rxBufferSize = 20;
 	uint8_t rxBuffer[rxBufferSize];
@@ -33,6 +43,8 @@ int main(void) {
 	uint16_t maxData = 50; // ændre det til 256
 	lsm9ds1_raw_data_t lsmdata[maxData];
 	uint8_t collect = 1;
+
+	uint8_t packet[IMU_PACKET_SIZE];
 
 	while(1) {
 
@@ -82,6 +94,13 @@ int main(void) {
 			lsmdata[sampleIndex].mz = dataArray[8];
 			lsmdata[sampleIndex].T = dataArray[9];
 			sampleIndex++;
+			//		imu_stub_next_packet(packet);
+
+			// Write it directly to SD via OpenLog
+			sensors_pack_raw(&lsmdata[sampleIndex], packet);
+
+			// Write to SD
+			openlog_writebytes(packet, IMU_PACKET_SIZE);
 		}
 		else if (sampleIndex == maxData){
 			printf("Data sent\n");
@@ -105,29 +124,11 @@ int main(void) {
 	}
 }
 
-//#include "stm32f30x.h"
-//#include "ultrasonic_sensor.h"
-//#include <stdint.h>
-//#include "openlog_sd.h"
-//#include "imu_stub.h"
-
 //int main(void) {
-//	SystemInit();
-//	SystemCoreClockUpdate();
-//	init_uart(115200);
-//	delay(1000); // wait for openlog to boot
-
-//	int count = 0;
-//	uint8_t packet[IMU_PACKET_SIZE];
 
 //	while (count < 1000) {
 		// Get next IMU telemetry packet (18 bytes of raw binary)
-//		imu_stub_next_packet(packet);
 
-		// Write it directly to SD via OpenLog
-//		openlog_writebytes(packet, IMU_PACKET_SIZE);
-//		count++;
-//		delay(1);   // a few ms between samples
 //	}
 //	reset();
 //	while (1); // halt after done
