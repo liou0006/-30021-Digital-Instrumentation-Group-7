@@ -41,26 +41,41 @@ void menu_update() {
 		sel_sensor = 0;
 		sel_axis = 0;
 
-		if (joystick == UP && sel > 0) sel--;
-		else if (joystick == DOWN && sel < 1) sel++;
-		else if (joystick == CENTER) {
+		if (joystick == UP && sel > 0) {
+			sel--;
+			wait = 1;
+		} else if (joystick == DOWN && sel < 1) {
+			sel++;
+			wait = 1;
+		} else if (joystick == CENTER) {
 			sel_main = sel;		// Save main menu cursor
 
 			if (sel == 0) {
+				currentMenu = MENU_COLLECT;
+			} else if (sel == 1) {
 				currentMenu = MENU_FFT;
 				FFTmode = 1;
+				sel = sel_sensor;	// Restore previous cursor in sensor menu
 			} else {
 				currentMenu = MENU_HIST;
 				FFTmode = 0;
+				sel = sel_sensor;	// Restore previous cursor in sensor menu
 			}
-
-			sel = sel_sensor;	// Restore previous cursor in sensor menu
 			wait = 1;
 		}
 		lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
 		lcd_write_string((uint8_t *)"Main Menu:", lcdBuffer, 0, 0);
-		lcd_write_string((uint8_t*)(sel == 0 ? ">FFT" : " FFT"), lcdBuffer, 0, 1);
-		lcd_write_string((uint8_t*)(sel == 1 ? ">Histogram" : " Histogram"), lcdBuffer, 0, 2);
+		lcd_write_string((uint8_t*)(sel == 0 ? ">Collect" : " Collect"), lcdBuffer, 0, 1);
+		lcd_write_string((uint8_t*)(sel == 1 ? ">FFT" : " FFT"), lcdBuffer, 0, 2);
+		lcd_write_string((uint8_t*)(sel == 2 ? ">Histogram" : " Histogram"), lcdBuffer, 0, 3);
+		break;
+
+	case MENU_COLLECT:
+		lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
+		lcd_write_string((uint8_t *)"Collecting data...", lcdBuffer, 0, 0);
+
+		// other stuff here
+
 		break;
 
 	case MENU_FFT:
