@@ -41,6 +41,7 @@ int main(void) {
 
 	while(1) {
 
+		// breaks while loop when PB12 is low
 		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_SET);
 
 		while(SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == SET) {
