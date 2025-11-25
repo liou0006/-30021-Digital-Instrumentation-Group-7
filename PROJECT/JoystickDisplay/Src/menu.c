@@ -23,7 +23,7 @@ static uint8_t FFTmode = 0;		// 1 = FFT, 0 = Histogram
 uint8_t rxBufferSize = 20;
 uint8_t rxBuffer[20]; // should be rxBufferSize
 int16_t dataArray[20/2];
-uint8_t sampleIndex = 0;
+uint16_t sampleIndex = 0;
 uint16_t maxData = 50; // ændre det til 256
 lsm9ds1_raw_data_t lsmdata[50]; // should be maxData
 
@@ -126,6 +126,7 @@ void menu_update() {
 				lsmdata[sampleIndex].mz = dataArray[8];
 				lsmdata[sampleIndex].T = dataArray[9];
 				sampleIndex++;
+
 			}
 			else if (sampleIndex == maxData){
 				printf("Data sent\n");
