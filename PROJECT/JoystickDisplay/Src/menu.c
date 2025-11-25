@@ -74,6 +74,11 @@ void menu_update() {
 		lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
 		lcd_write_string((uint8_t *)"Collecting data...", lcdBuffer, 0, 0);
 
+		// Draw status bar
+		lcd_write_string((uint8_t *)"|", lcdBuffer, 0, 2);
+//		lcd_write_string((uint8_t *)"|", lcdBuffer, 122, 2);
+		lcd_draw_collect_status(25, 50);
+
 		// other stuff here
 
 		break;

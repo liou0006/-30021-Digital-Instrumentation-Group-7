@@ -250,3 +250,10 @@ void update_lcdBuffer() {
 	}
 }
 
+
+void lcd_draw_collect_status(uint16_t sample_idx, uint16_t num_samples) {
+	if (sample_idx == 10) lcd_write_string((uint8_t *)"|||||", lcdBuffer, 0, 2);
+	else if (sample_idx == 25) lcd_write_string((uint8_t *)"||||||||||", lcdBuffer, 0, 2);
+	else if (sample_idx == num_samples - 1) lcd_write_string((uint8_t *)"||||||||||||||||||||", lcdBuffer, 0, 2);
+}
+
