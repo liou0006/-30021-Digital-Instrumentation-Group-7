@@ -5,6 +5,7 @@
 #include "lcd.h"
 #include "lsm9ds1.h"
 #include "spiSlave.h"
+#include "sensors.h"
 
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
@@ -17,6 +18,8 @@ int main(void) {
 	uint8_t rxBufferSize = 20;
 	uint8_t rxBuffer[rxBufferSize];
 	int16_t dataArray[rxBufferSize/2];
+	uint8_t samples = 265;
+	lsm9ds1_raw_data_t lsmdata;
 
 	while(1) {
 
@@ -37,6 +40,10 @@ int main(void) {
 		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_RESET);
 
 
+
+		// update code
+
+
 		for (int i = 0; i < rxBufferSize / 2; i++) {
 
 			uint8_t highByte = rxBuffer[i * 2];
@@ -44,6 +51,27 @@ int main(void) {
 
 			dataArray[i] = (int16_t)((highByte << 8) | lowByte);
 		}
+
+
+
+
+		for (int i = 0; i < samples; i++){
+
+		lsmdata.gx = dataArray[0];
+		lsmdata.gy = dataArray[1];
+		lsmdata.gz = dataArray[2];
+		lsmdata.ax = dataArray[3];
+		lsmdata.ay = dataArray[4];
+		lsmdata.az = dataArray[5];
+		lsmdata.mx = dataArray[6];
+		lsmdata.my = dataArray[7];
+		lsmdata.mz = dataArray[8];
+
+
+		}
+
+
+		// stop while
 
 		printf("Rx: ");
 		for (int i = 0; i < rxBufferSize / 2; i++) {
