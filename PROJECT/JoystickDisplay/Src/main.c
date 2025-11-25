@@ -7,22 +7,94 @@
 #include "lcd_graphics.h"
 #include "lcd.h"
 #include "menu.h"
+#include "lsm9ds1.h"
+#include "spiSlave.h"
+#include "sensors.h"
 
 // Define buffers (allocate memory)
 uint8_t lcdBuffer[LCD_BUFF_SIZE];
 uint8_t virtualBuffer[VIRTUAL_WIDTH_SIZE * LCD_ROWS];
 
 int main(void) {
-	uart_init( 9600 );	// Initialize USB serial at 9600 baud
+	uart_init( 9600 ); // Initialize USB serial at 9600 baud
 
 	// Initialize
 	initJoystick();		// Enabling GPIO pins for joystick
 	init_spi_lcd();		// Initialize SPI for LCD
 	ADC_setup_PA();		// Enabling GPIO pins for ADC
 	menu_init();		// Initialize main menu
+	initSlaveSPI();
+	iniPB12();
+  
+  printf("Slave Polling Started.\n");
 
+	uint8_t rxBufferSize = 20;
+	uint8_t rxBuffer[rxBufferSize];
+	int16_t dataArray[rxBufferSize/2];
+	uint8_t samples = 265;
+	lsm9ds1_raw_data_t lsmdata;
+  
 	while(1) {
 		menu_update();
 		lcd_push_buffer(lcdBuffer);
+
+
+		// checks if CS pin is low
+		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_SET);
+
+		//throws away bad signal
+		while(SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == SET) {
+			SPI_ReceiveData8(SPI3);
+		}
+
+		for (int i = 0; i < rxBufferSize; i++) {
+			while (SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == RESET);
+			rxBuffer[i] = SPI_ReceiveData8(SPI3);
+		}
+
+		//checks if CS pin is high
+		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_RESET);
+
+
+
+		// update code
+
+
+		for (int i = 0; i < rxBufferSize / 2; i++) {
+
+			uint8_t highByte = rxBuffer[i * 2];
+			uint8_t lowByte  = rxBuffer[i * 2 + 1];
+
+			dataArray[i] = (int16_t)((highByte << 8) | lowByte);
+		}
+
+
+
+
+		for (int i = 0; i < samples; i++){
+
+		lsmdata.gx = dataArray[0];
+		lsmdata.gy = dataArray[1];
+		lsmdata.gz = dataArray[2];
+		lsmdata.ax = dataArray[3];
+		lsmdata.ay = dataArray[4];
+		lsmdata.az = dataArray[5];
+		lsmdata.mx = dataArray[6];
+		lsmdata.my = dataArray[7];
+		lsmdata.mz = dataArray[8];
+
+
+		}
+
+
+		// stop while
+
+		printf("Rx: ");
+		for (int i = 0; i < rxBufferSize / 2; i++) {
+			printf("%d	", dataArray[i]);
+		}
+		printf("\n");
+
 	}
 }
+

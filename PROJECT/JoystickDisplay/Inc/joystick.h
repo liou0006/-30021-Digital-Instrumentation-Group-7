@@ -1,3 +1,10 @@
+/*
+ * joystick.h
+ *
+ *  Created on: Sep 6, 2025
+ *      Author: liou-
+ */
+
 #ifndef JOYSTICK_H_
 #define JOYSTICK_H_
 
@@ -14,5 +21,6 @@
 void initJoystick();
 uint8_t readJoystickState();
 //void handleJoystick();	// Not used so commented out for now
+
 
 #endif /* JOYSTICK_H_ */

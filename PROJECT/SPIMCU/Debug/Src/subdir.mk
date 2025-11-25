@@ -15,7 +15,6 @@ C_SRCS += \
 ../Src/lsm9ds1.c \
 ../Src/main.c \
 ../Src/spiMaster.c \
-../Src/spiSlave.c \
 ../Src/syscalls.c \
 ../Src/system_stm32f30x.c \
 ../Src/timer.c \
@@ -32,7 +31,6 @@ OBJS += \
 ./Src/lsm9ds1.o \
 ./Src/main.o \
 ./Src/spiMaster.o \
-./Src/spiSlave.o \
 ./Src/syscalls.o \
 ./Src/system_stm32f30x.o \
 ./Src/timer.o \
@@ -49,7 +47,6 @@ C_DEPS += \
 ./Src/lsm9ds1.d \
 ./Src/main.d \
 ./Src/spiMaster.d \
-./Src/spiSlave.d \
 ./Src/syscalls.d \
 ./Src/system_stm32f30x.d \
 ./Src/timer.d \
@@ -63,7 +60,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/30010_io.cyclo ./Src/30010_io.d ./Src/30010_io.o ./Src/30010_io.su ./Src/adc.cyclo ./Src/adc.d ./Src/adc.o ./Src/adc.su ./Src/flash.cyclo ./Src/flash.d ./Src/flash.o ./Src/flash.su ./Src/interrupt.cyclo ./Src/interrupt.d ./Src/interrupt.o ./Src/interrupt.su ./Src/joystick.cyclo ./Src/joystick.d ./Src/joystick.o ./Src/joystick.su ./Src/lcd.cyclo ./Src/lcd.d ./Src/lcd.o ./Src/lcd.su ./Src/led.cyclo ./Src/led.d ./Src/led.o ./Src/led.su ./Src/lsm9ds1.cyclo ./Src/lsm9ds1.d ./Src/lsm9ds1.o ./Src/lsm9ds1.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/spiMaster.cyclo ./Src/spiMaster.d ./Src/spiMaster.o ./Src/spiMaster.su ./Src/spiSlave.cyclo ./Src/spiSlave.d ./Src/spiSlave.o ./Src/spiSlave.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/system_stm32f30x.cyclo ./Src/system_stm32f30x.d ./Src/system_stm32f30x.o ./Src/system_stm32f30x.su ./Src/timer.cyclo ./Src/timer.d ./Src/timer.o ./Src/timer.su ./Src/window.cyclo ./Src/window.d ./Src/window.o ./Src/window.su
+	-$(RM) ./Src/30010_io.cyclo ./Src/30010_io.d ./Src/30010_io.o ./Src/30010_io.su ./Src/adc.cyclo ./Src/adc.d ./Src/adc.o ./Src/adc.su ./Src/flash.cyclo ./Src/flash.d ./Src/flash.o ./Src/flash.su ./Src/interrupt.cyclo ./Src/interrupt.d ./Src/interrupt.o ./Src/interrupt.su ./Src/joystick.cyclo ./Src/joystick.d ./Src/joystick.o ./Src/joystick.su ./Src/lcd.cyclo ./Src/lcd.d ./Src/lcd.o ./Src/lcd.su ./Src/led.cyclo ./Src/led.d ./Src/led.o ./Src/led.su ./Src/lsm9ds1.cyclo ./Src/lsm9ds1.d ./Src/lsm9ds1.o ./Src/lsm9ds1.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/spiMaster.cyclo ./Src/spiMaster.d ./Src/spiMaster.o ./Src/spiMaster.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/system_stm32f30x.cyclo ./Src/system_stm32f30x.d ./Src/system_stm32f30x.o ./Src/system_stm32f30x.su ./Src/timer.cyclo ./Src/timer.d ./Src/timer.o ./Src/timer.su ./Src/window.cyclo ./Src/window.d ./Src/window.o ./Src/window.su
 
 .PHONY: clean-Src
 

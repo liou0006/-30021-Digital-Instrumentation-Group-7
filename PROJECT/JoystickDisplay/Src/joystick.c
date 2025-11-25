@@ -1,28 +1,23 @@
 #include "joystick.h"
 
-void initJoystick() {
-	// Enable clock for GPIO Ports
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);	// Port A
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);	// Port B
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);	// Port C
-	GPIO_InitTypeDef GPIO_InitStructAll; 				// Define typedef struct for setting pins
+void initJoystick(){
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB,ENABLE);
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC,ENABLE);
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA,ENABLE);
+	GPIO_InitTypeDef GPIO_InitStructAll;
 
-	// Setup for GPIO Ports
-	// -- A
-	GPIO_StructInit(&GPIO_InitStructAll);				// Initialize GPIO struct
-	GPIO_InitStructAll.GPIO_Mode = GPIO_Mode_IN;		// Set as input
-	GPIO_InitStructAll.GPIO_PuPd = GPIO_PuPd_DOWN; 		// Set as pull down
-	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_4; 			// Set so the configuration is on pin 4
-	GPIO_Init(GPIOA, &GPIO_InitStructAll); 				// Setup of GPIO with the settings chosen
-
-	// -- B
 	GPIO_StructInit(&GPIO_InitStructAll);
 	GPIO_InitStructAll.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructAll.GPIO_PuPd = GPIO_PuPd_DOWN;
-	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_5;
+	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_4;
+	GPIO_Init(GPIOA, &GPIO_InitStructAll);
+
+	GPIO_StructInit(&GPIO_InitStructAll);
+	GPIO_InitStructAll.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStructAll.GPIO_PuPd = GPIO_PuPd_DOWN;
+	GPIO_InitStructAll.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_0;
 	GPIO_Init(GPIOB, &GPIO_InitStructAll);
 
-	// -- C
 	GPIO_StructInit(&GPIO_InitStructAll);
 	GPIO_InitStructAll.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructAll.GPIO_PuPd = GPIO_PuPd_DOWN;
@@ -42,7 +37,7 @@ uint8_t readJoystickState() {
 	else if (GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_0)) state = RIGHT;	// PC0, 0x8
 	else if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_5)) state = CENTER;	// PC1, 0x10
 
-	return state;
+	return bit;
 }
 
 // Not used so commented out for now
