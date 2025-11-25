@@ -9,6 +9,7 @@
 
 typedef enum {
 	MENU_MAIN,
+	MENU_COLLECT,
 	MENU_FFT,
 	MENU_HIST,
 	MENU_PLOT,

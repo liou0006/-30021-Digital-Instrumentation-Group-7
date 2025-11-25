@@ -152,11 +152,11 @@ void menu_update() {
 		lcd_clear_buffer(virtualBuffer, LCD_ROWS * VIRTUAL_WIDTH_SIZE);
 //		draw_new_axis();
 
-//		if (FFTmode) {
+		if (FFTmode) {
 //			plot_fft(currentSensor, currentAxis);
-//		} else {
+		} else {
 //			plot_histogram(currentSensor, currentAxis);
-//		}
+		}
 
 		update_lcdBuffer();		// Copy visible window to physical LCD buffer
 		break;
