@@ -26,20 +26,18 @@ int main(void) {
 	initSlaveSPI();
 	iniPB12();
 
-	printf("Slave Polling Started.\n");
-
 	uint8_t rxBufferSize = 20;
 	uint8_t rxBuffer[rxBufferSize];
 	int16_t dataArray[rxBufferSize/2];
 	uint8_t sampleIndex = 0;
-	uint16_t maxData = 256; // ændre det til 256
+	uint16_t maxData = 50; // ændre det til 256
 	lsm9ds1_raw_data_t lsmdata[maxData];
+	uint8_t collect = 1;
 
 	while(1) {
 
 
 //		menu_update();
-//		lcd_push_buffer(lcdBuffer);
 
 
 		// checks if CS pin is low
@@ -69,7 +67,10 @@ int main(void) {
 			dataArray[i] = (int16_t)((highByte << 8) | lowByte);
 		}
 
+
+
 		if (sampleIndex != maxData){
+			printf("Collected %d\n",sampleIndex);
 			lsmdata[sampleIndex].gx = dataArray[0];
 			lsmdata[sampleIndex].gy = dataArray[1];
 			lsmdata[sampleIndex].gz = dataArray[2];
@@ -84,13 +85,14 @@ int main(void) {
 		}
 		else if (sampleIndex == maxData){
 			printf("Data sent\n");
-			sampleIndex = 0;
+			plot_histogram(lsmdata,SENSOR_ACCEL, AXIS_X);
+			lcd_push_buffer(lcdBuffer);
+			sampleIndex = maxData; // should be 0
+			collect = 0;
 		}
 		else {
 			printf("Error");
 		}
-
-		plot_histogram(lsmdata,SENSOR_ACCEL, AXIS_X);
 
 
 		//		print on PuTTY
