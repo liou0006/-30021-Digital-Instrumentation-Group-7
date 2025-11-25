@@ -25,18 +25,19 @@ int main(void) {
 	menu_init();		// Initialize main menu
 	initSlaveSPI();
 	iniPB12();
-  
-  printf("Slave Polling Started.\n");
 
 	uint8_t rxBufferSize = 20;
 	uint8_t rxBuffer[rxBufferSize];
 	int16_t dataArray[rxBufferSize/2];
-	uint8_t samples = 265;
-	lsm9ds1_raw_data_t lsmdata;
-  
+	uint8_t sampleIndex = 0;
+	uint16_t maxData = 50; // ændre det til 256
+	lsm9ds1_raw_data_t lsmdata[maxData];
+	uint8_t collect = 1;
+
 	while(1) {
-		menu_update();
-		lcd_push_buffer(lcdBuffer);
+
+
+//		menu_update();
 
 
 		// checks if CS pin is low
@@ -58,8 +59,6 @@ int main(void) {
 
 
 		// update code
-
-
 		for (int i = 0; i < rxBufferSize / 2; i++) {
 
 			uint8_t highByte = rxBuffer[i * 2];
@@ -70,31 +69,66 @@ int main(void) {
 
 
 
-
-		for (int i = 0; i < samples; i++){
-
-		lsmdata.gx = dataArray[0];
-		lsmdata.gy = dataArray[1];
-		lsmdata.gz = dataArray[2];
-		lsmdata.ax = dataArray[3];
-		lsmdata.ay = dataArray[4];
-		lsmdata.az = dataArray[5];
-		lsmdata.mx = dataArray[6];
-		lsmdata.my = dataArray[7];
-		lsmdata.mz = dataArray[8];
-
-
+		if (sampleIndex != maxData){
+			printf("Collected %d\n",sampleIndex);
+			lsmdata[sampleIndex].gx = dataArray[0];
+			lsmdata[sampleIndex].gy = dataArray[1];
+			lsmdata[sampleIndex].gz = dataArray[2];
+			lsmdata[sampleIndex].ax = dataArray[3];
+			lsmdata[sampleIndex].ay = dataArray[4];
+			lsmdata[sampleIndex].az = dataArray[5];
+			lsmdata[sampleIndex].mx = dataArray[6];
+			lsmdata[sampleIndex].my = dataArray[7];
+			lsmdata[sampleIndex].mz = dataArray[8];
+			lsmdata[sampleIndex].T = dataArray[9];
+			sampleIndex++;
+		}
+		else if (sampleIndex == maxData){
+			printf("Data sent\n");
+			plot_histogram(lsmdata,SENSOR_ACCEL, AXIS_X);
+			lcd_push_buffer(lcdBuffer);
+			sampleIndex = maxData; // should be 0
+			collect = 0;
+		}
+		else {
+			printf("Error");
 		}
 
 
-		// stop while
-
-		printf("Rx: ");
-		for (int i = 0; i < rxBufferSize / 2; i++) {
-			printf("%d	", dataArray[i]);
-		}
-		printf("\n");
+		//		print on PuTTY
+		//		printf("Rx: ");
+		//		for (int i = 0; i < rxBufferSize / 2; i++) {
+		//			printf("%d	", dataArray[i]);
+		//		}
+		//		printf("\n");
 
 	}
 }
 
+//#include "stm32f30x.h"
+//#include "ultrasonic_sensor.h"
+//#include <stdint.h>
+//#include "openlog_sd.h"
+//#include "imu_stub.h"
+
+//int main(void) {
+//	SystemInit();
+//	SystemCoreClockUpdate();
+//	init_uart(115200);
+//	delay(1000); // wait for openlog to boot
+
+//	int count = 0;
+//	uint8_t packet[IMU_PACKET_SIZE];
+
+//	while (count < 1000) {
+		// Get next IMU telemetry packet (18 bytes of raw binary)
+//		imu_stub_next_packet(packet);
+
+		// Write it directly to SD via OpenLog
+//		openlog_writebytes(packet, IMU_PACKET_SIZE);
+//		count++;
+//		delay(1);   // a few ms between samples
+//	}
+//	reset();
+//	while (1); // halt after done
+//}
