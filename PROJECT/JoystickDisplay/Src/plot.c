@@ -5,14 +5,14 @@
 #include "lcd_graphics.h"
 #include "lcd.h"
 #include "sensors.h"
+#include <math.h>
 
-#define NUM_SAMPLES 10 // not using this. usin sizeof in compute_historgram rn
 #define GRAPH_HEIGHT (LCD_HEIGHT - GRAPH_MARGIN_TOP - GRAPH_MARGIN_BOTTOM)
 #define GRAPH_WIDTH (VIRTUAL_WIDTH_SIZE - GRAPH_X_OFFSET - GRAPH_MARGIN_RIGHT)
 #define NUM_Y_TICKS 4
 
 void plot_fft(sensor_t sensor, axis_t axis) {
-	lcd_write_string("FFT plot", virtualBuffer, 0, 0);
+	lcd_write_string((uint8_t *)"FFT plot", virtualBuffer, 0, 0);
 //	lsm9ds1_raw_data_t samples[FFT_NUM_SAMPLES];
 //	sensors_read_samples(samples, FFT_NUM_SAMPLES);
 }
@@ -26,7 +26,10 @@ void plot_histogram(lsm9ds1_raw_data_t* samples,sensor_t sensor, axis_t axis) {
 
 	// Compute histogram
 	histogram_result_t hist;
-	compute_histogram(samples, sizeof(samples), sensor, axis, num_bins, &hist);
+//	compute_histogram(samples, sizeof(samples), sensor, axis, num_bins, &hist);
+	compute_histogram(samples, NUM_SAMPLES, sensor, axis, num_bins, &hist);
+	// OBS! sizeof(samples) is size of the pointer and does not equal the number
+	// of samples.
 
 	uint16_t hist_graph_width = GRAPH_WIDTH;
 	uint16_t hist_x_offset = GRAPH_X_OFFSET;
@@ -86,11 +89,13 @@ void plot_histogram(lsm9ds1_raw_data_t* samples,sensor_t sensor, axis_t axis) {
 		uint16_t tick_y = graph_y_to_lcd_y(tick_height);
 
 		// Draw tick mark
-		lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, hist_x_offset - 1, hist_x_offset, tick_y);
+		lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE,
+				hist_x_offset - 1, hist_x_offset, tick_y);
 
 		if (tick_height != 0) {
-			// Draw tick label
+			// Compute tick value
 			int tick_val = (int)(hist.max_bin_height * height_frac);
+			// Draw tick label
 			lcd_convert_int_to_char3x5_y_axis(virtualBuffer, VIRTUAL_WIDTH_SIZE, num_digits, tick_val, 0, tick_y - 2);
 		}
 	}

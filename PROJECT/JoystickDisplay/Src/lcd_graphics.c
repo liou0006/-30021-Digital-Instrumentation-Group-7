@@ -160,7 +160,10 @@ void lcd_convert_int_to_char3x5_y_axis(uint8_t *buffer, uint16_t buff_width,
 	}
 
 	// Digits are reversed, so drawing from left to right
-	if (max_num_digits == 2) {
+	if (max_num_digits == 1) {
+		lcd_draw_char3x5(buffer, buff_width, x + 4, y, str[idx - 1]);
+		return;
+	} else if (max_num_digits == 2) {
 		if (idx < 2) {
 			lcd_draw_char3x5(buffer, buff_width, x + 4, y, str[idx - 1]);
 			return;

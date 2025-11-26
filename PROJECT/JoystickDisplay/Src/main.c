@@ -15,7 +15,6 @@
 #include "openlog_sd.h"
 #include "imu_stub.h"
 
-
 // Define buffers (allocate memory)
 uint8_t lcdBuffer[LCD_BUFF_SIZE];
 uint8_t virtualBuffer[VIRTUAL_WIDTH_SIZE * LCD_ROWS];
@@ -29,21 +28,17 @@ int main(void) {
 	init_spi_lcd();		// Initialize SPI for LCD
 	ADC_setup_PA();		// Enabling GPIO pins for ADC
 	menu_init();		// Initialize main menu
-	initSlaveSPI();
-	iniPB12();
+//	initSlaveSPI();
+//	iniPB12();
 	// Initialize SD
-	SystemInit();
-	SystemCoreClockUpdate();
-	delay(1000);
+//	SystemInit();
+//	SystemCoreClockUpdate();
+//	delay(1000);
 
 
 	while(1) {
-
-
 		menu_update();
 		lcd_push_buffer(lcdBuffer);
-
-
 	}
 }
 
