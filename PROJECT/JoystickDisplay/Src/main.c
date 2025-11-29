@@ -21,19 +21,19 @@ uint8_t virtualBuffer[VIRTUAL_WIDTH_SIZE * LCD_ROWS];
 
 int main(void) {
 	uart_init( 9600 ); // Initialize USB serial at 9600 baud
+	SystemInit();
+	SystemCoreClockUpdate();
 	init_uart(115200); // Initialize UART3 for writing to SD
-
+    delay(1000);
 	// Initialize Origin
 	initJoystick();		// Enabling GPIO pins for joystick
 	init_spi_lcd();		// Initialize SPI for LCD
 	ADC_setup_PA();		// Enabling GPIO pins for ADC
 	menu_init();		// Initialize main menu
-//	initSlaveSPI();
-//	iniPB12();
+	initSlaveSPI();
+	iniPB12();
 	// Initialize SD
-//	SystemInit();
-//	SystemCoreClockUpdate();
-//	delay(1000);
+
 
 
 	while(1) {

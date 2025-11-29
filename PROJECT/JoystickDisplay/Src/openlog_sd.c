@@ -84,16 +84,30 @@ void openlog_writebytes(const uint8_t *data, uint32_t len)
 /*******************/
 // Openlog commands
 /*******************/
-void reset(void)
+void reset_openlog(void)
 {
-    // Pull RTS (PB14) low to reset OpenLog
+    GPIO_InitTypeDef GPIO_InitStructure;
+
+    // 1) Put PB14 into GPIO output mode
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_14;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_UP;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+    // 2) Pulse reset (active-low)
     GPIO_ResetBits(GPIOB, GPIO_Pin_14);
     for (volatile int i = 0; i < 100000; i++);
     GPIO_SetBits(GPIOB, GPIO_Pin_14);
+    for (volatile int i = 0; i < 4000000; i++);
 
-    // Wait for OpenLog to reboot
-    for (volatile int i = 0; i < 4000000; i++); 
+    // 3) Put PB14 back to AF7 (RTS), if you really use it
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+    GPIO_PinAFConfig(GPIOB, GPIO_PinSource14, GPIO_AF_7);
 }
+
 
 //Enter Command Mode (Ctrl+Z ×3)
 void commandmode(void) {

@@ -22,10 +22,10 @@ static uint8_t FFTmode = 0;		// 1 = FFT, 0 = Histogram
 
 uint8_t rxBufferSize = 20;
 uint8_t rxBuffer[20]; // should be rxBufferSize
-int16_t dataArray[20/2];
+int16_t dataArray[10];
 uint16_t sampleIndex = 0;
-uint16_t maxData = 200; // ændre det til 256  (det kan ændres til NUM_SAMPLES som er defineret til 256)
-lsm9ds1_raw_data_t lsmdata[200]; // should be maxData
+uint16_t maxData = 256; // ændre det til 256  (det kan ændres til NUM_SAMPLES som er defineret til 256)
+lsm9ds1_raw_data_t lsmdata[256]; // should be maxData
 uint8_t packet[20]; // should be IMU_PACKET_SIZE
 
 
@@ -83,20 +83,16 @@ void menu_update() {
 	case MENU_COLLECT:
 		lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
 		lcd_write_string((uint8_t *)"Collecting data...", lcdBuffer, 0, 0);
-
 		// checks if CS pin is low
 		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_SET);
-
 		//throws away bad signal
 		while(SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == SET) {
 			SPI_ReceiveData8(SPI3);
 		}
-
 		for (int i = 0; i < rxBufferSize; i++) {
 			while (SPI_I2S_GetFlagStatus(SPI3, SPI_I2S_FLAG_RXNE) == RESET);
 			rxBuffer[i] = SPI_ReceiveData8(SPI3);
 		}
-
 		//checks if CS pin is high
 		while(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12) == Bit_RESET);
 
@@ -111,8 +107,7 @@ void menu_update() {
 			dataArray[i] = (int16_t)((highByte << 8) | lowByte);
 		}
 
-		if (sampleIndex != maxData){
-			printf("Collected %d\n",sampleIndex);
+		if (sampleIndex < maxData){
 			lsmdata[sampleIndex].gx = dataArray[0];
 			lsmdata[sampleIndex].gy = dataArray[1];
 			lsmdata[sampleIndex].gz = dataArray[2];
@@ -123,18 +118,19 @@ void menu_update() {
 			lsmdata[sampleIndex].my = dataArray[7];
 			lsmdata[sampleIndex].mz = dataArray[8];
 			lsmdata[sampleIndex].T = dataArray[9];
-			sampleIndex++;
-
+			//printf("dataArray [0] %d\n", dataArray[0]);
+			//printf("lsmData gx: %d\n\n", lsmdata[sampleIndex].gx);
 			sensors_pack_raw(&lsmdata[sampleIndex], packet);
-
+			//printf("Packet [0][1] %d , %d", packet[0], packet[1]);
 			// Write to SD
 			//				openlog_writebytes(packet, IMU_PACKET_SIZE);
 			openlog_writebytes(packet, 20);
-
+			sampleIndex++;
 		} else if (sampleIndex == maxData){
 			printf("Data sent\n");
 			currentMenu = MENU_MAIN;
 			sampleIndex = 0; // should be 0
+			//reset_openlog();
 		} else {
 			printf("Error");
 		}
