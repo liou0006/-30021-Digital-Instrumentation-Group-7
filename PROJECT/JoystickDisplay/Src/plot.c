@@ -130,8 +130,14 @@ void plot_fft(lsm9ds1_raw_data_t *samples, sensor_t sensor, axis_t axis) {
 	for (int i = 0; i < N; ++i) x[i].real -= mean;
 
 	// Applying Hann window: w[n] = 0.5 * (1 - cos(2*pi*n/(N-1)))
+//	for (int n = 0; n < N; ++n) {
+//		float w = 0.5f * (1.0f - cosf(2.0f * M_PI * n / (N - 1)));
+//		x[n].real *= w;
+//	}
+
+	// Applying Hamming window: w[n] = 0.54 - 0.46 * cos(2*pi*n/(N-1)))
 	for (int n = 0; n < N; ++n) {
-		float w = 0.5f * (1.0f - cosf(2.0f * M_PI * n / (N - 1)));
+		float w = 0.54f - 0.46 * cosf(2.0f * M_PI * n / (N - 1));
 		x[n].real *= w;
 	}
 
