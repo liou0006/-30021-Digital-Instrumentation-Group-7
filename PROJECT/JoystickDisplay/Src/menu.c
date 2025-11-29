@@ -1,8 +1,9 @@
 #include "menu.h"
-
 #include "joystick.h"
 #include "lcd.h"
 #include "lcd_graphics.h"
+
+#define MAX_DATA 256
 
 // Current menu
 static menu_state_t currentMenu = MENU_MAIN;
@@ -24,10 +25,9 @@ uint8_t rxBufferSize = 20;
 uint8_t rxBuffer[20]; // should be rxBufferSize
 int16_t dataArray[20/2];
 uint16_t sampleIndex = 0;
-uint16_t maxData = 200; // ændre det til 256  (det kan ændres til NUM_SAMPLES som er defineret til 256)
-lsm9ds1_raw_data_t lsmdata[200]; // should be maxData
+uint16_t maxData = MAX_DATA; // ændre det til 256  (det kan ændres til NUM_SAMPLES som er defineret til 256)
+static lsm9ds1_raw_data_t lsmdata[MAX_DATA]; // should be maxData
 uint8_t packet[20]; // should be IMU_PACKET_SIZE
-
 
 void menu_init() {
 	lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
@@ -137,6 +137,9 @@ void menu_update() {
 			sampleIndex = 0; // should be 0
 		} else {
 			printf("Error");
+			lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
+			lcd_write_string((uint8_t *)"Failed to collect data", lcdBuffer, 20, 1);
+			lcd_write_string((uint8_t *)"Please press RESET", lcdBuffer, 20, 2);
 		}
 
 
@@ -219,21 +222,33 @@ void menu_update() {
 			wait = 1;
 		}
 
+		lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
+		// Clear virtual buffer used for displaying graph
 		lcd_clear_buffer(virtualBuffer, LCD_ROWS * VIRTUAL_WIDTH_SIZE);
-		//		draw_new_axis();
 
 		if (FFTmode) {
-			//			plot_fft(currentSensor, currentAxis);
+			// FFT debugging
+//			lsm9ds1_raw_data_t samples[256];
+//			sensors_read_samples(samples, 256);
+//			plot_fft(samples, currentSensor, currentAxis);
+
+			sensors_read_samples(lsmdata, MAX_DATA);
+			plot_fft(lsmdata, currentSensor, currentAxis);
+
+//			plot_fft(currentSensor, currentAxis);
 		} else {
 			// y-axis labels not working debugging
-//			lsm9ds1_raw_data_t samples[NUM_SAMPLES]; // changes
-//			sensors_read_samples(samples, 49);
+//			lsm9ds1_raw_data_t samples[256];
+//			sensors_read_samples(samples, 256);
 //			plot_histogram(samples, currentSensor, currentAxis);
 
+			sensors_read_samples(lsmdata, MAX_DATA);
 			plot_histogram(lsmdata, currentSensor, currentAxis);
+
+//			plot_histogram(lsmdata, currentSensor, currentAxis);
 		}
 
-		update_lcdBuffer();		// Copy visible window to physical LCD buffer
+//		update_lcdBuffer();		// Copy visible window to physical LCD buffer
 		break;
 	}
 }

@@ -2,6 +2,7 @@
 #define _LCD_H_
 
 #include "stm32f30x_conf.h"
+#include <string.h>
 
 #define CHAR_WIDTH 6
 #define LCD_BUFF_SIZE 512

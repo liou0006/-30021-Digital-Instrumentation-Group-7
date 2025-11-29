@@ -30,10 +30,10 @@ int main(void) {
 	menu_init();		// Initialize main menu
 //	initSlaveSPI();
 //	iniPB12();
-	// Initialize SD
+//	// Initialize SD
 //	SystemInit();
 //	SystemCoreClockUpdate();
-//	delay(1000);
+//	delay(1000);		// Can this delay be shorter? It makes it lag when starting up
 
 
 	while(1) {

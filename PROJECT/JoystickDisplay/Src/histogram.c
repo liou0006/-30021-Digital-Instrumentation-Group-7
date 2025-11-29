@@ -4,18 +4,14 @@
 #include <limits.h>
 #include <string.h>
 
-/*
- * Compare function for qsort
- */
+// Compare function for qsort
 static int compare_int16(const void *a, const void *b) {
 	int16_t va = *(const int16_t*)a;
 	int16_t vb = *(const int16_t*)b;
 	return (va > vb) - (va < vb);
 }
 
-/*
- * Computes histogram from the range of min and max bin height value.
- */
+// Computes histogram from the range of min and max bin height value
 void compute_histogram(lsm9ds1_raw_data_t *data, int num_samples,
 		sensor_t sensor, axis_t axis, int num_bins, histogram_result_t *result) {
 
