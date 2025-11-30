@@ -207,15 +207,18 @@ void menu_update() {
 		}
 
 		// Display chosen sensor and corresponding unit and scaling of the values
+		// Note: The unit is the same for FFT and hist right now, but we keep the code
+		// like this in case we need it more customized (after we see more actual data
+		// we can tune it)
 		char headline[24];
 		if (FFTmode) {
-			if (currentSensor == SENSOR_ACCEL) sprintf(headline, "FFT: Accel (ug)");
+			if (currentSensor == SENSOR_ACCEL) sprintf(headline, "FFT: Accel (mg)");
 			else if (currentSensor == SENSOR_GYRO) sprintf(headline, "FFT: Gyro (mdsp)");
-			else sprintf(headline, "FFT: Mag (uGauss)");
+			else sprintf(headline, "FFT: Mag (mGauss)");
 		} else {
-			if (currentSensor == SENSOR_ACCEL) sprintf(headline, "Hist: Accel (ug)");
+			if (currentSensor == SENSOR_ACCEL) sprintf(headline, "Hist: Accel (mg)");
 			else if (currentSensor == SENSOR_GYRO) sprintf(headline, "Hist: Gyro (mdsp)");
-			else sprintf(headline, "Hist: Mag (uGauss)");
+			else sprintf(headline, "Hist: Mag (mGauss)");
 		}
 
 		lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);

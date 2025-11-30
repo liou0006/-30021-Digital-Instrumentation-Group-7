@@ -97,7 +97,11 @@ void compute_graph_layout(bool hist, uint16_t total_graph_width, uint16_t x_base
 			out->x_offset += 4;
 			out->y_axis_offset = 4;
 		} else {
-			out->y_axis_offset = 0;
+//			out->y_axis_offset = 0;
+
+			out->graph_width -= 6;
+			out->x_offset += 6;
+			out->y_axis_offset = 6;
 		}
 	}
 
@@ -172,8 +176,10 @@ void plot_fft(lsm9ds1_raw_data_t *samples, sensor_t sensor, axis_t axis) {
 	}
 
 	// ---------- Drawing FFT bars ----------
+	float max_mag_scaled = max_mag * 1000.0f;
+
 	graph_layout_t layout;
-	compute_graph_layout(false, GRAPH_WIDTH, GRAPH_X_OFFSET, GRAPH_HEIGHT, max_mag, 0, &layout);
+	compute_graph_layout(false, GRAPH_WIDTH, GRAPH_X_OFFSET, GRAPH_HEIGHT, max_mag_scaled, 0, &layout);
 
 	// Draw FFT
 	const uint16_t n_bins = N / 2;
@@ -183,23 +189,23 @@ void plot_fft(lsm9ds1_raw_data_t *samples, sensor_t sensor, axis_t axis) {
 
 		// Scale bar height to usable graph height
 		uint16_t bar_height = 0;
-		if (max_mag > 0.0f) {
-			bar_height = (uint16_t)((amps[k] * (float)layout.usable_height) / max_mag);
+		if (max_mag_scaled > 0.0f) {
+			bar_height = (uint16_t)((amps[k] * (float)layout.usable_height) / max_mag_scaled);
 		}
 
 		uint16_t y_start = graph_y_to_lcd_y(0);
 		uint16_t y_end = graph_y_to_lcd_y(bar_height);
 
 		// Draw vertical line
-//		lcd_draw_vertical_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, x_pos, y_start, y_end);
+		lcd_draw_vertical_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, x_pos, y_start, y_end);
 	}
 
-//	draw_new_axis(layout.y_axis_offset);
+	draw_new_axis(layout.y_axis_offset);
 
 	// Decide number of decimals based on num digits before decimal
 	int decimals;
-	if (max_mag >= 100.0f) decimals = 0;
-	else if (max_mag >= 10.0f) decimals = 1;
+	if (max_mag_scaled >= 100.0f) decimals = 0;
+	else if (max_mag_scaled >= 10.0f) decimals = 1;
 	else decimals = 2;
 
 	for (int t = 0; t <= NUM_Y_TICKS; t++) {
@@ -207,19 +213,19 @@ void plot_fft(lsm9ds1_raw_data_t *samples, sensor_t sensor, axis_t axis) {
 		uint16_t tick_h = (uint16_t)(layout.usable_height * frac);
 		uint16_t tick_y = graph_y_to_lcd_y(tick_h);
 
-//		lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, layout.x_offset - 1, layout.x_offset, tick_y);
+		lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, layout.x_offset - 1, layout.x_offset, tick_y);
 
 		if (tick_h != 0) {
-			float tick_val = max_mag * (float)frac;
+			float tick_val = max_mag_scaled * (float)frac;
 
 			int label_x = (int)layout.x_offset - (int)layout.y_axis_offset;
 			if (label_x < 0) label_x = 0;
 
 			lcd_convert_float_to_char3x5_y_axis(virtualBuffer, VIRTUAL_WIDTH_SIZE, layout.num_digits, tick_val, (uint16_t)label_x, tick_y - 2, decimals);
-			printf("max_mag=%.6  tick_val=%.6f\n", max_mag, tick_val);
+//			printf("max_mag=%.6  tick_val=%.6f\n", max_mag, tick_val);
 		}
 	}
-	printf("\n");
+//	printf("\n");
 
 	// Update lcdBuffer with virtualBuffer content
 	update_lcdBuffer();
