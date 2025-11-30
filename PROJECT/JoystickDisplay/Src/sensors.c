@@ -54,9 +54,6 @@ lsm9ds1_raw_data_t dummy_data[NUM_RAW_SAMPLES] = {
 	{49,     44,     -5,     12936,  -433,   -9687,  447,    1020,   -192,   14}
 };
 
-
-
-
 void sensors_read_samples(lsm9ds1_raw_data_t *data, int n_samples) {
 	if (!data || n_samples <= 0) return;
 
@@ -65,6 +62,33 @@ void sensors_read_samples(lsm9ds1_raw_data_t *data, int n_samples) {
 		// Cycle through dummy data (we only copy the number of data samples we have into it.
 		data[i] = dummy_data[i % NUM_RAW_SAMPLES];
 	}
+}
+
+
+// int16_t has range -32768 to +32767 but we map to +/-32767
+#define ACCEL_SCALE_FACTOR_G_PER_LSB (2.0f / 32767.0f)
+#define GYRO_SCALE_FACTOR_DSP_PER_LSB (245.0f / 32767.0f)
+#define MAGNET_SCALE_FACTOR_GAUSS_PER_LSB (4.0f / 32767.0f)
+
+float get_scale_factor(sensor_t sensor) {
+	if (sensor == SENSOR_ACCEL) {
+		return ACCEL_SCALE_FACTOR_G_PER_LSB;
+	} else if (sensor == SENSOR_GYRO) {
+		return GYRO_SCALE_FACTOR_DSP_PER_LSB;
+	} else if (sensor == SENSOR_MAGNET) {
+		return MAGNET_SCALE_FACTOR_GAUSS_PER_LSB;
+	}
+
+	// Should be done smarter but just to display values we do it hardcoded
+//	if (sensor == SENSOR_ACCEL) {
+//		return ACCEL_SCALE_FACTOR_G_PER_LSB * 1000000.0f;
+//	} else if (sensor == SENSOR_GYRO) {
+//		return GYRO_SCALE_FACTOR_DSP_PER_LSB * 1000.0f;
+//	} else if (sensor == SENSOR_MAGNET) {
+//		return MAGNET_SCALE_FACTOR_GAUSS_PER_LSB * 1000000.0f;
+//	}
+
+	return 1.0f;	// Default no scale
 }
 
 int16_t get_data_val(lsm9ds1_raw_data_t *data, int i, sensor_t sensor,

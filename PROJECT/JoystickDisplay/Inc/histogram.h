@@ -10,8 +10,8 @@
 #define HIST_MAX_BINS 128
 
 typedef struct {
-	int16_t min_val;
-	int16_t max_val;
+	float min_val;
+	float max_val;
 	float bin_width;
 	int num_bins;
 	int *bin_counts;

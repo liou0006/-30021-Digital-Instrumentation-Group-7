@@ -1,5 +1,4 @@
 #include "manual_fft.h"
-
 #include <math.h>
 #include <string.h>
 #include <stdio.h>

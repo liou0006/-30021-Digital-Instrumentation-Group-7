@@ -87,8 +87,13 @@ void compute_graph_layout(bool hist, uint16_t total_graph_width, uint16_t x_base
 	} else {
 		// FFT float label
 		if (digits_before >= 3) {
-			if (out->graph_width > 4) out->graph_width -= 4;
-			else out->graph_width = 0;
+			// Prevent making graph wider several times
+//			if (out->graph_width > 4) {
+//				out->graph_width -= 4;
+//			} else {
+//				out->graph_width = 0;
+//			}
+			out->graph_width -= 4;
 			out->x_offset += 4;
 			out->y_axis_offset = 4;
 		} else {
@@ -114,9 +119,12 @@ void plot_fft(lsm9ds1_raw_data_t *samples, sensor_t sensor, axis_t axis) {
 	static complex_t x[N_FFT];
 	const uint16_t N = N_FFT;
 
+	// Find scale factor based on sensor type
+	float scale_factor = get_scale_factor(sensor);
+
 	// Extract data for chosen sensor and axis
 	for (int i = 0; i < N; i++) {
-		x[i].real = (float)get_data_val(samples, i, sensor, axis);
+		x[i].real = (float)get_data_val(samples, i, sensor, axis) * scale_factor;
 		x[i].imag = 0.0f;
 	}
 
@@ -130,16 +138,16 @@ void plot_fft(lsm9ds1_raw_data_t *samples, sensor_t sensor, axis_t axis) {
 	for (int i = 0; i < N; ++i) x[i].real -= mean;
 
 	// Applying Hann window: w[n] = 0.5 * (1 - cos(2*pi*n/(N-1)))
-//	for (int n = 0; n < N; ++n) {
-//		float w = 0.5f * (1.0f - cosf(2.0f * M_PI * n / (N - 1)));
-//		x[n].real *= w;
-//	}
-
-	// Applying Hamming window: w[n] = 0.54 - 0.46 * cos(2*pi*n/(N-1)))
 	for (int n = 0; n < N; ++n) {
-		float w = 0.54f - 0.46 * cosf(2.0f * M_PI * n / (N - 1));
+		float w = 0.5f * (1.0f - cosf(2.0f * M_PI * n / (N - 1)));
 		x[n].real *= w;
 	}
+
+	// Applying Hamming window: w[n] = 0.54 - 0.46 * cos(2*pi*n/(N-1)))
+//	for (int n = 0; n < N; ++n) {
+//		float w = 0.54f - 0.46 * cosf(2.0f * M_PI * n / (N - 1));
+//		x[n].real *= w;
+//	}
 
 	// ---------- FFT and magnitude computations ----------
 	// Perform Fast Fourier Transform of x
@@ -150,7 +158,7 @@ void plot_fft(lsm9ds1_raw_data_t *samples, sensor_t sensor, axis_t axis) {
 	for (uint16_t k = 0; k < N/2; k++) {	// Compute magnitude (only positive frequency)
 		float re = x[k].real;
 		float im = x[k].imag;
-		float mag = re*re + im*im;
+		float mag = sqrtf(re*re + im*im);
 
 		// Normalize to get amplitude for real input
 		// For 0 and Nyquist use 1/N, otherwise scale by 2/N
@@ -169,7 +177,6 @@ void plot_fft(lsm9ds1_raw_data_t *samples, sensor_t sensor, axis_t axis) {
 
 	// Draw FFT
 	const uint16_t n_bins = N / 2;
-
 	for (uint16_t k = 0; k < n_bins; k++) {
 		// Map k to x px inside usable graph width
 		uint16_t x_pos = layout.x_offset + (uint16_t)((float)k * layout.usable_width / n_bins);
@@ -184,10 +191,35 @@ void plot_fft(lsm9ds1_raw_data_t *samples, sensor_t sensor, axis_t axis) {
 		uint16_t y_end = graph_y_to_lcd_y(bar_height);
 
 		// Draw vertical line
-		lcd_draw_vertical_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, x_pos, y_start, y_end);
+//		lcd_draw_vertical_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, x_pos, y_start, y_end);
 	}
 
-	draw_new_axis(layout.y_axis_offset);
+//	draw_new_axis(layout.y_axis_offset);
+
+	// Decide number of decimals based on num digits before decimal
+	int decimals;
+	if (max_mag >= 100.0f) decimals = 0;
+	else if (max_mag >= 10.0f) decimals = 1;
+	else decimals = 2;
+
+	for (int t = 0; t <= NUM_Y_TICKS; t++) {
+		float frac = (float)t / (float)NUM_Y_TICKS;
+		uint16_t tick_h = (uint16_t)(layout.usable_height * frac);
+		uint16_t tick_y = graph_y_to_lcd_y(tick_h);
+
+//		lcd_draw_horizontal_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, layout.x_offset - 1, layout.x_offset, tick_y);
+
+		if (tick_h != 0) {
+			float tick_val = max_mag * (float)frac;
+
+			int label_x = (int)layout.x_offset - (int)layout.y_axis_offset;
+			if (label_x < 0) label_x = 0;
+
+			lcd_convert_float_to_char3x5_y_axis(virtualBuffer, VIRTUAL_WIDTH_SIZE, layout.num_digits, tick_val, (uint16_t)label_x, tick_y - 2, decimals);
+			printf("max_mag=%.6  tick_val=%.6f\n", max_mag, tick_val);
+		}
+	}
+	printf("\n");
 
 	// Update lcdBuffer with virtualBuffer content
 	update_lcdBuffer();
@@ -195,7 +227,7 @@ void plot_fft(lsm9ds1_raw_data_t *samples, sensor_t sensor, axis_t axis) {
 
 void plot_histogram(lsm9ds1_raw_data_t* samples,sensor_t sensor, axis_t axis) {
 	// Compute histogram
-	int num_bins = 10;	// Fixed number of bins
+	int num_bins = 7;	// Fixed number of bins
 	histogram_result_t hist;
 	compute_histogram(samples, NUM_SAMPLES, sensor, axis, num_bins, &hist);
 
@@ -233,6 +265,12 @@ void plot_histogram(lsm9ds1_raw_data_t* samples,sensor_t sensor, axis_t axis) {
 	// Draw axes
 	draw_new_axis(layout.y_axis_offset);
 
+	// Decide number of decimals based on num digits before decimal
+	int decimals;
+	if (hist.max_bin_height >= 100.0f) decimals = 0;
+	else if (hist.max_bin_height >= 10.0f) decimals = 1;
+	else decimals = 2;
+
 	// Draw y-axis ticks and labels
 	for (int t = 0; t <= NUM_Y_TICKS; t++) {
 		float height_frac = (float)t / NUM_Y_TICKS;
@@ -254,10 +292,12 @@ void plot_histogram(lsm9ds1_raw_data_t* samples,sensor_t sensor, axis_t axis) {
 	// Draw x-axis ticks and labels
 	for (int b = 0; b <= hist.num_bins; b++) {
 		uint16_t x = layout.x_offset + b * layout.bar_width;
-		float val = hist.min_val + (b * hist.bin_width);	// Actual measurement value
 
-		// Draw tick label
-		lcd_convert_int_to_char3x5_x_axis(virtualBuffer, VIRTUAL_WIDTH_SIZE, (int)val, x, 27);
+		// Actual measurement value (scaled by e+3 to display)
+		float val = (hist.min_val + (b * hist.bin_width)) * 1000.0f;
+
+		// Draw scaled tick value label
+		lcd_convert_float_to_char3x5_x_axis(virtualBuffer, VIRTUAL_WIDTH_SIZE, val, x, 27, decimals);
 	}
 
 	free(hist.bin_counts);

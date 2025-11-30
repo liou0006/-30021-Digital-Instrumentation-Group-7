@@ -30,6 +30,8 @@ typedef struct {
 } lsm9ds1_raw_data_t;
 
 void sensors_read_samples(lsm9ds1_raw_data_t *data, int n_samples);
+
+float get_scale_factor(sensor_t sensor);
 int16_t get_data_val(lsm9ds1_raw_data_t *data, int i, sensor_t sensor,
 		axis_t axis);
 

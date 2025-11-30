@@ -1,6 +1,8 @@
 #include "lcd_graphics.h"
 
 #include "adc.h"
+#include <stdio.h>
+#include <math.h>
 
 /***********************************************************
  * Constants (local)
@@ -83,12 +85,6 @@ void lcd_draw_vertical_line(uint8_t *buffer, uint16_t buff_width, uint16_t x, ui
 	}
 }
 
-void lcd_draw_fft_mag(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t mag) {
-//	uint16_t x_min = 5, x_max = buff_width - 1, y_length_max = 26;
-//
-//	if (x >= buff_width) return;
-}
-
 /*
  * Draws a horizontal line at y which goes from x_start to x_end.
  * Specify the buffer width and the function works for both the
@@ -125,6 +121,13 @@ void lcd_draw_char3x5(uint8_t *buffer, uint16_t buff_width, uint16_t x, uint16_t
 				if (bits & (1 << row)) {
 					lcd_draw_pixel(buffer, buff_width, x + col, y + row);
 				}
+			}
+		}
+	} else if (c == '.') {
+		uint16_t bits = 0x10;
+		for (uint16_t row = 0; row < 5; row++) {
+			if (bits & (1 << row)) {
+				lcd_draw_pixel(buffer, buff_width, x, y + row);
 			}
 		}
 	}
@@ -228,6 +231,123 @@ void lcd_convert_int_to_char3x5_x_axis(uint8_t *buffer, uint16_t buff_width, int
 	for (int i = idx - 1; i >= 0; i--) {
 		lcd_draw_char3x5(buffer, buff_width, x - digit_offset, y, str[i]);
 		x += 4;		// Move right by width of char + 1 px
+	}
+}
+
+void lcd_convert_float_to_char3x5_y_axis(uint8_t *buffer, uint16_t buff_width,
+		int max_num_digits, float val, uint16_t x, uint16_t y, int decimals) {
+	// Sanity constraint
+	if (max_num_digits < 1) max_num_digits = 1;
+	if (decimals < 0) decimals = 0;
+	if (!buffer) return;
+
+	// Format float into string using given decimals
+	// Rounding provided by snprintf
+	char str[12];
+	if (decimals == 0) {
+		snprintf(str, sizeof(str), "%.0f", val);
+	} else {
+		char fmt[8];
+		snprintf(fmt, sizeof(fmt), "%%.%df", decimals);
+		snprintf(str, sizeof(str), fmt, val);
+	}
+
+	// Trim leading spaces if they exists
+	char *s = str;
+	while (*s == ' ') s++;
+
+	// Compute px width of formatted label
+	int label_px_width = 0;
+	size_t len = strlen(s);
+	for (size_t i = 0; i < len; ++i) {
+		char c = s[i];
+		if (c == '.') label_px_width += DOT_WIDTH;
+		else label_px_width += DIGIT_WIDTH;
+		if (i + 1 < len) label_px_width += CHAR_SPACING;
+	}
+
+	int reserved_px = max_num_digits * DIGIT_WIDTH;
+	if (max_num_digits > 1) reserved_px += (max_num_digits - 1) * CHAR_SPACING;
+
+	int start_x = x + reserved_px - label_px_width;
+	if (start_x < (int)x) start_x = (int)x;
+
+	int cur_x = start_x;
+	for (size_t i = 0; i < len; ++i) {
+		char c = s[i];
+		/* Draw char (lcd_draw_char3x5 expects an ASCII char) */
+		lcd_draw_char3x5(buffer, buff_width, (uint16_t)cur_x, y, c);
+
+		/* Advance cur_x by this char's pixel width + spacing (if not last char) */
+		if (c == '.') cur_x += DOT_WIDTH;
+		else cur_x += DIGIT_WIDTH;
+
+		if (i + 1 < len) cur_x += CHAR_SPACING;
+	}
+}
+
+
+
+void lcd_convert_float_to_char3x5_x_axis(uint8_t *buffer, uint16_t buff_width,
+		float val, uint16_t x, uint16_t y, int decimals) {
+	// Sanity constraint
+	if (decimals < 0) decimals = 0;
+	if (!buffer) return;
+
+	// Format float into string using given decimals
+	// Rounding provided by snprintf (also handles negative values)
+	char str[12];
+	if (decimals == 0) {
+		snprintf(str, sizeof(str), "%.0f", val);
+	} else {
+		char fmt[8];
+		snprintf(fmt, sizeof(fmt), "%%.%df", decimals);
+		snprintf(str, sizeof(str), fmt, val);
+	}
+
+	// Trim leading spaces if they exists
+	char *s = str;
+	while (*s == ' ') s++;
+
+	// Compute px width of formatted label
+	int label_px_width = 0;
+	size_t len = strlen(s);
+	for (size_t i = 0; i < len; ++i) {
+		char c = s[i];
+		if (c == '.') {
+			// Character has 1 px width
+			label_px_width += DOT_WIDTH;
+		} else {
+			// Standard characters have 3 px width
+			label_px_width += DIGIT_WIDTH;
+		}
+
+		// Add spacing if not last character
+		if (i + 1 < len) label_px_width += CHAR_SPACING;
+	}
+
+	// ---------- Center value around middle pixel ----------
+	// Input x is the center point for the label
+	int half_width = label_px_width / 2;
+	int x_start = (int)x - half_width;
+
+	// Ensuring drawing label is within graph limit (only for left side)
+	if (x_start < 0) x_start = 0;
+
+	// ---------- Draw characters ----------
+	int cur_x = x_start;
+	for (size_t i = 0; i < len; ++i) {
+		char c = s[i];
+
+		// Draw char
+		lcd_draw_char3x5(buffer, buff_width, (uint16_t)cur_x, y, c);
+
+		// Advance cur_x by the char's px width
+		if (c == '.') cur_x += DOT_WIDTH;
+		else cur_x += DIGIT_WIDTH;
+
+		// Add spacing if not last character
+		if (i + 1 < len) cur_x += CHAR_SPACING;
 	}
 }
 

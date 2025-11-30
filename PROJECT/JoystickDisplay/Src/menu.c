@@ -58,7 +58,7 @@ void menu_update() {
 			sel++;
 			wait = 1;
 		} else if (joystick == CENTER) {
-			sel_main = sel;		// Save main menu cursor
+			sel_main = sel;			// Save main menu cursor
 
 			if (sel == 0) {
 				currentMenu = MENU_COLLECT;
@@ -178,7 +178,7 @@ void menu_update() {
 		}
 
 		lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
-		lcd_write_string((uint8_t*)(FFTmode ? "FFT: Select Sensor" : "Hist.: Select Sensor"), lcdBuffer, 0, 0);
+		lcd_write_string((uint8_t*)(FFTmode ? "FFT: Select Sensor" : "Hist: Select Sensor"), lcdBuffer, 0, 0);
 		lcd_write_string((uint8_t *)(sel == 0 ? ">Accelerometer" : " Accelerometer"), lcdBuffer, 0, 1);
 		lcd_write_string((uint8_t *)(sel == 1 ? ">Gyroscope" : " Gyroscope"), lcdBuffer, 0, 2);
 		lcd_write_string((uint8_t *)(sel == 2 ? ">Magnetometer" : " Magnetometer"), lcdBuffer, 0, 3);
@@ -206,8 +206,21 @@ void menu_update() {
 			wait = 1;
 		}
 
+		// Display chosen sensor and corresponding unit and scaling of the values
+		char headline[24];
+		if (FFTmode) {
+			if (currentSensor == SENSOR_ACCEL) sprintf(headline, "FFT: Accel (ug)");
+			else if (currentSensor == SENSOR_GYRO) sprintf(headline, "FFT: Gyro (mdsp)");
+			else sprintf(headline, "FFT: Mag (uGauss)");
+		} else {
+			if (currentSensor == SENSOR_ACCEL) sprintf(headline, "Hist: Accel (ug)");
+			else if (currentSensor == SENSOR_GYRO) sprintf(headline, "Hist: Gyro (mdsp)");
+			else sprintf(headline, "Hist: Mag (uGauss)");
+		}
+
 		lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
-		lcd_write_string((uint8_t*)(FFTmode ? "FFT: Select Axis" : "Hist.: Select Axis"), lcdBuffer, 0, 0);
+//		lcd_write_string((uint8_t*)(FFTmode ? "FFT: Axis" : "Hist.: Axis"), lcdBuffer, 0, 0);
+		lcd_write_string((uint8_t*)headline, lcdBuffer, 0, 0);
 		lcd_write_string((uint8_t*)(sel == 0 ? ">X" : " X"), lcdBuffer, 0, 1);
 		lcd_write_string((uint8_t*)(sel == 1 ? ">Y" : " Y"), lcdBuffer, 0, 2);
 		lcd_write_string((uint8_t*)(sel == 2 ? ">Z" : " Z"), lcdBuffer, 0, 3);

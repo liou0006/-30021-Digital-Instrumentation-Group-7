@@ -1,14 +1,16 @@
 #include "histogram.h"
-
+#include <math.h>
 #include <stdint.h>
 #include <limits.h>
 #include <string.h>
 
 // Compare function for qsort
-static int compare_int16(const void *a, const void *b) {
-	int16_t va = *(const int16_t*)a;
-	int16_t vb = *(const int16_t*)b;
-	return (va > vb) - (va < vb);
+static int compare_float(const void *a, const void *b) {
+	float va = *(const float*)a;
+	float vb = *(const float*)b;
+	if (va > vb) return 1;
+	if (va < vb) return -1;
+	return 0;
 }
 
 // Computes histogram from the range of min and max bin height value
@@ -21,14 +23,18 @@ void compute_histogram(lsm9ds1_raw_data_t *data, int num_samples,
 	// text overlap for num_bins = 16
 	if (sensor == SENSOR_GYRO && axis == AXIS_Z) num_bins -= 2;
 
-	// Extract values
-	int16_t *vals = malloc(num_samples * sizeof(int16_t));
+	// ---------- Data extraction ----------
+	// Find scale factor based on sensor type
+	float scale_factor = get_scale_factor(sensor);
+
+	// Extract data for chosen sensor and axis
+	float *vals = malloc(num_samples * sizeof(float));
 	for (int i = 0; i < num_samples; i++) {
-		vals[i] = get_data_val(data, i, sensor, axis);
+		vals[i] = (float)get_data_val(data, i, sensor, axis) * scale_factor;
 	}
 
 	// Sort using qsort
-	qsort(vals, num_samples, sizeof(int16_t), compare_int16);
+	qsort(vals, num_samples, sizeof(float), compare_float);
 
 	// Percentile-based min/max
 	float lower_p = 0.05f;
@@ -40,31 +46,34 @@ void compute_histogram(lsm9ds1_raw_data_t *data, int num_samples,
 	if (idx_min < 0) idx_min = 0;
 	if (idx_max >= num_samples) idx_max = num_samples - 1;
 
-	int16_t min_val = vals[idx_min];
-	int16_t max_val = vals[idx_max];
+	float min_val = vals[idx_min];
+	float max_val = vals[idx_max];
 
 	free(vals);
 
 	result->min_val = min_val;
 	result->max_val = max_val;
 	result->num_bins = num_bins;
-	result->bin_width = (float)(max_val - min_val + 1) / num_bins;
+
+	// Ensure range is not zero
+	float range = max_val - min_val;
+	if (range <= 0.0f) {
+		// Prevent division by zero by forcing a small range
+		range = 10.0f * scale_factor;
+	}
+	result->bin_width = range / num_bins;
 
 	// Allocate histogram bins
 	result->bin_counts = calloc(num_bins, sizeof(int));
 
 	// Fill bins (outliers go into edge bins)
 	for (int i = 0; i < num_samples; i++) {
-		int16_t v = get_data_val(data, i, sensor, axis);
+		float v = (float)get_data_val(data, i, sensor, axis) * scale_factor;
 
 		int index;
-
-		if (v <= min_val)
-			index = 0;
-		else if (v >= max_val)
-			index = num_bins - 1;
-		else
-			index = (int)((v - min_val) / result->bin_width);
+		if (v <= min_val) index = 0;
+		else if (v >= max_val) index = num_bins - 1;
+		else index = (int)floorf((v - min_val) / result->bin_width);
 
 		if (index < 0) index = 0;
 		if (index >= num_bins) index = num_bins - 1;
