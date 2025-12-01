@@ -1,12 +1,9 @@
 #include "lcd_graphics.h"
-
 #include "adc.h"
 #include <stdio.h>
 #include <math.h>
 
-/***********************************************************
- * Constants (local)
- ***********************************************************/
+// ---------- Local constants ----------
 // 3x5 fonts for digits '0'-'9'
 const uint8_t font3x5[][3] = {
 		{0x1F, 0x11, 0x1F},	// 0
@@ -29,9 +26,7 @@ const uint16_t graph_x_end = VIRTUAL_WIDTH_SIZE - 2 - GRAPH_MARGIN_RIGHT;
 const uint16_t graph_y_bottom = LCD_HEIGHT - 1 - GRAPH_MARGIN_BOTTOM;
 const uint16_t graph_y_top = GRAPH_MARGIN_TOP;
 
-/***********************************************************
- * Functions
- ********************Y***************************************/
+// ---------- Functions ----------
 void lcd_clear_buffer(uint8_t *buffer, uint16_t buff_size) {
 	memset(buffer, 0x00, buff_size);
 }
@@ -267,21 +262,20 @@ void lcd_convert_float_to_char3x5_y_axis(uint8_t *buffer, uint16_t buff_width,
 	}
 
 	int reserved_px = (max_num_digits * DIGIT_WIDTH) + 1;
-//	if (max_num_digits > 1) reserved_px += (max_num_digits - 1) * CHAR_SPACING;
-//
 	int start_x = x + reserved_px - label_px_width;
-//	if (start_x < (int)x) start_x = (int)x;
 
 	int cur_x = start_x;
 	for (size_t i = 0; i < len; ++i) {
 		char c = s[i];
-		/* Draw char (lcd_draw_char3x5 expects an ASCII char) */
+
+		// Draw char
 		lcd_draw_char3x5(buffer, buff_width, (uint16_t)cur_x, y, c);
 
-		/* Advance cur_x by this char's pixel width + spacing (if not last char) */
+		// Advance cur_x by the char's px width
 		if (c == '.') cur_x += DOT_WIDTH;
 		else cur_x += DIGIT_WIDTH;
 
+		// Add spacing if not last character
 		if (i + 1 < len) cur_x += CHAR_SPACING;
 	}
 }

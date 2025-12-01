@@ -54,38 +54,3 @@ void compute_fft(complex_t *x, uint16_t N) {
 }
 
 
-
-//// Compute FFT and positive frequency magnitudes
-//void compute_fft(lsm9ds1_raw_data_t *samples, int num_samples,
-//		sensor_t sensor, axis_t axis, fft_result_t *fft_result) {
-//
-//	// Extract values
-//	for (int k = 0; k < num_samples; k++) {
-//		fft_result->x_in[k].real = get_data_val(samples, k, sensor, axis);
-//		fft_result->x_in[k].imag = 0.0f;
-//	}
-//
-//	for (int k = 0; k < num_samples; k++) {
-//		fft_result->x_out[k].real = 0.0f;
-//		fft_result->x_out[k].imag = 0.0f;
-//		for (int n = 0; n < num_samples; n++) {
-//			float angle = -2.0f * M_PI * n * k / num_samples;
-//			fft_result->x_out[k].real += fft_result->x_in[k].real * cosf(angle);
-//		}
-//	}
-//
-//	// Compute magnitudes for positive frequencies [0 .. FFT_SIZE/2-1]
-//	float max_mag = 0.0f;
-//	for (int k = 0; k < num_samples/2; k++) {
-//		float re = fft_result->x_out[k].real;
-//		float im = fft_result->x_out[k].imag;
-//		fft_result->mags[k] = sqrtf(re*re + im*im);
-//
-//		// Update maximum magnitude
-//		if (fft_result->mags[k] > max_mag) max_mag = fft_result->mags[k];
-//	}
-//	fft_result->max_mag = max_mag;
-//}
-
-
-

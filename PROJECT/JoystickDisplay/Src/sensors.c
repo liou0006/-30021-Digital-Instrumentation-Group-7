@@ -1,8 +1,10 @@
 #include "sensors.h"
 
+// ---------- Data used to test when can't receive data ----------
 // Moving up and down x-axis
 #define NUM_RAW_SAMPLES 49
 lsm9ds1_raw_data_t dummy_data[NUM_RAW_SAMPLES] = {
+//	 gx		 gy		 gz		 ax		 ay		 az		 mx		 my		 mz		 T
 	{46,     42,     -2,     12836,  -346,   -9652,  439,    1022,   -193,   14},
 	{44,     45,     0,      13003,  -329,   -9569,  444,    1026,   -173,   14},
 	{46,     43,     4,      12843,  -400,   -9643,  443,    1027,   -162,   14},
@@ -65,6 +67,8 @@ void sensors_read_samples(lsm9ds1_raw_data_t *data, int n_samples) {
 }
 
 
+// ---------- Data extraction and scaling ----------
+
 // int16_t has range -32768 to +32767 but we map to +/-32767
 #define ACCEL_SCALE_FACTOR_G_PER_LSB (2.0f / 32767.0f)
 #define GYRO_SCALE_FACTOR_DSP_PER_LSB (245.0f / 32767.0f)
@@ -78,15 +82,6 @@ float get_scale_factor(sensor_t sensor) {
 	} else if (sensor == SENSOR_MAGNET) {
 		return MAGNET_SCALE_FACTOR_GAUSS_PER_LSB;
 	}
-
-	// Should be done smarter but just to display values we do it hardcoded
-//	if (sensor == SENSOR_ACCEL) {
-//		return ACCEL_SCALE_FACTOR_G_PER_LSB * 1000000.0f;
-//	} else if (sensor == SENSOR_GYRO) {
-//		return GYRO_SCALE_FACTOR_DSP_PER_LSB * 1000.0f;
-//	} else if (sensor == SENSOR_MAGNET) {
-//		return MAGNET_SCALE_FACTOR_GAUSS_PER_LSB * 1000000.0f;
-//	}
 
 	return 1.0f;	// Default no scale
 }

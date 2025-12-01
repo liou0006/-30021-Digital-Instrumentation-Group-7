@@ -15,6 +15,7 @@
 
 // y-axis label (is essentially 5 since it has [0 %, 25 %, 50 %, 75 %, 100 %]
 #define NUM_Y_TICKS 4
+#define NUM_X_TICKS 10	// ex. [0 50 100 150 200 Hz]
 
 // FFT specific
 #define N_FFT 256	// Needs to be power of 2 and correspond to LSM9DS1 num samples
@@ -87,18 +88,10 @@ void compute_graph_layout(bool hist, uint16_t total_graph_width, uint16_t x_base
 	} else {
 		// FFT float label
 		if (digits_before >= 3) {
-			// Prevent making graph wider several times
-//			if (out->graph_width > 4) {
-//				out->graph_width -= 4;
-//			} else {
-//				out->graph_width = 0;
-//			}
 			out->graph_width -= 4;
 			out->x_offset += 4;
 			out->y_axis_offset = 4;
 		} else {
-//			out->y_axis_offset = 0;
-
 			out->graph_width -= 6;
 			out->x_offset += 6;
 			out->y_axis_offset = 6;
@@ -190,7 +183,7 @@ void plot_fft(lsm9ds1_raw_data_t *samples, sensor_t sensor, axis_t axis) {
 		// Scale bar height to usable graph height
 		uint16_t bar_height = 0;
 		if (max_mag_scaled > 0.0f) {
-			bar_height = (uint16_t)((amps[k] * (float)layout.usable_height) / max_mag_scaled);
+			bar_height = (uint16_t)((amps[k] * 1000.0f * (float)layout.usable_height) / max_mag_scaled);
 		}
 
 		uint16_t y_start = graph_y_to_lcd_y(0);
@@ -202,12 +195,14 @@ void plot_fft(lsm9ds1_raw_data_t *samples, sensor_t sensor, axis_t axis) {
 
 	draw_new_axis(layout.y_axis_offset);
 
+	// ---------- Drawing axes ticks and labels ----------
 	// Decide number of decimals based on num digits before decimal
 	int decimals;
 	if (max_mag_scaled >= 100.0f) decimals = 0;
 	else if (max_mag_scaled >= 10.0f) decimals = 1;
 	else decimals = 2;
 
+	// Draw y-axis ticks and labels
 	for (int t = 0; t <= NUM_Y_TICKS; t++) {
 		float frac = (float)t / (float)NUM_Y_TICKS;
 		uint16_t tick_h = (uint16_t)(layout.usable_height * frac);
@@ -222,10 +217,27 @@ void plot_fft(lsm9ds1_raw_data_t *samples, sensor_t sensor, axis_t axis) {
 			if (label_x < 0) label_x = 0;
 
 			lcd_convert_float_to_char3x5_y_axis(virtualBuffer, VIRTUAL_WIDTH_SIZE, layout.num_digits, tick_val, (uint16_t)label_x, tick_y - 2, decimals);
-//			printf("max_mag=%.6  tick_val=%.6f\n", max_mag, tick_val);
 		}
 	}
-//	printf("\n");
+
+	// Draw x-axis ticks and labels
+	for (int t = 0; t <= NUM_X_TICKS; t++) {
+		float frac = (float)t / (float)NUM_X_TICKS;
+		uint16_t bin = (uint16_t)(frac * (float)n_bins - 1);
+
+		// Frequency for bin (fk = k * Fs / N)
+		float freq = (SAMPLING_FREQ_HZ * bin) / (float)N_FFT;
+
+		// Compute x px coordinate
+		uint16_t x_pos = layout.x_offset + (uint16_t)(frac * layout.usable_width);
+
+		// Draw tick mark
+		uint16_t y_start = graph_y_to_lcd_y(0);
+		lcd_draw_vertical_line(virtualBuffer, VIRTUAL_WIDTH_SIZE, x_pos, y_start, y_start + 1);
+
+		// Draw scaled label
+		lcd_convert_float_to_char3x5_x_axis(virtualBuffer, VIRTUAL_WIDTH_SIZE, freq, x_pos, LCD_HEIGHT - 1 - 4, 0);
+	}
 
 	// Update lcdBuffer with virtualBuffer content
 	update_lcdBuffer();

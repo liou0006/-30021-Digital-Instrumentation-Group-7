@@ -19,6 +19,5 @@ void lcd_reset();
 void generate_line_buff(uint8_t * str, uint8_t * linebuff, uint16_t bufflen);
 void write_line_buff(uint8_t * linebuff, uint8_t * lcdbuff, uint8_t xoffset, uint8_t yoffset, uint8_t scrollena);
 void lcd_write_string(uint8_t * str, uint8_t * lcdBuff, uint8_t xoffset, uint8_t yoffset);
-void lcd_init_and_print(void);
 
 #endif /*! _LCD_H_ */
