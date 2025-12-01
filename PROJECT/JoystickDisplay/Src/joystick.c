@@ -25,7 +25,6 @@ void initJoystick(){
 	GPIO_Init(GPIOC, &GPIO_InitStructAll);
 }
 
-
 uint8_t readJoystickState() {
 	// Initialize joystick state variable
 	uint8_t state = 0;
@@ -39,46 +38,3 @@ uint8_t readJoystickState() {
 
 	return state;
 }
-
-// Not used so commented out for now
-//void handleJoystick() {
-//	static int8_t current_state = 0;
-//	int8_t next_state = readJoystickState();
-//
-////	printf("next state = %d\n", next_state);
-//
-//	if (next_state != current_state) {
-//		switch(next_state) {
-//		default:
-//			setLed('d');
-//			break;
-//
-//		case 0x1:
-//			setLed('r');
-//			printf("UP (red)\n");
-//			break;
-//
-//		case 0x2:
-//			setLed('g');
-//			printf("DOWN (green)\n");
-//			break;
-//
-//		case 0x4:
-//			setLed('b');
-//			printf("LEFT (blue)\n");
-//			break;
-//
-//		case 0x8:
-//			setLed('c');
-//			printf("RIGHT (cyan)\n");
-//			break;
-//
-//		case 0x10:
-//			setLed('m');
-//			printf("CENTER (magenta)\n");
-//			break;
-//		}
-//
-//		current_state = next_state;
-//	}
-//}

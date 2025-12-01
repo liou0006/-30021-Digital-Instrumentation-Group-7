@@ -6,6 +6,9 @@
 
 #include <stdint.h>
 
+// LSM9DS1 sampling frequency
+#define SAMPLING_FREQ_HZ 100.0f	// NEEDS TO BE UPDATED WITH ACTUAL SAMPLING FREQ!
+
 typedef enum {
 	SENSOR_ACCEL,
 	SENSOR_GYRO,
@@ -28,6 +31,8 @@ typedef struct {
 void sensors_pack_raw(const lsm9ds1_raw_data_t *s, uint8_t out[20]);
 
 void sensors_read_samples(lsm9ds1_raw_data_t *data, int n_samples);
+
+float get_scale_factor(sensor_t sensor);
 int16_t get_data_val(lsm9ds1_raw_data_t *data, int i, sensor_t sensor,
 		axis_t axis);
 

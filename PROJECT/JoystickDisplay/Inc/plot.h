@@ -7,10 +7,9 @@
 #include <stdlib.h>
 #include "sensors.h"
 
-#define NUM_SAMPLES 50 // Need to use this instead of sizeof(samples)
+#define NUM_SAMPLES 256 // Need to use this instead of sizeof(samples)
 
-void plot_fft(sensor_t sensor, axis_t axis);
-//void plot_histogram(sensor_t sensor, axis_t axis);
-void plot_histogram(lsm9ds1_raw_data_t* samples,sensor_t sensor, axis_t axis);
+void plot_fft(lsm9ds1_raw_data_t *samples, sensor_t sensor, axis_t axis);
+void plot_histogram(lsm9ds1_raw_data_t *samples,sensor_t sensor, axis_t axis);
 
 #endif /* PLOT_H_ */

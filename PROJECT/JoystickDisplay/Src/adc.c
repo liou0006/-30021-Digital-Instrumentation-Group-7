@@ -1,13 +1,8 @@
 #include "ADC.h"
 
 void ADC_setup_PA(void) {
-
     RCC_ADCCLKConfig(RCC_ADC12PLLCLK_Div8);
-
-
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_ADC12, ENABLE);
-
-
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
     GPIO_InitTypeDef gpio;
     GPIO_StructInit(&gpio);
@@ -34,7 +29,6 @@ void ADC_setup_PA(void) {
     while (!ADC_GetFlagStatus(ADC1, ADC_FLAG_RDY)) {}
 	ADC_VoltageRegulatorCmd(ADC1,ENABLE);
 	for(uint32_t i = 0; i<10000;i++);
-
 
     ADC_Cmd(ADC1, DISABLE);
     while (ADC_GetDisableCmdStatus(ADC1)) {}

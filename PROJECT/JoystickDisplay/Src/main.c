@@ -24,48 +24,20 @@ int main(void) {
 	SystemInit();
 	SystemCoreClockUpdate();
 	init_uart(115200); // Initialize UART3 for writing to SD
-    delay(1000);
-	// Initialize Origin
+  delay(1000);       // Can this delay be shorter? It makes it lag when starting up
+  
+	// Initialize joystick, LCD, ADC, and menu
 	initJoystick();		// Enabling GPIO pins for joystick
 	init_spi_lcd();		// Initialize SPI for LCD
 	ADC_setup_PA();		// Enabling GPIO pins for ADC
-	menu_init();		// Initialize main menu
+	menu_init();      // Initialize main menu
+  
+  // Initialize SD
 	initSlaveSPI();
 	iniPB12();
-	// Initialize SD
-
-
 
 	while(1) {
 		menu_update();
 		lcd_push_buffer(lcdBuffer);
 	}
 }
-
-//#include "stm32f30x.h"
-//#include "ultrasonic_sensor.h"
-//#include <stdint.h>
-//#include "openlog_sd.h"
-//#include "imu_stub.h"
-
-//int main(void) {
-//	SystemInit();
-//	SystemCoreClockUpdate();
-//	init_uart(115200);
-//	delay(1000); // wait for openlog to boot
-
-//	int count = 0;
-//	uint8_t packet[IMU_PACKET_SIZE];
-
-//	while (count < 1000) {
-		// Get next IMU telemetry packet (18 bytes of raw binary)
-//		imu_stub_next_packet(packet);
-
-		// Write it directly to SD via OpenLog
-//		openlog_writebytes(packet, IMU_PACKET_SIZE);
-//		count++;
-//		delay(1);   // a few ms between samples
-//	}
-//	reset();
-//	while (1); // halt after done
-//}
