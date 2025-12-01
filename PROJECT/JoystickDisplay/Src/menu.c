@@ -220,7 +220,7 @@ void menu_update() {
 		}
 
 		lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
-//		lcd_write_string((uint8_t*)(FFTmode ? "FFT: Axis" : "Hist.: Axis"), lcdBuffer, 0, 0);
+		//		lcd_write_string((uint8_t*)(FFTmode ? "FFT: Axis" : "Hist.: Axis"), lcdBuffer, 0, 0);
 		lcd_write_string((uint8_t*)headline, lcdBuffer, 0, 0);
 		lcd_write_string((uint8_t*)(sel == 0 ? ">X" : " X"), lcdBuffer, 0, 1);
 		lcd_write_string((uint8_t*)(sel == 1 ? ">Y" : " Y"), lcdBuffer, 0, 2);
@@ -244,12 +244,12 @@ void menu_update() {
 			sensors_read_samples(lsmdata, MAX_DATA);
 			plot_fft(lsmdata, currentSensor, currentAxis);
 
-//			plot_fft(currentSensor, currentAxis);
+			//			plot_fft(currentSensor, currentAxis);
 		} else {
 			sensors_read_samples(lsmdata, MAX_DATA);
 			plot_histogram(lsmdata, currentSensor, currentAxis);
 
-//			plot_histogram(lsmdata, currentSensor, currentAxis);
+			//			plot_histogram(lsmdata, currentSensor, currentAxis);
 		}
 
 		break;
