@@ -7,7 +7,7 @@
 #include <stdint.h>
 
 // LSM9DS1 sampling frequency
-#define SAMPLING_FREQ_HZ 200.0f	// NEEDS TO BE UPDATED WITH ACTUAL SAMPLING FREQ!
+#define SAMPLING_FREQ_HZ 100.0f	// NEEDS TO BE UPDATED WITH ACTUAL SAMPLING FREQ!
 
 typedef enum {
 	SENSOR_ACCEL,
