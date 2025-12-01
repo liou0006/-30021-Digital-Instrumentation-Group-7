@@ -28,6 +28,7 @@ typedef struct {
 	int16_t mx, my, mz;
 	int16_t T;
 } lsm9ds1_raw_data_t;
+void sensors_pack_raw(const lsm9ds1_raw_data_t *s, uint8_t out[20]);
 
 void sensors_read_samples(lsm9ds1_raw_data_t *data, int n_samples);
 
