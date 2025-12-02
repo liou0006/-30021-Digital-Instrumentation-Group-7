@@ -76,8 +76,11 @@ void openlog_writeline(char *s) {
 void openlog_writebytes(const uint8_t *data, uint32_t len)
 {
     for (uint32_t i = 0; i < len; i++) {
-        openlog_writechar((char)data[i]);
+        while (USART_GetFlagStatus(USART3, USART_FLAG_TXE) == RESET);
+        USART_SendData(USART3, data[i]);
     }
+    // wait for last byte to finish
+    while (USART_GetFlagStatus(USART3, USART_FLAG_TC) == RESET);
 }
 
 
