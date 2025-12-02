@@ -20,11 +20,11 @@ uint8_t lcdBuffer[LCD_BUFF_SIZE];
 uint8_t virtualBuffer[VIRTUAL_WIDTH_SIZE * LCD_ROWS];
 
 int main(void) {
-	uart_init( 9600 );	// Initialize USB serial at 9600 baud
+	uart_init( 115200 );	// Initialize USB serial at 9600 baud
 	SystemInit();
 	SystemCoreClockUpdate();
 	init_uart(115200);	// Initialize UART3 for writing to SD
-	delay(1000);		// Can this delay be shorter? It makes it lag when starting up
+//	delay(1000);		// Can this delay be shorter? It makes it lag when starting up
 
 	// Initialize joystick, LCD, ADC, and menu
 	initJoystick();		// Enabling GPIO pins for joystick

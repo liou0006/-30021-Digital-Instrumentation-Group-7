@@ -47,12 +47,9 @@ void compute_graph_layout(bool hist, uint16_t total_graph_width, uint16_t x_base
 
 	// Check cache (approx equality for float)
 	const float epsilon = 1e-6f;
-	if (cached_layout_valid
-			&& cached_layout.graph_width == total_graph_width
-			&& cached_layout.x_offset == x_base_offset
-			&& cached_layout.usable_height == graph_height
-			&& cached_layout.num_bins == num_bins
-			&& cached_layout.hist_mode == hist
+	if (cached_layout_valid && cached_layout.graph_width == total_graph_width
+			&& cached_layout.x_offset == x_base_offset && cached_layout.usable_height == graph_height
+			&& cached_layout.num_bins == num_bins && cached_layout.hist_mode == hist
 			&& fabsf(cached_layout.max_label_val - max_label_val) < epsilon) {
 		// Reuse cached layout
 		*out = cached_layout;
@@ -87,15 +84,20 @@ void compute_graph_layout(bool hist, uint16_t total_graph_width, uint16_t x_base
 		}
 	} else {
 		// FFT float label
-		if (digits_before >= 3) {
-			out->graph_width -= 4;
-			out->x_offset += 4;
-			out->y_axis_offset = 4;
-		} else {
-			out->graph_width -= 6;
-			out->x_offset += 6;
-			out->y_axis_offset = 6;
-		}
+//		if (digits_before >= 3) {
+//			out->graph_width -= 4;
+//			out->x_offset += 4;
+//			out->y_axis_offset = 4;
+//		} else {
+//			out->graph_width -= 6;
+//			out->x_offset += 6;
+//			out->y_axis_offset = 6;
+//		}
+
+		int label_px_width = 16;	// 4 characters wide
+		out->graph_width -= label_px_width;
+		out->x_offset += label_px_width;
+		out->y_axis_offset = label_px_width;
 	}
 
 	// Update usable graph width

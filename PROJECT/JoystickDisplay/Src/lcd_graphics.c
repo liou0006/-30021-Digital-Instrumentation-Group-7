@@ -261,8 +261,9 @@ void lcd_convert_float_to_char3x5_y_axis(uint8_t *buffer, uint16_t buff_width,
 		if (i + 1 < len) label_px_width += CHAR_SPACING;
 	}
 
-	int reserved_px = (max_num_digits * DIGIT_WIDTH) + 1;
-	int start_x = x + reserved_px - label_px_width;
+//	int reserved_px = (max_num_digits * DIGIT_WIDTH) + 1;
+//	int start_x = x + reserved_px - label_px_width;
+	int start_x = x + 10 - label_px_width;
 
 	int cur_x = start_x;
 	for (size_t i = 0; i < len; ++i) {

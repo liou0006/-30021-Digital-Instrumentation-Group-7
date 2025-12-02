@@ -139,26 +139,10 @@ void menu_update() {
 			lcd_write_string((uint8_t *)"Failed to collect data", lcdBuffer, 20, 1);
 			lcd_write_string((uint8_t *)"Please press RESET", lcdBuffer, 20, 2);
 		}
-
-
-		//		print on PuTTY
-		//		printf("Rx: ");
-		//		for (int i = 0; i < rxBufferSize / 2; i++) {
-		//			printf("%d	", dataArray[i]);
-		//		}
-		//		printf("\n");
 		break;
 
 	case MENU_FFT:
 	case MENU_HIST:
-		// Check that there is data available to process
-//		if (!lsmdata) {
-//			printf("Error: No data to process\n");
-//			currentMenu = MENU_MAIN;
-//			sel = sel_main;		// Restore main menu cursor
-//			wait = 1;
-//		}
-
 		sel_axis = 0;
 
 		if (joystick == LEFT) {
