@@ -151,6 +151,14 @@ void menu_update() {
 
 	case MENU_FFT:
 	case MENU_HIST:
+		// Check that there is data available to process
+//		if (!lsmdata) {
+//			printf("Error: No data to process\n");
+//			currentMenu = MENU_MAIN;
+//			sel = sel_main;		// Restore main menu cursor
+//			wait = 1;
+//		}
+
 		sel_axis = 0;
 
 		if (joystick == LEFT) {
@@ -237,19 +245,14 @@ void menu_update() {
 		}
 
 		lcd_clear_buffer(lcdBuffer, LCD_BUFF_SIZE);
-		// Clear virtual buffer used for displaying graph
-		lcd_clear_buffer(virtualBuffer, LCD_ROWS * VIRTUAL_WIDTH_SIZE);
+		lcd_clear_buffer(virtualBuffer, LCD_ROWS * VIRTUAL_WIDTH_SIZE);	// Clear virtual buffer used for displaying graph
 
 		if (FFTmode) {
-			sensors_read_samples(lsmdata, MAX_DATA);
+//			sensors_read_samples(lsmdata, MAX_DATA);	// Read pre-collected data
 			plot_fft(lsmdata, currentSensor, currentAxis);
-
-			//			plot_fft(currentSensor, currentAxis);
 		} else {
-			sensors_read_samples(lsmdata, MAX_DATA);
+//			sensors_read_samples(lsmdata, MAX_DATA);	// Read pre-collected data
 			plot_histogram(lsmdata, currentSensor, currentAxis);
-
-			//			plot_histogram(lsmdata, currentSensor, currentAxis);
 		}
 
 		break;
